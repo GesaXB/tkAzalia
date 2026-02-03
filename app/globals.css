@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+/* --- CUSTOM STYLES --- */
+
+:root {
+  /* Warna latar belakang agak krem seperti di desain */
+  --background-cream: #F8F9FA; 
+}
+
+body {
+  background-color: var(--background-cream);
+  /* Di Next.js + Tailwind v4, kita set warna teks default di sini jika perlu */
+  color: #1f2937; /* gray-800 */
+}
+
+/* Utilitas tambahan untuk text balance (bawaan Next.js) */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
