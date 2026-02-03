@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --background-cream: #F8F9FA;
+}
+
+body {
+  background-color: var(--background-cream);
+  color: #1f2937;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
