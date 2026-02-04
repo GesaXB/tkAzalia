@@ -12,18 +12,18 @@ export default function Navbar() {
         </div>
 
         <div className="flex flex-col">
-            <span className="text-xl font-bold text-green-800 tracking-wide">TK AZALIA</span>
+            <span className="text-xl font-bold text-[#01793B] tracking-wide">TK AZALIA</span>
         </div>
       </div>
 
       <div className="hidden md:flex items-center gap-8 font-medium">
-        <Link href="/about" className="text-white font px-4 py-1 rounded-full bg-green-700 transition-colors">
+        <Link href="/about" className="text-white font px-4 py-1 rounded-full bg-[#01793B] transition-colors">
           Tentang
         </Link>
-        <Link href="/pendaftaran" className="text-gray-500 hover:text-green-700 transition-colors">
+        <Link href="/pendaftaran" className="text-gray-500 hover:text-[#01793B] transition-colors">
           Pendaftaran
         </Link>
-        <Link href="/contact" className="text-gray-500 hover:text-green-700 transition-colors">
+        <Link href="/contact" className="text-gray-500 hover:text-[#01793B] transition-colors">
           Contact
         </Link>
       </div>
@@ -37,7 +37,7 @@ export default function Navbar() {
         </Link>
         <Link
           href="/register"
-          className="px-6 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors"
+          className="px-6 py-2 rounded-lg bg-[#01793B] text-white hover:bg-green-800 transition-colors"
         >
           Daftar
         </Link>
