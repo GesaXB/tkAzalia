@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id      Int      @id @default(autoincrement())
+  username     String   @db.VarChar(50)
+  password     String   @db.VarChar(255)
+  role         Role     @default(user)
+  nama_lengkap String   @db.VarChar(100)
+  email        String   @db.VarChar(100)
+  no_telepon   String   @db.VarChar(15)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  siswa           Siswa[]
+  log_aktivitas   LogAktivitas[]
+  informasi       InformasiSekolah[] @relation("updated_by")
+  berkas_validasi BerkasSiswa[]      @relation("validated_by")
+
+  @@unique([username])
+  @@unique([email])
+}
+
+model Siswa {
+  siswa_id            Int               @id @default(autoincrement())
+  user_id             Int
+  nama_lengkap        String            @db.VarChar(100)
+  tempat_lahir        String            @db.VarChar(50)
+  tanggal_lahir       DateTime
+  jenis_kelamin       JenisKelamin
+  alamat              String            @db.Text
+  nama_orangtua       String            @db.VarChar(100)
+  no_telepon_orangtua String            @db.VarChar(15)
+  status_pendaftaran  StatusPendaftaran @default(menunggu)
+  tanggal_daftar      DateTime          @default(now())
+  keterangan          String?           @db.Text
+  created_at          DateTime          @default(now())
+
+  user   User          @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  berkas BerkasSiswa[]
+
+  @@index([user_id])
+  @@index([status_pendaftaran])
+}
+
+model BerkasSiswa {
+  berkas_id       Int            @id @default(autoincrement())
+  siswa_id        Int
+  jenis_berkas    JenisBerkas
+  nama_file       String         @db.VarChar(255)
+  nama_asli       String         @db.VarChar(255)
+  path_file       String         @db.VarChar(500)
+  ukuran          Int
+  tipe_file       String         @db.VarChar(50)
+  status_validasi StatusValidasi @default(menunggu)
+  keterangan      String?        @db.Text
+  uploaded_at     DateTime       @default(now())
+  validated_at    DateTime?
+  validated_by    Int?
+
+  siswa     Siswa @relation(fields: [siswa_id], references: [siswa_id], onDelete: Cascade)
+  validator User? @relation("validated_by", fields: [validated_by], references: [user_id], onDelete: SetNull)
+
+  @@unique([siswa_id, jenis_berkas])
+  @@index([siswa_id])
+  @@index([jenis_berkas])
+  @@index([status_validasi])
+}
+
+// Tabel Log Aktivitas
+model LogAktivitas {
+  log_id     Int      @id @default(autoincrement())
+  user_id    Int
+  aksi       String   @db.VarChar(100)
+  deskripsi  String?  @db.Text
+  ip_address String?  @db.VarChar(45)
+  user_agent String?  @db.Text
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([created_at])
+}
+
+model InformasiSekolah {
+  info_id    Int           @id @default(autoincrement())
+  judul      String        @db.VarChar(200)
+  slug       String        @db.VarChar(200)
+  konten     String        @db.Text
+  tipe       TipeInformasi
+  status     StatusInfo    @default(published)
+  urutan     Int           @default(0)
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  updated_by Int?
+
+  user_updated User? @relation("updated_by", fields: [updated_by], references: [user_id], onDelete: SetNull)
+
+  @@unique([slug])
+  @@index([tipe])
+  @@index([status])
+  @@index([urutan])
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum JenisKelamin {
+  L
+  P
+}
+
+enum StatusPendaftaran {
+  menunggu
+  diproses
+  diterima
+  ditolak
+}
+
+enum TipeInformasi {
+  profil
+  visi_misi
+  fasilitas
+  pengumuman
+  kontak
+  syarat_pendaftaran
+}
+
+enum StatusInfo {
+  draft
+  published
+}
+
+enum JenisBerkas {
+  akta_kelahiran
+  kartu_keluarga
+  ktp_orangtua
+  pas_foto
+  surat_kesehatan
+  ijazah_paud
+  lainnya
+}
+
+enum StatusValidasi {
+  menunggu
+  valid
+  tidak_valid
+  revisi
+}
