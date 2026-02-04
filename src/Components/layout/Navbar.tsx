@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm border-b border-gray-100">
+    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-white shadow-sm border-b border-gray-100">
       <div className="flex items-center gap-3">
         <div className="relative w-10 h-10">
             <div className="w-10 h-10">
@@ -17,7 +17,7 @@ export default function Navbar() {
       </div>
 
       <div className="hidden md:flex items-center gap-8 font-medium">
-        <Link href="/about" className="text-white font px-4 py-1 rounded-full bg-[#01793B] transition-colors">
+        <Link href="/about" className="text-gray-500 hover:text-[#01793B] transition-colors">
           Tentang
         </Link>
         <Link href="/pendaftaran" className="text-gray-500 hover:text-[#01793B] transition-colors">
