@@ -7,7 +7,7 @@ const testimonials = [
     body: "Kami merasa tenang karena anak belajar di lingkungan yang bersih, aman, dan selalu dalam pengawasan guru.",
     name: "Siti Aminah",
     role: "Orang Tua Murid Kelompok B",
-    imageSrc: "/siti.jpeg", 
+    imageSrc: "/siti.jpeg",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ export default function TestimonialSection() {
   return (
     <section className="mb-20">
       <div className="container mx-auto px-6 max-w-7xl">
-        
+
         {/* JUDUL SECTION */}
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-24 tracking-wide uppercase">
           TESTIMONI ORANG TUA
@@ -40,25 +40,27 @@ export default function TestimonialSection() {
         {/* GRID KARTU TESTIMONI */}
         <div className="grid md:grid-cols-3 gap-12">
           {testimonials.map((item) => (
-            // Kartu dengan Border Hijau
-            <div key={item.id} className="border-2 border-[#01793B] p-8 flex flex-col h-full bg-white">
-              
+            <div 
+              key={item.id} 
+              className="bg-white p-8 rounded-2xl flex flex-col h-full border border-gray-100 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#01793B]/30"
+            >
+
               {/* Heading Kutipan (Bold) */}
               <h3 className="text-lg font-bold text-center text-gray-900 mb-4 leading-tight">
                 {item.heading}
               </h3>
-              
+
               {/* Isi Kutipan (Italic & Gray) */}
               <p className="text-sm text-gray-600 text-center italic mb-8 flex-grow leading-relaxed">
                 {item.body}
               </p>
 
               {/* Bagian Profil (Foto & Nama) */}
-              <div className="flex items-center gap-4 mt-auto pt-4">
+              <div className="flex items-center gap-4 mt-auto pt-4 border-t border-gray-100">
                 {/* Pembungkus Gambar Lingkaran */}
                 <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
-                  <Image 
-                    src={item.imageSrc} 
+                  <Image
+                    src={item.imageSrc}
                     alt={`Foto ${item.name}`}
                     fill
                     className="object-cover"
@@ -75,7 +77,7 @@ export default function TestimonialSection() {
                   </p>
                 </div>
               </div>
-              
+
             </div>
           ))}
         </div>

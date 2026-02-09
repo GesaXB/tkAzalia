@@ -3,6 +3,8 @@ import { Poppins } from "next/font/google";
 import icon from '../public/logotk.png';
 import "../styles/globals.css";
 
+import Footer from "@/Components/layout/Footer";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -24,8 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={poppins.className}>
+      <body className={poppins.className} suppressHydrationWarning={true}>
         {children}
+        <Footer />
       </body>
     </html>
   );
