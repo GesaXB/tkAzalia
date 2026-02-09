@@ -1,8 +1,7 @@
 export default function WhyChooseSection() {
   return (
     <section className="max-w-7xl mx-auto w-full px-4 md:px-0">
-      
-      {/* JUDUL SECTION */}
+
       <div className="mb-12 text-left">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
           Mengapa Memilih Belajar di <br />
@@ -10,14 +9,10 @@ export default function WhyChooseSection() {
         </h2>
       </div>
 
-      {/* LIST ITEMS */}
       <div className="space-y-10">
-        
-        {/* 1: Guru Berpengalaman  */}
         <div className="flex gap-6 items-start">
-          {/* Icon Kotak Hijau */}
           <div className="flex-shrink-0 w-16 h-16 bg-[#01793B] rounded-2xl"></div>
-          
+
           <div>
             <h3 className="text-xl font-bold text-[#01793B] mb-2">
               Guru Yang Berpengalaman
@@ -28,11 +23,9 @@ export default function WhyChooseSection() {
           </div>
         </div>
 
-        {/* 2: Fasilitas Sekolah */}
         <div className="flex gap-6 items-start">
-          {/* Icon Kotak Hijau Polos */}
           <div className="flex-shrink-0 w-16 h-16 bg-[#01793B] rounded-2xl shadow-sm"></div>
-          
+
           <div>
             <h3 className="text-xl font-bold text-[#01793B] mb-2">
               Fasilitas Sekolah
@@ -43,11 +36,9 @@ export default function WhyChooseSection() {
           </div>
         </div>
 
-        {/* 3: Metode Pembelajaran */}
         <div className="flex gap-6 items-start">
-          {/* Icon Kotak Hijau Polos */}
           <div className="flex-shrink-0 w-16 h-16 bg-[#01793B] rounded-2xl shadow-sm"></div>
-          
+
           <div>
             <h3 className="text-xl font-bold text-[#01793B] mb-2">
               Metode Pembelajaran

@@ -1,30 +1,36 @@
 import HeroSection from "../home/HeroSection";
-import VisionMissionSection from "../home/VisionMissionSection";
-import WhyChooseSection from "../home/WhyChooseSection";
 import ProgramSection from "../home/ProgramSection";
 import TestimonialSection from "../home/TestimonialSection";
+import VisionMissionSection from "../home/VisionMissionSection";
+import WhyChooseSection from "../home/WhyChooseSection";
 
 export default function LandingPage() {
   return (
-    <div className="bg-[#F8F9FA]">
-      <div className="relative overflow-hidden pb-32">
-        {/* Dekorasi Background */}
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-green-700/10 rounded-full blur-3xl -z-10"></div>
-        {/* Konten Landing Page */}
-        <div className="container mx-auto px-2 pt-16 md:pt-32 flex flex-col gap-20 md:gap-32">
-          
-          <HeroSection />
-          
-          <VisionMissionSection />
+    <div className="bg-white">
+      <div className="relative bg-gradient-to-b from-white via-[#F0F9F1] to-white">
+        <HeroSection />
+      </div>
 
+      <div className="relative -mt-12 md:-mt-16 pb-15">
+        <VisionMissionSection />
+      </div>
+
+      <div className="bg-[#F8F9FA] mt-0 pt-12 md:pt-20 pb-20">
+        <div className="container mx-auto px-4">
           <WhyChooseSection />
-          
-          <ProgramSection />
-
-          <TestimonialSection />
-
         </div>
+      </div>
 
+      <div className="bg-white pt-12 md:pt-20">
+        <div className="container mx-auto px-4">
+          <ProgramSection />
+        </div>
+      </div>
+
+      <div className="bg-[#F8F9FA] pt-12 md:pt-20 pb-12 md:pb-20">
+        <div className="container mx-auto px-4">
+          <TestimonialSection />
+        </div>
       </div>
     </div>
   );
