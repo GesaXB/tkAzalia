@@ -20,7 +20,8 @@ const reasons = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="max-w-7xl mx-auto w-full px-4 md:px-0 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+    // UBAH 1: Ganti 'items-center' jadi 'items-start' agar kita bisa atur turunnya manual
+    <section className="max-w-7xl mx-auto w-full px-4 md:px-0 grid md:grid-cols-2 gap-12 md:gap-20 items-start">
       
       {/* --- KOLOM KIRI: Teks & List --- */}
       <div>
@@ -32,7 +33,7 @@ export default function WhyChooseSection() {
           </h2>
         </div>
 
-        {/* LIST ITEMS (Menggunakan map biar lebih efisien) */}
+        {/* LIST ITEMS */}
         <div className="space-y-10">
           {reasons.map((item) => (
             <div key={item.id} className="flex gap-6 items-start">
@@ -52,7 +53,8 @@ export default function WhyChooseSection() {
       </div>
 
       {/* --- KOLOM KANAN: Gambar --- */}
-      <div className="relative h-[300px] md:h-[350px] w-full max-w-lg mx-auto rounded-3xl overflow-hidden border-4 border-[#01793B] shadow-xl mt-12 md:mt-16 hidden md:block">
+      {/* UBAH 2: Saya ganti 'md:mt-16' menjadi 'md:mt-32' supaya gambarnya turun jauh ke bawah */}
+      <div className="relative h-[300px] md:h-[350px] w-full max-w-lg mx-auto rounded-3xl overflow-hidden border-4 border-[#01793B] shadow-xl mt-12 md:mt-36 hidden md:block">
         <Image
           src="/7.jpeg" 
           alt="Suasana Belajar di TK Azalia"
