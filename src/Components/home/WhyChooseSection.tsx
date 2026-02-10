@@ -21,7 +21,7 @@ const reasons = [
 export default function WhyChooseSection() {
   return (
     <section className="max-w-7xl mx-auto w-full px-4 md:px-0 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-      
+
       {/* --- KOLOM KIRI: Teks & List --- */}
       <div>
         {/* JUDUL */}
@@ -54,7 +54,7 @@ export default function WhyChooseSection() {
       {/* --- KOLOM KANAN: Gambar --- */}
       <div className="relative h-[300px] md:h-[350px] w-full max-w-lg mx-auto rounded-3xl overflow-hidden border-4 border-[#01793B] shadow-xl mt-12 md:mt-16 hidden md:block">
         <Image
-          src="/7.jpeg" 
+          src="/7.jpeg"
           alt="Suasana Belajar di TK Azalia"
           fill
           className="object-cover"

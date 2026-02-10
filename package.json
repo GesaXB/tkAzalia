@@ -20,6 +20,7 @@
     "dotenv": "^17.2.3",
     "framer-motion": "^12.31.0",
     "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "pg": "^8.18.0",
     "postcss": "^8.5.6",
