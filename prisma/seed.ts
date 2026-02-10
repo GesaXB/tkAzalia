@@ -85,7 +85,6 @@ async function seedUsers(): Promise<number> {
 
   const usersToCreate: UserSeedData[] = [];
 
-  // Add admin users
   for (const user of adminUsers) {
     usersToCreate.push({
       ...user,

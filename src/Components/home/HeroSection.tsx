@@ -6,7 +6,7 @@ export default function HeroSection() {
     <section className="relative text-center flex flex-col items-center justify-center min-h-[75vh] px-4 pt-8 md:pt-12">
       <BackgroundDecoration />
 
-      <div className="relative z-10 max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center -mt-24">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
           Selamat Datang di <br />
           <span className="text-[#01793B]">TK Azalia</span>

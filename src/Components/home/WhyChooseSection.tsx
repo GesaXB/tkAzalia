@@ -32,7 +32,7 @@ export default function WhyChooseSection() {
           </h2>
         </div>
 
-        {/* LIST ITEMS (Menggunakan map biar lebih efisien) */}
+        {/* LIST ITEMS */}
         <div className="space-y-10">
           {reasons.map((item) => (
             <div key={item.id} className="flex gap-6 items-start">

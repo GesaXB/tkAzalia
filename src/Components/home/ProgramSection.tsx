@@ -1,6 +1,6 @@
 export default function ProgramSection() {
   return (
-    <section className="max-w-7xl mx-auto px-4 w-full">
+    <section className="max-w-7xl mx-auto px-4 w-full mb-16">
       
       {/* JUDUL SECTION */}
       <div className="text-center mb-24">

@@ -3,7 +3,10 @@ import { Poppins } from "next/font/google";
 import icon from '../public/logotk.png';
 import "../styles/globals.css";
 
+
+import Navbar from "@/Components/layout/Navbar"; 
 import Footer from "@/Components/layout/Footer";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -26,8 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={poppins.className} suppressHydrationWarning={true}>
-        {children}
+      <body className={`${poppins.variable} ${poppins.className} flex flex-col min-h-screen`} suppressHydrationWarning={true}>
+        <Navbar />
+        <div className="flex-grow flex flex-col">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );
