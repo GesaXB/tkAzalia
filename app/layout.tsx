@@ -28,7 +28,6 @@ export default function RootLayout({
     <html lang="id">
       <body className={poppins.className} suppressHydrationWarning={true}>
         {children}
-        <Footer />
       </body>
     </html>
   );

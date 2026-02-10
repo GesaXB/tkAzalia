@@ -3,6 +3,7 @@ import ProgramSection from "../home/ProgramSection";
 import TestimonialSection from "../home/TestimonialSection";
 import VisionMissionSection from "../home/VisionMissionSection";
 import WhyChooseSection from "../home/WhyChooseSection";
+import Footer from "../layout/Footer";
 
 export default function LandingPage() {
   return (
@@ -32,6 +33,8 @@ export default function LandingPage() {
           <TestimonialSection />
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

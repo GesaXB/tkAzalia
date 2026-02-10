@@ -30,13 +30,13 @@ export default function Navbar() {
 
       <div className="flex items-center gap-3">
         <Link
-          href="/login"
+          href="/auth/login"
           className="px-6 py-2 rounded-lg border border-green-600 text-green-700 hover:bg-green-50 transition-colors"
         >
           Masuk
         </Link>
         <Link
-          href="/register"
+          href="/auth/register"
           className="px-6 py-2 rounded-lg bg-[#01793B] text-white hover:bg-green-800 transition-colors"
         >
           Daftar
