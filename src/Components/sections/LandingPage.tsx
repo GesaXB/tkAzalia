@@ -1,8 +1,8 @@
-import HeroSection from "../home/HeroSection";
-import ProgramSection from "../home/ProgramSection";
-import TestimonialSection from "../home/TestimonialSection";
-import VisionMissionSection from "../home/VisionMissionSection";
-import WhyChooseSection from "../home/WhyChooseSection";
+import HeroSection from "../HomeComponent/HeroSection";
+import ProgramSection from "../HomeComponent/ProgramSection";
+import TestimonialSection from "../HomeComponent/TestimonialSection";
+import VisionMissionSection from "../HomeComponent/VisionMissionSection";
+import WhyChooseSection from "../HomeComponent/WhyChooseSection";
 
 export default function LandingPage() {
   return (
