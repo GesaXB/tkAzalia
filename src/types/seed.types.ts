@@ -1,6 +1,5 @@
 import { Role, Status, StatusValidasi, Tipe } from '../../generated/prisma/enums';
 
-// User Seed Types
 export interface UserSeedData {
   username: string;
   password: string;
@@ -10,17 +9,14 @@ export interface UserSeedData {
   no_telp: string;
 }
 
-// Siswa Seed Types
 export interface SiswaSeedData {
   user_id: number;
 }
 
-// Jenis Berkas Seed Types
 export interface JenisBerkasSeedData {
   nama_berkas: string;
 }
 
-// Berkas Siswa Seed Types
 export interface BerkasSiswaSeedData {
   siswa_id: number;
   jenis_berkas_id: number;
@@ -32,8 +28,6 @@ export interface BerkasSiswaSeedData {
   status_validasi: StatusValidasi;
   catatan_validasi: string;
 }
-
-// Informasi Sekolah Seed Types
 export interface InformasiSekolahSeedData {
   judul: string;
   slug: string;
@@ -42,8 +36,6 @@ export interface InformasiSekolahSeedData {
   status: Status;
   urutan: number;
 }
-
-// Seed Data Container
 export interface SeedDataContainer {
   users: UserSeedData[];
   jenisBerkas: JenisBerkasSeedData[];
