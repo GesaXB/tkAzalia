@@ -1,10 +1,15 @@
+"use client";
+
+import { Mail, MessageSquare, Send, User } from "lucide-react";
+
 export default function ContactForm() {
   return (
-    <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-t-4 border-[#01793B]">
+    <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-t-4 border-[#01793B] h-full min-h-[600px] flex flex-col">
+      
       <h3 className="text-2xl font-bold text-gray-800 mb-2">Kirim Pesan</h3>
       <p className="text-gray-500 mb-8 text-sm">Silakan isi formulir di bawah ini, kami akan membalas secepatnya.</p>
 
-      <form className="space-y-5">
+      <form className="space-y-5 flex-grow flex flex-col">
         <FormInput
           label="Nama Lengkap"
           type="text"
@@ -46,6 +51,8 @@ export default function ContactForm() {
     </div>
   );
 }
+
+// --- SUB COMPONENTS ---
 
 function FormInput({
   label,
@@ -99,12 +106,12 @@ function FormTextarea({
   placeholder: string;
 }) {
   return (
-    <div>
+    <div className="flex-grow flex flex-col">
       <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
       <textarea
         rows={rows}
         placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/20 outline-none transition-all resize-none"
+        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/20 outline-none transition-all resize-none h-full"
       ></textarea>
     </div>
   );
@@ -114,7 +121,7 @@ function SubmitButton() {
   return (
     <button
       type="button"
-      className="w-full bg-[#01793B] text-white font-bold py-4 rounded-xl hover:bg-green-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
+      className="w-full bg-[#01793B] text-white font-bold py-4 rounded-xl hover:bg-green-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 mt-auto"
     >
       Kirim Pesan Sekarang
     </button>

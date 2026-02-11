@@ -3,11 +3,12 @@
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("");
+  const pathname = usePathname();
 
   const navLinks = [
     { href: "/", label: "Beranda" },
@@ -22,6 +23,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
+          {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-105">
               <Image
@@ -42,38 +44,55 @@ export default function Navbar() {
             </div>
           </Link>
 
+          {/* MENU DESKTOP */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setActiveLink(link.href)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeLink === link.href
-                    ? "bg-emerald-50 text-[#01793B]"
-                    : "text-gray-600 hover:text-[#01793B] hover:bg-emerald-50/50"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? "bg-emerald-50 text-[#01793B]"
+                      : "text-gray-600 hover:text-[#01793B] hover:bg-emerald-50/50"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
+          {/* TOMBOL ACTION (Masuk & Daftar) */}
           <div className="hidden md:flex items-center gap-3">
+            
+            {/* TOMBOL MASUK - DIPERBAIKI: Selalu Outline (Tidak ada blok hijau) */}
             <Link
               href="/auth/login"
-              className="px-5 py-2 rounded-lg text-[#01793B] font-medium bg-emerald-50/40 hover:bg-emerald-100/60 transition-all duration-300 hover:scale-105"
+              className={`px-5 py-2 rounded-lg font-medium border transition-all duration-300 hover:scale-105 ${
+                pathname === "/auth/login"
+                  ? "bg-transparent text-[#01793B] border-[#01793B]" // AKTIF: Tetap transparan + Teks Hijau
+                  : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50" // BIASA: Transparan + Hover Hijau Tipis
+              }`}
             >
               Masuk
             </Link>
+
+            {/* TOMBOL DAFTAR - Tetap Full Block */}
             <Link
               href="/auth/register"
-              className="px-5 py-2 rounded-lg bg-[#01793B] text-white font-medium hover:bg-emerald-700 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+              className={`px-5 py-2 rounded-lg font-medium border shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                pathname === "/auth/register"
+                  ? "bg-emerald-800 text-white border-emerald-800"
+                  : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
+              }`}
             >
               Daftar
             </Link>
           </div>
 
+          {/* TOMBOL MOBILE MENU */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
@@ -84,6 +103,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* MENU MOBILE */}
       <div
         className={`md:hidden bg-white border-t border-gray-100 transition-all duration-500 ease-in-out ${
           isMenuOpen
@@ -92,35 +112,46 @@ export default function Navbar() {
         } overflow-hidden`}
       >
         <div className="px-4 py-3 space-y-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => {
-                setActiveLink(link.href);
-                setIsMenuOpen(false);
-              }}
-              className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
-                activeLink === link.href
-                  ? "bg-emerald-50 text-[#01793B]"
-                  : "text-gray-600 hover:bg-emerald-50"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMenuOpen(false)}
+                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+                  isActive
+                    ? "bg-emerald-50 text-[#01793B]"
+                    : "text-gray-600 hover:bg-emerald-50"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+          
           <div className="pt-4 pb-2 space-y-3">
+            {/* TOMBOL MASUK MOBILE */}
             <Link
               href="/auth/login"
               onClick={() => setIsMenuOpen(false)}
-              className="block px-4 py-3 text-center rounded-lg text-[#01793B] font-medium bg-emerald-50/40 hover:bg-emerald-100/60 transition-all duration-300 active:scale-95"
+              className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${
+                 pathname === "/auth/login"
+                 ? "bg-emerald-50 text-[#01793B] border-[#01793B]" // Sedikit highlight di mobile biar jelas
+                 : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
+              }`}
             >
               Masuk
             </Link>
+            {/* TOMBOL DAFTAR MOBILE */}
             <Link
               href="/auth/register"
               onClick={() => setIsMenuOpen(false)}
-              className="block px-4 py-3 text-center rounded-lg bg-[#01793B] text-white font-medium hover:bg-emerald-700 shadow-md hover:shadow-lg transition-all duration-300 active:scale-95"
+              className={`block px-4 py-3 text-center rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 ${
+                pathname === "/auth/register"
+                ? "bg-emerald-800 text-white border-emerald-800"
+                : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
+              }`}
             >
               Daftar
             </Link>

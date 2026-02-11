@@ -4,7 +4,7 @@ export default function RegisterPage() {
   return (
     // PERUBAHAN SAMA:
     // Gunakan 'pt-40' yang sama persis dengan Login agar sejajar.
-    <div className="flex-grow flex justify-center bg-gray-50 px-4 pt-40 pb-20">
+    <div className="flex-grow flex justify-center bg-gray-50 px-4 pt-20 pb-20">
       
       {/* Kartu Register */}
       {/* 'h-fit' memastikan kotak hanya setinggi isinya, tapi start dari atas */}

@@ -5,7 +5,7 @@ export default function LoginPage() {
     // PERUBAHAN:
     // 1. Hapus 'items-center' (biar gak naik-turun).
     // 2. Ganti 'pt-32' jadi 'pt-40' (biar turunnya pas enak dilihat).
-    <div className="flex-grow flex justify-center bg-gray-50 px-4 pt-40 pb-20">
+    <div className="flex-grow flex justify-center bg-gray-50 px-4 pt-20 pb-20">
       
       {/* Kartu Login */}
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 h-fit">
@@ -38,7 +38,7 @@ export default function LoginPage() {
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/20 outline-none transition-all"
             />
             <div className="text-right mt-2">
-              <a href="#" className="text-xs text-[#01793B] hover:underline">Lupa Password?</a>
+              <a href="/auth/forgotpassword" className="text-xs text-[#01793B] hover:underline">Lupa Password?</a>
             </div>
           </div>
 
