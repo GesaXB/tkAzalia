@@ -32,16 +32,24 @@ enum Role {
 }
 
 model Siswa {
-  siswa_id Int           @id @default(autoincrement())
-  user_id  Int           @unique
-  berkas   BerkasSiswa[]
+  siswa_id      Int         @id @default(autoincrement())
+  user_id       Int         @unique
+  status_ppdb   StatusPpdb  @default(menunggu)
+  catatan_ppdb  String?
+  berkas        BerkasSiswa[]
 
   user User @relation(fields: [user_id], references: [user_id])
 }
 
+enum StatusPpdb {
+  menunggu
+  lulus
+  tidak_lulus
+}
+
 model BerkasSiswa {
   berkas_siswa_id  Int            @id @default(autoincrement())
-  siswa_id         Int            @unique
+  siswa_id         Int
   jenis_berkas_id  Int
   nama_file        String
   nama_file_hash   String
@@ -54,6 +62,8 @@ model BerkasSiswa {
 
   jenisBerkas JenisBerkas @relation(fields: [jenis_berkas_id], references: [jenis_berkas_id])
   siswa       Siswa       @relation(fields: [siswa_id], references: [siswa_id])
+
+  @@unique([siswa_id, jenis_berkas_id])
 }
 
 enum StatusValidasi {

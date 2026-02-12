@@ -298,10 +298,11 @@ export type BerkasSiswaOrderByWithRelationInput = {
 
 export type BerkasSiswaWhereUniqueInput = Prisma.AtLeast<{
   berkas_siswa_id?: number
-  siswa_id?: number
+  siswa_id_jenis_berkas_id?: Prisma.BerkasSiswaSiswa_idJenis_berkas_idCompoundUniqueInput
   AND?: Prisma.BerkasSiswaWhereInput | Prisma.BerkasSiswaWhereInput[]
   OR?: Prisma.BerkasSiswaWhereInput[]
   NOT?: Prisma.BerkasSiswaWhereInput | Prisma.BerkasSiswaWhereInput[]
+  siswa_id?: Prisma.IntFilter<"BerkasSiswa"> | number
   jenis_berkas_id?: Prisma.IntFilter<"BerkasSiswa"> | number
   nama_file?: Prisma.StringFilter<"BerkasSiswa"> | string
   nama_file_hash?: Prisma.StringFilter<"BerkasSiswa"> | string
@@ -313,7 +314,7 @@ export type BerkasSiswaWhereUniqueInput = Prisma.AtLeast<{
   tanggal_unggah?: Prisma.DateTimeFilter<"BerkasSiswa"> | Date | string
   jenisBerkas?: Prisma.XOR<Prisma.JenisBerkasScalarRelationFilter, Prisma.JenisBerkasWhereInput>
   siswa?: Prisma.XOR<Prisma.SiswaScalarRelationFilter, Prisma.SiswaWhereInput>
-}, "berkas_siswa_id" | "siswa_id">
+}, "berkas_siswa_id" | "siswa_id_jenis_berkas_id">
 
 export type BerkasSiswaOrderByWithAggregationInput = {
   berkas_siswa_id?: Prisma.SortOrder
@@ -452,6 +453,11 @@ export type BerkasSiswaListRelationFilter = {
 
 export type BerkasSiswaOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type BerkasSiswaSiswa_idJenis_berkas_idCompoundUniqueInput = {
+  siswa_id: number
+  jenis_berkas_id: number
 }
 
 export type BerkasSiswaCountOrderByAggregateInput = {

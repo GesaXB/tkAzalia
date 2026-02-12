@@ -3,12 +3,25 @@
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { clearToken, getToken } from "@/lib/client/session";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    setHasToken(!!getToken());
+  }, [pathname]);
+
+  const handleLogout = () => {
+    clearToken();
+    setHasToken(false);
+    router.push("/");
+  };
 
   const navLinks = [
     { href: "/", label: "Beranda" },
@@ -66,30 +79,49 @@ export default function Navbar() {
 
           {/* TOMBOL ACTION (Masuk & Daftar) */}
           <div className="hidden md:flex items-center gap-3">
-            
-            {/* TOMBOL MASUK - DIPERBAIKI: Selalu Outline (Tidak ada blok hijau) */}
-            <Link
-              href="/auth/login"
-              className={`px-5 py-2 rounded-lg font-medium border transition-all duration-300 hover:scale-105 ${
-                pathname === "/auth/login"
-                  ? "bg-transparent text-[#01793B] border-[#01793B]" // AKTIF: Tetap transparan + Teks Hijau
-                  : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50" // BIASA: Transparan + Hover Hijau Tipis
-              }`}
-            >
-              Masuk
-            </Link>
-
-            {/* TOMBOL DAFTAR - Tetap Full Block */}
-            <Link
-              href="/auth/register"
-              className={`px-5 py-2 rounded-lg font-medium border shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 ${
-                pathname === "/auth/register"
-                  ? "bg-emerald-800 text-white border-emerald-800"
-                  : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
-              }`}
-            >
-              Daftar
-            </Link>
+            {hasToken ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className={`px-5 py-2 rounded-lg font-medium border transition-all duration-300 hover:scale-105 ${
+                    pathname.startsWith("/dashboard")
+                      ? "bg-transparent text-[#01793B] border-[#01793B]"
+                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-5 py-2 rounded-lg font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-300 hover:scale-105"
+                >
+                  Keluar
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className={`px-5 py-2 rounded-lg font-medium border transition-all duration-300 hover:scale-105 ${
+                    pathname === "/auth/login"
+                      ? "bg-transparent text-[#01793B] border-[#01793B]"
+                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
+                  }`}
+                >
+                  Masuk
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className={`px-5 py-2 rounded-lg font-medium border shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 ${
+                    pathname === "/auth/register"
+                      ? "bg-emerald-800 text-white border-emerald-800"
+                      : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
+                  }`}
+                >
+                  Daftar
+                </Link>
+              </>
+            )}
           </div>
 
           {/* TOMBOL MOBILE MENU */}
@@ -131,30 +163,55 @@ export default function Navbar() {
           })}
           
           <div className="pt-4 pb-2 space-y-3">
-            {/* TOMBOL MASUK MOBILE */}
-            <Link
-              href="/auth/login"
-              onClick={() => setIsMenuOpen(false)}
-              className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${
-                 pathname === "/auth/login"
-                 ? "bg-emerald-50 text-[#01793B] border-[#01793B]" // Sedikit highlight di mobile biar jelas
-                 : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
-              }`}
-            >
-              Masuk
-            </Link>
-            {/* TOMBOL DAFTAR MOBILE */}
-            <Link
-              href="/auth/register"
-              onClick={() => setIsMenuOpen(false)}
-              className={`block px-4 py-3 text-center rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 ${
-                pathname === "/auth/register"
-                ? "bg-emerald-800 text-white border-emerald-800"
-                : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
-              }`}
-            >
-              Daftar
-            </Link>
+            {hasToken ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${
+                    pathname.startsWith("/dashboard")
+                      ? "bg-emerald-50 text-[#01793B] border-[#01793B]"
+                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="block w-full px-4 py-3 text-center rounded-lg font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-300 active:scale-95"
+                >
+                  Keluar
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${
+                    pathname === "/auth/login"
+                      ? "bg-emerald-50 text-[#01793B] border-[#01793B]"
+                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
+                  }`}
+                >
+                  Masuk
+                </Link>
+                <Link
+                  href="/auth/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-3 text-center rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 ${
+                    pathname === "/auth/register"
+                      ? "bg-emerald-800 text-white border-emerald-800"
+                      : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
+                  }`}
+                >
+                  Daftar
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -47,3 +47,4 @@ export interface ApiResponse<T = unknown> {
 
 export type UserRole = 'admin' | 'user';
 export type StatusPendaftaran = 'menunggu' | 'diproses' | 'diterima' | 'ditolak';
+export type StatusPpdb = 'menunggu' | 'lulus' | 'tidak_lulus';

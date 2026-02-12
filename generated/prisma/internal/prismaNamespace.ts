@@ -834,7 +834,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const SiswaScalarFieldEnum = {
   siswa_id: 'siswa_id',
-  user_id: 'user_id'
+  user_id: 'user_id',
+  status_ppdb: 'status_ppdb',
+  catatan_ppdb: 'catatan_ppdb'
 } as const
 
 export type SiswaScalarFieldEnum = (typeof SiswaScalarFieldEnum)[keyof typeof SiswaScalarFieldEnum]
@@ -964,6 +966,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusPpdb'
+ */
+export type EnumStatusPpdbFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusPpdb'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusPpdb[]'
+ */
+export type ListEnumStatusPpdbFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusPpdb[]'>
     
 
 

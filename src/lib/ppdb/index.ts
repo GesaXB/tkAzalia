@@ -73,9 +73,28 @@ export async function listBerkasForSiswa(siswaId: number) {
   return berkas;
 }
 
+export async function getBerkasById(berkasSiswaId: number) {
+  return prisma.berkasSiswa.findUnique({
+    where: { berkas_siswa_id: berkasSiswaId },
+    include: { jenisBerkas: true },
+  });
+}
+
+export async function listJenisBerkas() {
+  return prisma.jenisBerkas.findMany({
+    orderBy: { jenis_berkas_id: 'asc' },
+  });
+}
+
 export async function createBerkasSiswa(input: CreateBerkasInput) {
-  const berkas = await prisma.berkasSiswa.create({
-    data: {
+  const berkas = await prisma.berkasSiswa.upsert({
+    where: {
+      siswa_id_jenis_berkas_id: {
+        siswa_id: input.siswaId,
+        jenis_berkas_id: input.jenisBerkasId,
+      },
+    },
+    create: {
       siswa_id: input.siswaId,
       jenis_berkas_id: input.jenisBerkasId,
       nama_file: input.namaFile,
@@ -86,8 +105,32 @@ export async function createBerkasSiswa(input: CreateBerkasInput) {
       status_validasi: StatusValidasi.menunggu,
       catatan_validasi: '',
     },
+    update: {
+      nama_file: input.namaFile,
+      nama_file_hash: input.namaFileHash,
+      path_file: input.pathFile,
+      ukuran_file: input.ukuranFile,
+      tipe_file: input.tipeFile,
+    },
   });
 
   return berkas;
+}
+
+export async function updateBerkasSiswa(
+  berkasSiswaId: number,
+  data: { nama_file?: string; path_file?: string; ukuran_file?: number; tipe_file?: string }
+) {
+  return prisma.berkasSiswa.update({
+    where: { berkas_siswa_id: berkasSiswaId },
+    data,
+    include: { jenisBerkas: true },
+  });
+}
+
+export async function deleteBerkasSiswa(berkasSiswaId: number) {
+  await prisma.berkasSiswa.delete({
+    where: { berkas_siswa_id: berkasSiswaId },
+  });
 }
 

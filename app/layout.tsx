@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import icon from '../public/logotk.png';
 import "../styles/globals.css";
 
-import Footer from "@/Components/layout/Footer";
-import Navbar from "@/Components/layout/Navbar";
+import AppShell from "@/Components/layout/AppShell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,11 +51,7 @@ export default function RootLayout({
         className="flex flex-col min-h-screen bg-white text-gray-900 antialiased"
         suppressHydrationWarning
       >
-        <Navbar />
-        <main className="flex-grow flex flex-col pt-16">
-          {children}
-        </main>
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

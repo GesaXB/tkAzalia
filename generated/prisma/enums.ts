@@ -17,6 +17,15 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const StatusPpdb = {
+  menunggu: 'menunggu',
+  lulus: 'lulus',
+  tidak_lulus: 'tidak_lulus'
+} as const
+
+export type StatusPpdb = (typeof StatusPpdb)[keyof typeof StatusPpdb]
+
+
 export const StatusValidasi = {
   menunggu: 'menunggu',
   valid: 'valid',
