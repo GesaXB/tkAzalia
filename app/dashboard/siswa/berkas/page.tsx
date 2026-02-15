@@ -19,6 +19,7 @@ import {
   updateBerkas,
   uploadBerkasFile,
 } from "@/lib/client/ppdb";
+import { getJadwalPpdb } from "@/lib/client/public";
 
 export default function SiswaBerkasPage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function SiswaBerkasPage() {
   });
   const [fileName, setFileName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [ppdbDibuka, setPpdbDibuka] = useState(true);
 
   useEffect(() => {
     const load = async () => {
@@ -52,9 +54,10 @@ export default function SiswaBerkasPage() {
       }
       setProfileName(profile.data.nama_lengkap);
       await ensureSiswa();
-      const [jenisRes, berkasResponse] = await Promise.all([
+      const [jenisRes, berkasResponse, jadwalRes] = await Promise.all([
         listJenisBerkas(),
         listBerkas(),
+        getJadwalPpdb(),
       ]);
       if (jenisRes.success && jenisRes.data?.length) {
         setJenisBerkasList(jenisRes.data);
@@ -64,6 +67,7 @@ export default function SiswaBerkasPage() {
         setError(berkasResponse.error || "Gagal memuat berkas");
       }
       setBerkasList(berkasResponse.data || []);
+      setPpdbDibuka(jadwalRes.success && jadwalRes.data?.dibuka === true);
       setLoading(false);
     };
     load();
@@ -77,6 +81,10 @@ export default function SiswaBerkasPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    if (!ppdbDibuka) {
+      setError("Periode PPDB telah berakhir. Upload tidak tersedia.");
+      return;
+    }
     if (!form.jenis_berkas_id || form.jenis_berkas_id < 1) {
       setError("Pilih jenis berkas");
       return;
@@ -119,6 +127,10 @@ export default function SiswaBerkasPage() {
 
   const handleDelete = async (berkasSiswaId: number) => {
     setError(null);
+    if (!ppdbDibuka) {
+      setError("Periode PPDB telah berakhir. Hapus berkas tidak tersedia.");
+      return;
+    }
     const response = await deleteBerkas(berkasSiswaId);
     if (!response.success) {
       setError(response.error || "Gagal menghapus berkas");
@@ -134,6 +146,10 @@ export default function SiswaBerkasPage() {
     newFile?: File
   ) => {
     setError(null);
+    if (!ppdbDibuka) {
+      setError("Periode PPDB telah berakhir. Perubahan berkas tidak tersedia.");
+      throw new Error("PPDB berakhir");
+    }
     let finalPayload = payload;
     if (newFile) {
       const uploadRes = await uploadBerkasFile(newFile);
@@ -172,6 +188,7 @@ export default function SiswaBerkasPage() {
       sidebarTitle="Siswa Menu"
       items={[
         { label: "Ringkasan", href: "/dashboard/siswa" },
+        { label: "Panduan PPDB", href: "/dashboard/siswa/panduan" },
         { label: "Status PPDB", href: "/dashboard/siswa/status" },
         { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
         { label: "Profil", href: "/dashboard/siswa/profile" },
@@ -184,6 +201,18 @@ export default function SiswaBerkasPage() {
         </div>
       ) : null}
 
+      {!ppdbDibuka && (
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800">
+          <svg className="h-5 w-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <div>
+            <p className="font-semibold">Periode pendaftaran PPDB telah berakhir</p>
+            <p className="text-sm mt-0.5 opacity-90">
+              Anda tidak dapat mengunggah, mengubah, atau menghapus berkas. Hanya melihat daftar berkas yang sudah diunggah.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-8">
         <SiswaUploadSection
           form={form}
@@ -193,12 +222,14 @@ export default function SiswaBerkasPage() {
           onChangeFileName={setFileName}
           onFileSelect={setSelectedFile}
           onSubmit={handleSubmit}
+          disabled={!ppdbDibuka}
         />
 
         <SiswaBerkasSection
           berkasList={berkasList}
-          onDelete={handleDelete}
-          onUpdate={handleUpdate}
+          onDelete={ppdbDibuka ? handleDelete : undefined}
+          onUpdate={ppdbDibuka ? handleUpdate : undefined}
+          uploadDisabled={!ppdbDibuka}
         />
       </div>
     </DashboardShell>

@@ -29,36 +29,30 @@ const testimonials = [
 
 export default function TestimonialSection() {
   return (
-    <section className="mb-20">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <section>
+      <div className="max-w-6xl mx-auto w-full">
 
-        {/* JUDUL SECTION */}
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-24 tracking-wide uppercase">
-          TESTIMONI ORANG TUA
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8 md:mb-10 tracking-wide uppercase">
+          Testimoni Orang Tua
         </h2>
 
-        {/* GRID KARTU TESTIMONI */}
-        <div className="grid md:grid-cols-3 gap-12">
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((item) => (
             <div 
               key={item.id} 
-              className="bg-white p-8 rounded-2xl flex flex-col h-full border border-gray-100 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#01793B]/30"
+              className="bg-white p-5 md:p-6 rounded-xl flex flex-col h-full border border-gray-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#01793B]/20"
             >
 
-              {/* Heading Kutipan (Bold) */}
-              <h3 className="text-lg font-bold text-center text-gray-900 mb-4 leading-tight">
+              <h3 className="text-base font-bold text-center text-gray-900 mb-3 leading-tight">
                 {item.heading}
               </h3>
 
-              {/* Isi Kutipan (Italic & Gray) */}
-              <p className="text-sm text-gray-600 text-center italic mb-8 flex-grow leading-relaxed">
+              <p className="text-sm text-gray-600 text-center italic mb-6 flex-grow leading-relaxed">
                 {item.body}
               </p>
 
-              {/* Bagian Profil (Foto & Nama) */}
-              <div className="flex items-center gap-4 mt-auto pt-4 border-t border-gray-100">
-                {/* Pembungkus Gambar Lingkaran */}
-                <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+              <div className="flex items-center gap-3 mt-auto pt-3 border-t border-gray-100">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
                   <Image
                     src={item.imageSrc}
                     alt={`Foto ${item.name}`}
@@ -67,8 +61,7 @@ export default function TestimonialSection() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
-                {/* Teks Nama & Role */}
-                <div className="text-left">
+                <div className="text-left min-w-0">
                   <h4 className="font-bold text-gray-900 text-sm">
                     {item.name}
                   </h4>

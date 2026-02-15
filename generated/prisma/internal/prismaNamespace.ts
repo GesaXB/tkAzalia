@@ -385,10 +385,12 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  Kelas: 'Kelas',
   Siswa: 'Siswa',
   BerkasSiswa: 'BerkasSiswa',
   JenisBerkas: 'JenisBerkas',
-  InformasiSekolah: 'InformasiSekolah'
+  InformasiSekolah: 'InformasiSekolah',
+  PpdbSetting: 'PpdbSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siswa" | "berkasSiswa" | "jenisBerkas" | "informasiSekolah"
+    modelProps: "user" | "kelas" | "siswa" | "berkasSiswa" | "jenisBerkas" | "informasiSekolah" | "ppdbSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -479,6 +481,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    Kelas: {
+      payload: Prisma.$KelasPayload<ExtArgs>
+      fields: Prisma.KelasFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KelasFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KelasFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        findFirst: {
+          args: Prisma.KelasFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KelasFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        findMany: {
+          args: Prisma.KelasFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>[]
+        }
+        create: {
+          args: Prisma.KelasCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        createMany: {
+          args: Prisma.KelasCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KelasCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>[]
+        }
+        delete: {
+          args: Prisma.KelasDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        update: {
+          args: Prisma.KelasUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        deleteMany: {
+          args: Prisma.KelasDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KelasUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KelasUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>[]
+        }
+        upsert: {
+          args: Prisma.KelasUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KelasPayload>
+        }
+        aggregate: {
+          args: Prisma.KelasAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKelas>
+        }
+        groupBy: {
+          args: Prisma.KelasGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KelasGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KelasCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KelasCountAggregateOutputType> | number
         }
       }
     }
@@ -778,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PpdbSetting: {
+      payload: Prisma.$PpdbSettingPayload<ExtArgs>
+      fields: Prisma.PpdbSettingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PpdbSettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PpdbSettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        findFirst: {
+          args: Prisma.PpdbSettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PpdbSettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        findMany: {
+          args: Prisma.PpdbSettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>[]
+        }
+        create: {
+          args: Prisma.PpdbSettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        createMany: {
+          args: Prisma.PpdbSettingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PpdbSettingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>[]
+        }
+        delete: {
+          args: Prisma.PpdbSettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        update: {
+          args: Prisma.PpdbSettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        deleteMany: {
+          args: Prisma.PpdbSettingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PpdbSettingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PpdbSettingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>[]
+        }
+        upsert: {
+          args: Prisma.PpdbSettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PpdbSettingPayload>
+        }
+        aggregate: {
+          args: Prisma.PpdbSettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePpdbSetting>
+        }
+        groupBy: {
+          args: Prisma.PpdbSettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PpdbSettingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PpdbSettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PpdbSettingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -832,9 +982,19 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const KelasScalarFieldEnum = {
+  kelas_id: 'kelas_id',
+  nama: 'nama',
+  urutan: 'urutan'
+} as const
+
+export type KelasScalarFieldEnum = (typeof KelasScalarFieldEnum)[keyof typeof KelasScalarFieldEnum]
+
+
 export const SiswaScalarFieldEnum = {
   siswa_id: 'siswa_id',
   user_id: 'user_id',
+  kelas_id: 'kelas_id',
   status_ppdb: 'status_ppdb',
   catatan_ppdb: 'catatan_ppdb'
 } as const
@@ -872,6 +1032,8 @@ export const InformasiSekolahScalarFieldEnum = {
   judul: 'judul',
   slug: 'slug',
   konten: 'konten',
+  ringkasan: 'ringkasan',
+  gambar: 'gambar',
   tipe: 'tipe',
   status: 'status',
   urutan: 'urutan',
@@ -881,6 +1043,17 @@ export const InformasiSekolahScalarFieldEnum = {
 } as const
 
 export type InformasiSekolahScalarFieldEnum = (typeof InformasiSekolahScalarFieldEnum)[keyof typeof InformasiSekolahScalarFieldEnum]
+
+
+export const PpdbSettingScalarFieldEnum = {
+  id: 'id',
+  tanggal_mulai: 'tanggal_mulai',
+  tanggal_selesai: 'tanggal_selesai',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type PpdbSettingScalarFieldEnum = (typeof PpdbSettingScalarFieldEnum)[keyof typeof PpdbSettingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1134,10 +1307,12 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  kelas?: Prisma.KelasOmit
   siswa?: Prisma.SiswaOmit
   berkasSiswa?: Prisma.BerkasSiswaOmit
   jenisBerkas?: Prisma.JenisBerkasOmit
   informasiSekolah?: Prisma.InformasiSekolahOmit
+  ppdbSetting?: Prisma.PpdbSettingOmit
 }
 
 /* Types for Logging */

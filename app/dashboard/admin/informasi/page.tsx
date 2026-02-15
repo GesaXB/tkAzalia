@@ -23,7 +23,9 @@ export default function AdminInformasiPage() {
     judul: "",
     slug: "",
     konten: "",
-    tipe: "profil",
+    ringkasan: "",
+    gambar: "",
+    tipe: "berita",
     status: "draft",
     urutan: 1,
   });
@@ -32,10 +34,13 @@ export default function AdminInformasiPage() {
     judul: "",
     slug: "",
     konten: "",
-    tipe: "profil",
+    ringkasan: "",
+    gambar: "",
+    tipe: "berita",
     status: "draft",
     urutan: 1,
   });
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -72,6 +77,8 @@ export default function AdminInformasiPage() {
       judul: infoForm.judul,
       slug: infoForm.slug,
       konten: infoForm.konten,
+      ringkasan: infoForm.ringkasan || null,
+      gambar: infoForm.gambar || null,
       tipe: infoForm.tipe,
       status: infoForm.status,
       urutan: Number(infoForm.urutan),
@@ -88,7 +95,9 @@ export default function AdminInformasiPage() {
       judul: "",
       slug: "",
       konten: "",
-      tipe: "profil",
+      ringkasan: "",
+      gambar: "",
+      tipe: "berita",
       status: "draft",
       urutan: 1,
     });
@@ -106,6 +115,8 @@ export default function AdminInformasiPage() {
       judul: infoUpdate.judul,
       slug: infoUpdate.slug,
       konten: infoUpdate.konten,
+      ringkasan: infoUpdate.ringkasan || null,
+      gambar: infoUpdate.gambar || null,
       tipe: infoUpdate.tipe,
       status: infoUpdate.status,
       urutan: Number(infoUpdate.urutan),
@@ -123,10 +134,13 @@ export default function AdminInformasiPage() {
       judul: "",
       slug: "",
       konten: "",
-      tipe: "profil",
+      ringkasan: "",
+      gambar: "",
+      tipe: "berita",
       status: "draft",
       urutan: 1,
     });
+    setEditingId(null);
   };
 
   const handleSelectInfo = (info: InformasiSekolahItem) => {
@@ -135,11 +149,18 @@ export default function AdminInformasiPage() {
       judul: info.judul,
       slug: info.slug,
       konten: info.konten,
+      ringkasan: info.ringkasan || "",
+      gambar: info.gambar || "",
       tipe: info.tipe,
       status: info.status,
       urutan: info.urutan,
     });
+    setEditingId(info.info_id);
     setError(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingId(null);
   };
 
   const handleDeleteInfo = async (info_id: number) => {
@@ -160,10 +181,13 @@ export default function AdminInformasiPage() {
         judul: "",
         slug: "",
         konten: "",
-        tipe: "profil",
+        ringkasan: "",
+        gambar: "",
+        tipe: "berita",
         status: "draft",
         urutan: 1,
       });
+      setEditingId(null);
     }
   };
 
@@ -177,13 +201,15 @@ export default function AdminInformasiPage() {
 
   return (
     <DashboardShell
-      title="Informasi Sekolah"
-      subtitle="Kelola konten informasi untuk website"
+      title="Blog"
+      subtitle="Kelola artikel blog untuk website"
       sidebarTitle="Admin Menu"
       items={[
         { label: "Ringkasan", href: "/dashboard/admin" },
+        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
+        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
         { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Informasi", href: "/dashboard/admin/informasi" },
+        { label: "Blog", href: "/dashboard/admin/informasi" },
         { label: "Profil", href: "/dashboard/admin/profile" },
       ]}
       onLogout={handleLogout}
@@ -204,6 +230,8 @@ export default function AdminInformasiPage() {
         onUpdate={handleUpdateInfo}
         onSelectInfo={handleSelectInfo}
         onDeleteInfo={handleDeleteInfo}
+        editingId={editingId}
+        onCloseEditModal={handleCloseEditModal}
       />
     </DashboardShell>
   );

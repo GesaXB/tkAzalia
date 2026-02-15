@@ -26,10 +26,14 @@ function normalizeInput(raw: Record<string, unknown>): InformasiSekolahInput | n
   if (!Number.isInteger(urutan) || urutan < 0) {
     return null;
   }
+  const ringkasan = raw.ringkasan != null ? String(raw.ringkasan) : null;
+  const gambar = raw.gambar != null ? String(raw.gambar) : null;
   return {
     judul: raw.judul,
     slug: raw.slug,
     konten: raw.konten,
+    ringkasan: ringkasan || null,
+    gambar: gambar || null,
     tipe: raw.tipe as InformasiSekolahInput['tipe'],
     status: raw.status as InformasiSekolahInput['status'],
     urutan,

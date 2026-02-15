@@ -52,10 +52,12 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Kelas: 'Kelas',
   Siswa: 'Siswa',
   BerkasSiswa: 'BerkasSiswa',
   JenisBerkas: 'JenisBerkas',
-  InformasiSekolah: 'InformasiSekolah'
+  InformasiSekolah: 'InformasiSekolah',
+  PpdbSetting: 'PpdbSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -89,9 +91,19 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const KelasScalarFieldEnum = {
+  kelas_id: 'kelas_id',
+  nama: 'nama',
+  urutan: 'urutan'
+} as const
+
+export type KelasScalarFieldEnum = (typeof KelasScalarFieldEnum)[keyof typeof KelasScalarFieldEnum]
+
+
 export const SiswaScalarFieldEnum = {
   siswa_id: 'siswa_id',
   user_id: 'user_id',
+  kelas_id: 'kelas_id',
   status_ppdb: 'status_ppdb',
   catatan_ppdb: 'catatan_ppdb'
 } as const
@@ -129,6 +141,8 @@ export const InformasiSekolahScalarFieldEnum = {
   judul: 'judul',
   slug: 'slug',
   konten: 'konten',
+  ringkasan: 'ringkasan',
+  gambar: 'gambar',
   tipe: 'tipe',
   status: 'status',
   urutan: 'urutan',
@@ -138,6 +152,17 @@ export const InformasiSekolahScalarFieldEnum = {
 } as const
 
 export type InformasiSekolahScalarFieldEnum = (typeof InformasiSekolahScalarFieldEnum)[keyof typeof InformasiSekolahScalarFieldEnum]
+
+
+export const PpdbSettingScalarFieldEnum = {
+  id: 'id',
+  tanggal_mulai: 'tanggal_mulai',
+  tanggal_selesai: 'tanggal_selesai',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type PpdbSettingScalarFieldEnum = (typeof PpdbSettingScalarFieldEnum)[keyof typeof PpdbSettingScalarFieldEnum]
 
 
 export const SortOrder = {

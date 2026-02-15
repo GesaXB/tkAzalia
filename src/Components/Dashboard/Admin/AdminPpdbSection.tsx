@@ -1,32 +1,37 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { AdminPpdbSiswa } from "@/lib/client/admin";
 import SectionCard from "../SectionCard";
-
-interface StatusDraft {
-  status_ppdb: "menunggu" | "lulus" | "tidak_lulus";
-  catatan_ppdb: string;
-}
+import { Search, FileCheck, ChevronRight, CheckCircle, XCircle, Clock } from "lucide-react";
 
 interface AdminPpdbSectionProps {
   ppdbList: AdminPpdbSiswa[];
-  drafts: Record<number, StatusDraft>;
   statusOptions: string[];
-  onDraftChange: (siswaId: number, field: keyof StatusDraft, value: string) => void;
-  onUpdateStatus: (siswaId: number) => void;
+}
+
+function statusLabel(s: string) {
+  const map: Record<string, string> = {
+    menunggu: "Menunggu",
+    lulus: "Lulus",
+    tidak_lulus: "Tidak Lulus",
+  };
+  return map[s] ?? s;
+}
+
+function StatusIcon({ status }: { status: string }) {
+  if (status === "lulus") return <CheckCircle size={18} className="text-emerald-600 shrink-0" />;
+  if (status === "tidak_lulus") return <XCircle size={18} className="text-red-600 shrink-0" />;
+  return <Clock size={18} className="text-amber-500 shrink-0" />;
 }
 
 export default function AdminPpdbSection({
   ppdbList,
-  drafts,
   statusOptions,
-  onDraftChange,
-  onUpdateStatus,
 }: AdminPpdbSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("");
-  const [detailSiswa, setDetailSiswa] = useState<AdminPpdbSiswa | null>(null);
 
   const filteredList = useMemo(() => {
     let list = ppdbList;
@@ -46,143 +51,82 @@ export default function AdminPpdbSection({
   }, [ppdbList, searchQuery, filterStatus]);
 
   return (
-    <SectionCard title="Daftar PPDB" description="Konfirmasi status PPDB calon siswa.">
+    <SectionCard
+      title="Penerimaan PPDB"
+      description="Lihat berkas calon siswa dan beri keputusan lulus / tidak lulus. Klik peserta untuk melihat file dan memutuskan."
+    >
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari nama, email, no. telepon..."
-            className="flex-1 min-w-0 px-3 py-2 rounded-lg border border-gray-200 text-sm"
-          />
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari nama, email, no. telepon..."
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B]"
+            />
+          </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white w-full sm:w-auto"
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white w-full sm:w-auto focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B]"
           >
             <option value="">Semua status</option>
             {statusOptions.map((s) => (
               <option key={s} value={s}>
-                {s}
+                {statusLabel(s)}
               </option>
             ))}
           </select>
         </div>
 
         {filteredList.length === 0 ? (
-          <p className="text-sm text-gray-500">
-            {ppdbList.length === 0 ? "Belum ada data PPDB." : "Tidak ada peserta yang cocok dengan filter."}
-          </p>
+          <div className="py-12 text-center rounded-xl border border-dashed border-gray-200 bg-gray-50">
+            <p className="text-sm text-gray-500">
+              {ppdbList.length === 0
+                ? "Belum ada data PPDB."
+                : "Tidak ada peserta yang cocok dengan filter."}
+            </p>
+          </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {filteredList.map((item) => {
-              const draft = drafts[item.siswa_id];
-              const currentStatus = draft?.status_ppdb || item.status_ppdb || "menunggu";
-              const currentCatatan = draft?.catatan_ppdb ?? item.catatan_ppdb ?? "";
+              const currentStatus = item.status_ppdb || "menunggu";
               return (
-                <div key={item.siswa_id} className="border border-gray-100 rounded-xl p-4 space-y-3">
-                  <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <p className="font-semibold text-gray-900">{item.user.nama_lengkap}</p>
-                      <p className="text-xs text-gray-500">{item.user.email}</p>
+                <div
+                  key={item.siswa_id}
+                  className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 rounded-xl border border-gray-100 bg-white hover:border-[#01793B]/20 hover:shadow-sm transition-all"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <StatusIcon status={currentStatus} />
+                      <p className="font-semibold text-gray-900 truncate">{item.user.nama_lengkap}</p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs text-gray-500">Berkas: {item.berkas.length}</span>
-                      <button
-                        type="button"
-                        onClick={() => setDetailSiswa(item)}
-                        className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50"
-                      >
-                        Lihat detail
-                      </button>
-                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 truncate">{item.user.email}</p>
+                    {item.kelas && (
+                      <p className="text-xs text-[#01793B] mt-0.5">{item.kelas.nama}</p>
+                    )}
                   </div>
-                  <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                    <select
-                      value={currentStatus}
-                      onChange={(event) => onDraftChange(item.siswa_id, "status_ppdb", event.target.value)}
-                      className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    >
-                      {statusOptions.map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      value={currentCatatan}
-                      onChange={(event) => onDraftChange(item.siswa_id, "catatan_ppdb", event.target.value)}
-                      placeholder="Catatan keputusan"
-                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    />
-                    <button
-                      onClick={() => onUpdateStatus(item.siswa_id)}
-                      className="px-4 py-2 rounded-lg bg-[#01793B] text-white text-sm font-medium hover:bg-emerald-700"
-                    >
-                      Simpan
-                    </button>
+                  <div className="flex items-center gap-2 text-xs text-gray-500 shrink-0">
+                    <span className="flex items-center gap-1">
+                      <FileCheck size={14} />
+                      {item.berkas.length} berkas
+                    </span>
                   </div>
+                  <Link
+                    href={`/dashboard/admin/ppdb/${item.siswa_id}`}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors shrink-0"
+                  >
+                    Lihat & putuskan
+                    <ChevronRight size={16} />
+                  </Link>
                 </div>
               );
             })}
           </div>
         )}
       </div>
-
-      {detailSiswa && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-          onClick={() => setDetailSiswa(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Detail peserta"
-        >
-          <div
-            className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="text-lg font-semibold text-gray-900">Detail Peserta</h3>
-                <button
-                  type="button"
-                  onClick={() => setDetailSiswa(null)}
-                  className="p-1 rounded-lg text-gray-500 hover:bg-gray-100"
-                  aria-label="Tutup"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="grid gap-2 text-sm">
-                <p><span className="text-gray-500">Nama:</span> {detailSiswa.user.nama_lengkap}</p>
-                <p><span className="text-gray-500">Email:</span> {detailSiswa.user.email}</p>
-                <p><span className="text-gray-500">No. Telepon:</span> {detailSiswa.user.no_telp}</p>
-                <p><span className="text-gray-500">Status PPDB:</span> {detailSiswa.status_ppdb ?? "menunggu"}</p>
-                {detailSiswa.catatan_ppdb && (
-                  <p><span className="text-gray-500">Catatan:</span> {detailSiswa.catatan_ppdb}</p>
-                )}
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Berkas ({detailSiswa.berkas.length})</h4>
-                {detailSiswa.berkas.length === 0 ? (
-                  <p className="text-sm text-gray-500">Belum ada berkas.</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {detailSiswa.berkas.map((b) => (
-                      <li key={b.berkas_siswa_id} className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-800">{b.nama_file}</span>
-                        <span className="text-xs text-gray-500">{b.jenisBerkas?.nama_berkas ?? "-"} · {b.status_validasi}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </SectionCard>
   );
 }

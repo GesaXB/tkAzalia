@@ -126,11 +126,8 @@ export async function updateBerkasSiswa(
     data,
     include: { jenisBerkas: true },
   });
-}
-
-export async function deleteBerkasSiswa(berkasSiswaId: number) {
+}export async function deleteBerkasSiswa(berkasSiswaId: number) {
   await prisma.berkasSiswa.delete({
     where: { berkas_siswa_id: berkasSiswaId },
   });
 }
-

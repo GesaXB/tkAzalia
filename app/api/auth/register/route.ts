@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { AuthService } from '@/lib/auth';
+import { checkPpdbOpen } from '@/lib/ppdbSetting';
 import { ApiResponse, RegisterData } from '@/types';
 
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
+    const ppdb = await checkPpdbOpen();
+    if (!ppdb.open) {
+      return NextResponse.json(
+        { success: false, error: ppdb.message || 'Pendaftaran PPDB tidak dibuka' },
+        { status: 403 }
+      );
+    }
+
     const body = (await req.json()) as RegisterData;
 
     if (

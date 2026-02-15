@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model Kelas
+ * 
+ */
+export type Kelas = Prisma.KelasModel
+/**
  * Model Siswa
  * 
  */
@@ -42,3 +47,8 @@ export type JenisBerkas = Prisma.JenisBerkasModel
  * 
  */
 export type InformasiSekolah = Prisma.InformasiSekolahModel
+/**
+ * Model PpdbSetting
+ * 
+ */
+export type PpdbSetting = Prisma.PpdbSettingModel

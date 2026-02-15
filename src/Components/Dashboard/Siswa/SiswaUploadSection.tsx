@@ -2,6 +2,7 @@
 
 import SectionCard from "../SectionCard";
 import { CreateBerkasPayload, JenisBerkasItem } from "@/lib/client/ppdb";
+import { AlertCircle } from "lucide-react";
 
 interface SiswaUploadSectionProps {
   form: CreateBerkasPayload;
@@ -11,6 +12,7 @@ interface SiswaUploadSectionProps {
   onChangeFileName: (next: string) => void;
   onFileSelect?: (file: File | null) => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  disabled?: boolean;
 }
 
 export default function SiswaUploadSection({
@@ -21,7 +23,27 @@ export default function SiswaUploadSection({
   onChangeFileName,
   onFileSelect,
   onSubmit,
+  disabled = false,
 }: SiswaUploadSectionProps) {
+  if (disabled) {
+    return (
+      <SectionCard
+        title="Upload Berkas"
+        description="Pilih jenis berkas dan unggah file. Data akan terisi otomatis dari file."
+      >
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-amber-800">
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">Periode pendaftaran PPDB telah berakhir</p>
+            <p className="text-sm mt-1 opacity-90">
+              Upload berkas tidak tersedia. Anda hanya dapat melihat daftar berkas yang sudah diunggah di bawah.
+            </p>
+          </div>
+        </div>
+      </SectionCard>
+    );
+  }
+
   return (
     <SectionCard
       title="Upload Berkas"

@@ -29,16 +29,19 @@ export type AggregateSiswa = {
 export type SiswaAvgAggregateOutputType = {
   siswa_id: number | null
   user_id: number | null
+  kelas_id: number | null
 }
 
 export type SiswaSumAggregateOutputType = {
   siswa_id: number | null
   user_id: number | null
+  kelas_id: number | null
 }
 
 export type SiswaMinAggregateOutputType = {
   siswa_id: number | null
   user_id: number | null
+  kelas_id: number | null
   status_ppdb: $Enums.StatusPpdb | null
   catatan_ppdb: string | null
 }
@@ -46,6 +49,7 @@ export type SiswaMinAggregateOutputType = {
 export type SiswaMaxAggregateOutputType = {
   siswa_id: number | null
   user_id: number | null
+  kelas_id: number | null
   status_ppdb: $Enums.StatusPpdb | null
   catatan_ppdb: string | null
 }
@@ -53,6 +57,7 @@ export type SiswaMaxAggregateOutputType = {
 export type SiswaCountAggregateOutputType = {
   siswa_id: number
   user_id: number
+  kelas_id: number
   status_ppdb: number
   catatan_ppdb: number
   _all: number
@@ -62,16 +67,19 @@ export type SiswaCountAggregateOutputType = {
 export type SiswaAvgAggregateInputType = {
   siswa_id?: true
   user_id?: true
+  kelas_id?: true
 }
 
 export type SiswaSumAggregateInputType = {
   siswa_id?: true
   user_id?: true
+  kelas_id?: true
 }
 
 export type SiswaMinAggregateInputType = {
   siswa_id?: true
   user_id?: true
+  kelas_id?: true
   status_ppdb?: true
   catatan_ppdb?: true
 }
@@ -79,6 +87,7 @@ export type SiswaMinAggregateInputType = {
 export type SiswaMaxAggregateInputType = {
   siswa_id?: true
   user_id?: true
+  kelas_id?: true
   status_ppdb?: true
   catatan_ppdb?: true
 }
@@ -86,6 +95,7 @@ export type SiswaMaxAggregateInputType = {
 export type SiswaCountAggregateInputType = {
   siswa_id?: true
   user_id?: true
+  kelas_id?: true
   status_ppdb?: true
   catatan_ppdb?: true
   _all?: true
@@ -180,6 +190,7 @@ export type SiswaGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type SiswaGroupByOutputType = {
   siswa_id: number
   user_id: number
+  kelas_id: number | null
   status_ppdb: $Enums.StatusPpdb
   catatan_ppdb: string | null
   _count: SiswaCountAggregateOutputType | null
@@ -210,19 +221,23 @@ export type SiswaWhereInput = {
   NOT?: Prisma.SiswaWhereInput | Prisma.SiswaWhereInput[]
   siswa_id?: Prisma.IntFilter<"Siswa"> | number
   user_id?: Prisma.IntFilter<"Siswa"> | number
+  kelas_id?: Prisma.IntNullableFilter<"Siswa"> | number | null
   status_ppdb?: Prisma.EnumStatusPpdbFilter<"Siswa"> | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.StringNullableFilter<"Siswa"> | string | null
   berkas?: Prisma.BerkasSiswaListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  kelas?: Prisma.XOR<Prisma.KelasNullableScalarRelationFilter, Prisma.KelasWhereInput> | null
 }
 
 export type SiswaOrderByWithRelationInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status_ppdb?: Prisma.SortOrder
   catatan_ppdb?: Prisma.SortOrderInput | Prisma.SortOrder
   berkas?: Prisma.BerkasSiswaOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
+  kelas?: Prisma.KelasOrderByWithRelationInput
 }
 
 export type SiswaWhereUniqueInput = Prisma.AtLeast<{
@@ -231,15 +246,18 @@ export type SiswaWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SiswaWhereInput | Prisma.SiswaWhereInput[]
   OR?: Prisma.SiswaWhereInput[]
   NOT?: Prisma.SiswaWhereInput | Prisma.SiswaWhereInput[]
+  kelas_id?: Prisma.IntNullableFilter<"Siswa"> | number | null
   status_ppdb?: Prisma.EnumStatusPpdbFilter<"Siswa"> | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.StringNullableFilter<"Siswa"> | string | null
   berkas?: Prisma.BerkasSiswaListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  kelas?: Prisma.XOR<Prisma.KelasNullableScalarRelationFilter, Prisma.KelasWhereInput> | null
 }, "siswa_id" | "user_id">
 
 export type SiswaOrderByWithAggregationInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrderInput | Prisma.SortOrder
   status_ppdb?: Prisma.SortOrder
   catatan_ppdb?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SiswaCountOrderByAggregateInput
@@ -255,6 +273,7 @@ export type SiswaScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SiswaScalarWhereWithAggregatesInput | Prisma.SiswaScalarWhereWithAggregatesInput[]
   siswa_id?: Prisma.IntWithAggregatesFilter<"Siswa"> | number
   user_id?: Prisma.IntWithAggregatesFilter<"Siswa"> | number
+  kelas_id?: Prisma.IntNullableWithAggregatesFilter<"Siswa"> | number | null
   status_ppdb?: Prisma.EnumStatusPpdbWithAggregatesFilter<"Siswa"> | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.StringNullableWithAggregatesFilter<"Siswa"> | string | null
 }
@@ -264,11 +283,13 @@ export type SiswaCreateInput = {
   catatan_ppdb?: string | null
   berkas?: Prisma.BerkasSiswaCreateNestedManyWithoutSiswaInput
   user: Prisma.UserCreateNestedOneWithoutSiswaInput
+  kelas?: Prisma.KelasCreateNestedOneWithoutSiswaInput
 }
 
 export type SiswaUncheckedCreateInput = {
   siswa_id?: number
   user_id: number
+  kelas_id?: number | null
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
   berkas?: Prisma.BerkasSiswaUncheckedCreateNestedManyWithoutSiswaInput
@@ -279,11 +300,13 @@ export type SiswaUpdateInput = {
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   berkas?: Prisma.BerkasSiswaUpdateManyWithoutSiswaNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSiswaNestedInput
+  kelas?: Prisma.KelasUpdateOneWithoutSiswaNestedInput
 }
 
 export type SiswaUncheckedUpdateInput = {
   siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  kelas_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   berkas?: Prisma.BerkasSiswaUncheckedUpdateManyWithoutSiswaNestedInput
@@ -292,6 +315,7 @@ export type SiswaUncheckedUpdateInput = {
 export type SiswaCreateManyInput = {
   siswa_id?: number
   user_id: number
+  kelas_id?: number | null
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
 }
@@ -304,6 +328,7 @@ export type SiswaUpdateManyMutationInput = {
 export type SiswaUncheckedUpdateManyInput = {
   siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  kelas_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -313,9 +338,20 @@ export type SiswaNullableScalarRelationFilter = {
   isNot?: Prisma.SiswaWhereInput | null
 }
 
+export type SiswaListRelationFilter = {
+  every?: Prisma.SiswaWhereInput
+  some?: Prisma.SiswaWhereInput
+  none?: Prisma.SiswaWhereInput
+}
+
+export type SiswaOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type SiswaCountOrderByAggregateInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrder
   status_ppdb?: Prisma.SortOrder
   catatan_ppdb?: Prisma.SortOrder
 }
@@ -323,11 +359,13 @@ export type SiswaCountOrderByAggregateInput = {
 export type SiswaAvgOrderByAggregateInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrder
 }
 
 export type SiswaMaxOrderByAggregateInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrder
   status_ppdb?: Prisma.SortOrder
   catatan_ppdb?: Prisma.SortOrder
 }
@@ -335,6 +373,7 @@ export type SiswaMaxOrderByAggregateInput = {
 export type SiswaMinOrderByAggregateInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrder
   status_ppdb?: Prisma.SortOrder
   catatan_ppdb?: Prisma.SortOrder
 }
@@ -342,6 +381,7 @@ export type SiswaMinOrderByAggregateInput = {
 export type SiswaSumOrderByAggregateInput = {
   siswa_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  kelas_id?: Prisma.SortOrder
 }
 
 export type SiswaScalarRelationFilter = {
@@ -381,12 +421,62 @@ export type SiswaUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SiswaUpdateToOneWithWhereWithoutUserInput, Prisma.SiswaUpdateWithoutUserInput>, Prisma.SiswaUncheckedUpdateWithoutUserInput>
 }
 
+export type SiswaCreateNestedManyWithoutKelasInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput> | Prisma.SiswaCreateWithoutKelasInput[] | Prisma.SiswaUncheckedCreateWithoutKelasInput[]
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutKelasInput | Prisma.SiswaCreateOrConnectWithoutKelasInput[]
+  createMany?: Prisma.SiswaCreateManyKelasInputEnvelope
+  connect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+}
+
+export type SiswaUncheckedCreateNestedManyWithoutKelasInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput> | Prisma.SiswaCreateWithoutKelasInput[] | Prisma.SiswaUncheckedCreateWithoutKelasInput[]
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutKelasInput | Prisma.SiswaCreateOrConnectWithoutKelasInput[]
+  createMany?: Prisma.SiswaCreateManyKelasInputEnvelope
+  connect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+}
+
+export type SiswaUpdateManyWithoutKelasNestedInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput> | Prisma.SiswaCreateWithoutKelasInput[] | Prisma.SiswaUncheckedCreateWithoutKelasInput[]
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutKelasInput | Prisma.SiswaCreateOrConnectWithoutKelasInput[]
+  upsert?: Prisma.SiswaUpsertWithWhereUniqueWithoutKelasInput | Prisma.SiswaUpsertWithWhereUniqueWithoutKelasInput[]
+  createMany?: Prisma.SiswaCreateManyKelasInputEnvelope
+  set?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  disconnect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  delete?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  connect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  update?: Prisma.SiswaUpdateWithWhereUniqueWithoutKelasInput | Prisma.SiswaUpdateWithWhereUniqueWithoutKelasInput[]
+  updateMany?: Prisma.SiswaUpdateManyWithWhereWithoutKelasInput | Prisma.SiswaUpdateManyWithWhereWithoutKelasInput[]
+  deleteMany?: Prisma.SiswaScalarWhereInput | Prisma.SiswaScalarWhereInput[]
+}
+
+export type SiswaUncheckedUpdateManyWithoutKelasNestedInput = {
+  create?: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput> | Prisma.SiswaCreateWithoutKelasInput[] | Prisma.SiswaUncheckedCreateWithoutKelasInput[]
+  connectOrCreate?: Prisma.SiswaCreateOrConnectWithoutKelasInput | Prisma.SiswaCreateOrConnectWithoutKelasInput[]
+  upsert?: Prisma.SiswaUpsertWithWhereUniqueWithoutKelasInput | Prisma.SiswaUpsertWithWhereUniqueWithoutKelasInput[]
+  createMany?: Prisma.SiswaCreateManyKelasInputEnvelope
+  set?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  disconnect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  delete?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  connect?: Prisma.SiswaWhereUniqueInput | Prisma.SiswaWhereUniqueInput[]
+  update?: Prisma.SiswaUpdateWithWhereUniqueWithoutKelasInput | Prisma.SiswaUpdateWithWhereUniqueWithoutKelasInput[]
+  updateMany?: Prisma.SiswaUpdateManyWithWhereWithoutKelasInput | Prisma.SiswaUpdateManyWithWhereWithoutKelasInput[]
+  deleteMany?: Prisma.SiswaScalarWhereInput | Prisma.SiswaScalarWhereInput[]
+}
+
 export type EnumStatusPpdbFieldUpdateOperationsInput = {
   set?: $Enums.StatusPpdb
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type SiswaCreateNestedOneWithoutBerkasInput = {
@@ -407,10 +497,12 @@ export type SiswaCreateWithoutUserInput = {
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
   berkas?: Prisma.BerkasSiswaCreateNestedManyWithoutSiswaInput
+  kelas?: Prisma.KelasCreateNestedOneWithoutSiswaInput
 }
 
 export type SiswaUncheckedCreateWithoutUserInput = {
   siswa_id?: number
+  kelas_id?: number | null
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
   berkas?: Prisma.BerkasSiswaUncheckedCreateNestedManyWithoutSiswaInput
@@ -436,24 +528,80 @@ export type SiswaUpdateWithoutUserInput = {
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   berkas?: Prisma.BerkasSiswaUpdateManyWithoutSiswaNestedInput
+  kelas?: Prisma.KelasUpdateOneWithoutSiswaNestedInput
 }
 
 export type SiswaUncheckedUpdateWithoutUserInput = {
   siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
+  kelas_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   berkas?: Prisma.BerkasSiswaUncheckedUpdateManyWithoutSiswaNestedInput
+}
+
+export type SiswaCreateWithoutKelasInput = {
+  status_ppdb?: $Enums.StatusPpdb
+  catatan_ppdb?: string | null
+  berkas?: Prisma.BerkasSiswaCreateNestedManyWithoutSiswaInput
+  user: Prisma.UserCreateNestedOneWithoutSiswaInput
+}
+
+export type SiswaUncheckedCreateWithoutKelasInput = {
+  siswa_id?: number
+  user_id: number
+  status_ppdb?: $Enums.StatusPpdb
+  catatan_ppdb?: string | null
+  berkas?: Prisma.BerkasSiswaUncheckedCreateNestedManyWithoutSiswaInput
+}
+
+export type SiswaCreateOrConnectWithoutKelasInput = {
+  where: Prisma.SiswaWhereUniqueInput
+  create: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput>
+}
+
+export type SiswaCreateManyKelasInputEnvelope = {
+  data: Prisma.SiswaCreateManyKelasInput | Prisma.SiswaCreateManyKelasInput[]
+  skipDuplicates?: boolean
+}
+
+export type SiswaUpsertWithWhereUniqueWithoutKelasInput = {
+  where: Prisma.SiswaWhereUniqueInput
+  update: Prisma.XOR<Prisma.SiswaUpdateWithoutKelasInput, Prisma.SiswaUncheckedUpdateWithoutKelasInput>
+  create: Prisma.XOR<Prisma.SiswaCreateWithoutKelasInput, Prisma.SiswaUncheckedCreateWithoutKelasInput>
+}
+
+export type SiswaUpdateWithWhereUniqueWithoutKelasInput = {
+  where: Prisma.SiswaWhereUniqueInput
+  data: Prisma.XOR<Prisma.SiswaUpdateWithoutKelasInput, Prisma.SiswaUncheckedUpdateWithoutKelasInput>
+}
+
+export type SiswaUpdateManyWithWhereWithoutKelasInput = {
+  where: Prisma.SiswaScalarWhereInput
+  data: Prisma.XOR<Prisma.SiswaUpdateManyMutationInput, Prisma.SiswaUncheckedUpdateManyWithoutKelasInput>
+}
+
+export type SiswaScalarWhereInput = {
+  AND?: Prisma.SiswaScalarWhereInput | Prisma.SiswaScalarWhereInput[]
+  OR?: Prisma.SiswaScalarWhereInput[]
+  NOT?: Prisma.SiswaScalarWhereInput | Prisma.SiswaScalarWhereInput[]
+  siswa_id?: Prisma.IntFilter<"Siswa"> | number
+  user_id?: Prisma.IntFilter<"Siswa"> | number
+  kelas_id?: Prisma.IntNullableFilter<"Siswa"> | number | null
+  status_ppdb?: Prisma.EnumStatusPpdbFilter<"Siswa"> | $Enums.StatusPpdb
+  catatan_ppdb?: Prisma.StringNullableFilter<"Siswa"> | string | null
 }
 
 export type SiswaCreateWithoutBerkasInput = {
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
   user: Prisma.UserCreateNestedOneWithoutSiswaInput
+  kelas?: Prisma.KelasCreateNestedOneWithoutSiswaInput
 }
 
 export type SiswaUncheckedCreateWithoutBerkasInput = {
   siswa_id?: number
   user_id: number
+  kelas_id?: number | null
   status_ppdb?: $Enums.StatusPpdb
   catatan_ppdb?: string | null
 }
@@ -478,9 +626,40 @@ export type SiswaUpdateWithoutBerkasInput = {
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
   catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutSiswaNestedInput
+  kelas?: Prisma.KelasUpdateOneWithoutSiswaNestedInput
 }
 
 export type SiswaUncheckedUpdateWithoutBerkasInput = {
+  siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  kelas_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
+  catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type SiswaCreateManyKelasInput = {
+  siswa_id?: number
+  user_id: number
+  status_ppdb?: $Enums.StatusPpdb
+  catatan_ppdb?: string | null
+}
+
+export type SiswaUpdateWithoutKelasInput = {
+  status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
+  catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  berkas?: Prisma.BerkasSiswaUpdateManyWithoutSiswaNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSiswaNestedInput
+}
+
+export type SiswaUncheckedUpdateWithoutKelasInput = {
+  siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
+  catatan_ppdb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  berkas?: Prisma.BerkasSiswaUncheckedUpdateManyWithoutSiswaNestedInput
+}
+
+export type SiswaUncheckedUpdateManyWithoutKelasInput = {
   siswa_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   status_ppdb?: Prisma.EnumStatusPpdbFieldUpdateOperationsInput | $Enums.StatusPpdb
@@ -521,47 +700,57 @@ export type SiswaCountOutputTypeCountBerkasArgs<ExtArgs extends runtime.Types.Ex
 export type SiswaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   siswa_id?: boolean
   user_id?: boolean
+  kelas_id?: boolean
   status_ppdb?: boolean
   catatan_ppdb?: boolean
   berkas?: boolean | Prisma.Siswa$berkasArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
   _count?: boolean | Prisma.SiswaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["siswa"]>
 
 export type SiswaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   siswa_id?: boolean
   user_id?: boolean
+  kelas_id?: boolean
   status_ppdb?: boolean
   catatan_ppdb?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
 }, ExtArgs["result"]["siswa"]>
 
 export type SiswaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   siswa_id?: boolean
   user_id?: boolean
+  kelas_id?: boolean
   status_ppdb?: boolean
   catatan_ppdb?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
 }, ExtArgs["result"]["siswa"]>
 
 export type SiswaSelectScalar = {
   siswa_id?: boolean
   user_id?: boolean
+  kelas_id?: boolean
   status_ppdb?: boolean
   catatan_ppdb?: boolean
 }
 
-export type SiswaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"siswa_id" | "user_id" | "status_ppdb" | "catatan_ppdb", ExtArgs["result"]["siswa"]>
+export type SiswaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"siswa_id" | "user_id" | "kelas_id" | "status_ppdb" | "catatan_ppdb", ExtArgs["result"]["siswa"]>
 export type SiswaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   berkas?: boolean | Prisma.Siswa$berkasArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
   _count?: boolean | Prisma.SiswaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SiswaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
 }
 export type SiswaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  kelas?: boolean | Prisma.Siswa$kelasArgs<ExtArgs>
 }
 
 export type $SiswaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -569,10 +758,12 @@ export type $SiswaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     berkas: Prisma.$BerkasSiswaPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
+    kelas: Prisma.$KelasPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     siswa_id: number
     user_id: number
+    kelas_id: number | null
     status_ppdb: $Enums.StatusPpdb
     catatan_ppdb: string | null
   }, ExtArgs["result"]["siswa"]>
@@ -971,6 +1162,7 @@ export interface Prisma__SiswaClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   berkas<T extends Prisma.Siswa$berkasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$berkasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BerkasSiswaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  kelas<T extends Prisma.Siswa$kelasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Siswa$kelasArgs<ExtArgs>>): Prisma.Prisma__KelasClient<runtime.Types.Result.GetResult<Prisma.$KelasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1002,6 +1194,7 @@ export interface Prisma__SiswaClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface SiswaFieldRefs {
   readonly siswa_id: Prisma.FieldRef<"Siswa", 'Int'>
   readonly user_id: Prisma.FieldRef<"Siswa", 'Int'>
+  readonly kelas_id: Prisma.FieldRef<"Siswa", 'Int'>
   readonly status_ppdb: Prisma.FieldRef<"Siswa", 'StatusPpdb'>
   readonly catatan_ppdb: Prisma.FieldRef<"Siswa", 'String'>
 }
@@ -1421,6 +1614,25 @@ export type Siswa$berkasArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.BerkasSiswaScalarFieldEnum | Prisma.BerkasSiswaScalarFieldEnum[]
+}
+
+/**
+ * Siswa.kelas
+ */
+export type Siswa$kelasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Kelas
+   */
+  select?: Prisma.KelasSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Kelas
+   */
+  omit?: Prisma.KelasOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KelasInclude<ExtArgs> | null
+  where?: Prisma.KelasWhereInput
 }
 
 /**

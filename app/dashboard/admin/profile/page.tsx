@@ -76,8 +76,10 @@ export default function AdminProfilePage() {
       sidebarTitle="Admin Menu"
       items={[
         { label: "Ringkasan", href: "/dashboard/admin" },
+        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
+        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
         { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Informasi", href: "/dashboard/admin/informasi" },
+        { label: "Blog", href: "/dashboard/admin/informasi" },
         { label: "Profil", href: "/dashboard/admin/profile" },
       ]}
       onLogout={handleLogout}

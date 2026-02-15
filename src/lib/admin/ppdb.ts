@@ -5,6 +5,7 @@ export async function listPpdbSiswa() {
   const siswa = await prisma.siswa.findMany({
     include: {
       user: true,
+      kelas: true,
       berkas: {
         include: {
           jenisBerkas: true,
@@ -16,6 +17,22 @@ export async function listPpdbSiswa() {
     },
   });
 
+  return siswa;
+}
+
+export async function getPpdbSiswaById(siswaId: number) {
+  const siswa = await prisma.siswa.findUnique({
+    where: { siswa_id: siswaId },
+    include: {
+      user: true,
+      kelas: true,
+      berkas: {
+        include: {
+          jenisBerkas: true,
+        },
+      },
+    },
+  });
   return siswa;
 }
 

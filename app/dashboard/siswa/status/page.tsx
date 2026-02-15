@@ -62,6 +62,7 @@ export default function SiswaStatusPage() {
       sidebarTitle="Siswa Menu"
       items={[
         { label: "Ringkasan", href: "/dashboard/siswa" },
+        { label: "Panduan PPDB", href: "/dashboard/siswa/panduan" },
         { label: "Status PPDB", href: "/dashboard/siswa/status" },
         { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
         { label: "Profil", href: "/dashboard/siswa/profile" },

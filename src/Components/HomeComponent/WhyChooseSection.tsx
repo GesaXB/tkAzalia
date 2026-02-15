@@ -24,25 +24,25 @@ const reasons = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="max-w-7xl mx-auto w-full px-4 md:px-0 grid md:grid-cols-2 gap-12 md:gap-20 items-center py-8 md:py-12">
+    <section className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-14 items-center py-6 md:py-8">
       <div>
-        <div className="mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug">
             Mengapa Memilih Belajar di <br />
             <span className="bg-gradient-to-r from-[#01793B] to-emerald-600 bg-clip-text text-transparent">TK Azalia?</span>
           </h2>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-5">
           {reasons.map((item) => {
             const IconComponent = item.icon;
             return (
-              <div key={item.id} className="flex gap-4 items-start group">
-                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-[#01793B] to-emerald-600 rounded-xl shadow-sm group-hover:shadow-md transition-shadow duration-300 flex items-center justify-center">
-                  <IconComponent className="w-7 h-7 text-white" />
+              <div key={item.id} className="flex gap-3 items-start group">
+                <div className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-[#01793B] to-emerald-600 rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-300 flex items-center justify-center">
+                  <IconComponent className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-[#01793B] mb-1.5">
+                  <h3 className="text-base font-bold text-[#01793B] mb-1">
                     {item.title}
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
@@ -55,7 +55,7 @@ export default function WhyChooseSection() {
         </div>
       </div>
 
-      <div className="relative h-[300px] md:h-[400px] w-full max-w-lg mx-auto hidden md:flex items-center justify-center">
+      <div className="relative h-[260px] md:h-[340px] w-full max-w-md mx-auto hidden md:flex items-center justify-center">
         <div className="absolute w-full h-full bg-[#01793B]/15 rounded-3xl transform -rotate-3 -z-10"></div>
 
         <div className="relative w-full h-full">

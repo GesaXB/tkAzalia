@@ -5,6 +5,8 @@ export interface InformasiSekolahInput {
   judul: string;
   slug: string;
   konten: string;
+  ringkasan?: string | null;
+  gambar?: string | null;
   tipe: Tipe;
   status: Status;
   urutan: number;
@@ -14,6 +16,18 @@ export async function listInformasiSekolah() {
   const data = await prisma.informasiSekolah.findMany({
     orderBy: {
       urutan: 'asc',
+    },
+  });
+
+  return data;
+}
+
+export async function getInformasiSekolahBySlug(slug: string) {
+  const data = await prisma.informasiSekolah.findFirst({
+    where: {
+      slug,
+      deleted_at: null,
+      status: 'published',
     },
   });
 

@@ -7,6 +7,7 @@ import {
   updateBerkasSiswa,
   deleteBerkasSiswa,
 } from '@/lib/ppdb';
+import { checkPpdbOpen } from '@/lib/ppdbSetting';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -16,6 +17,15 @@ async function patchHandler(
   req: AuthenticatedRequest,
   context: RouteContext
 ): Promise<NextResponse<ApiResponse>> {
+  if (req.user.role !== 'admin') {
+    const ppdb = await checkPpdbOpen();
+    if (!ppdb.open) {
+      return NextResponse.json(
+        { success: false, error: ppdb.message || 'PPDB tidak dibuka' },
+        { status: 403 }
+      );
+    }
+  }
   const id = Number((await context.params).id);
   if (!Number.isInteger(id) || id < 1) {
     return NextResponse.json(
@@ -61,6 +71,15 @@ async function deleteHandler(
   req: AuthenticatedRequest,
   context: RouteContext
 ): Promise<NextResponse<ApiResponse>> {
+  if (req.user.role !== 'admin') {
+    const ppdb = await checkPpdbOpen();
+    if (!ppdb.open) {
+      return NextResponse.json(
+        { success: false, error: ppdb.message || 'PPDB tidak dibuka' },
+        { status: 403 }
+      );
+    }
+  }
   const id = Number((await context.params).id);
   if (!Number.isInteger(id) || id < 1) {
     return NextResponse.json(

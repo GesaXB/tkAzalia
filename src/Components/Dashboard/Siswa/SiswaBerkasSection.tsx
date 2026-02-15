@@ -15,6 +15,8 @@ interface SiswaBerkasSectionProps {
     payload: Partial<CreateBerkasPayload>,
     newFile?: File
   ) => Promise<void>;
+  /** Saat true (PPDB berakhir), tombol Ubah dan Hapus disembunyikan; hanya Lihat yang aktif. */
+  uploadDisabled?: boolean;
 }
 
 function formatDate(s: string) {
@@ -44,6 +46,7 @@ export default function SiswaBerkasSection({
   berkasList,
   onDelete,
   onUpdate,
+  uploadDisabled = false,
 }: SiswaBerkasSectionProps) {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<BerkasSiswaItem | null>(null);
@@ -174,7 +177,7 @@ export default function SiswaBerkasSection({
                     Lihat
                   </button>
                 )}
-                {onUpdate && (
+                {onUpdate && !uploadDisabled && (
                   <button
                     type="button"
                     onClick={() => openEdit(berkas)}
@@ -186,7 +189,7 @@ export default function SiswaBerkasSection({
                     Ubah
                   </button>
                 )}
-                {onDelete && (
+                {onDelete && !uploadDisabled && (
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(berkas)}

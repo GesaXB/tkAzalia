@@ -26,6 +26,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Beranda" },
     { href: "/about", label: "Tentang" },
+    { href: "/blog", label: "Blog" },
     { href: "/program", label: "Program" },
     { href: "/pendaftaran", label: "Pendaftaran" },
     { href: "/contact", label: "Kontak" },

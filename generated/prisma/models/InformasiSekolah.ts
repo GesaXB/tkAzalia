@@ -41,6 +41,8 @@ export type InformasiSekolahMinAggregateOutputType = {
   judul: string | null
   slug: string | null
   konten: string | null
+  ringkasan: string | null
+  gambar: string | null
   tipe: $Enums.Tipe | null
   status: $Enums.Status | null
   urutan: number | null
@@ -54,6 +56,8 @@ export type InformasiSekolahMaxAggregateOutputType = {
   judul: string | null
   slug: string | null
   konten: string | null
+  ringkasan: string | null
+  gambar: string | null
   tipe: $Enums.Tipe | null
   status: $Enums.Status | null
   urutan: number | null
@@ -67,6 +71,8 @@ export type InformasiSekolahCountAggregateOutputType = {
   judul: number
   slug: number
   konten: number
+  ringkasan: number
+  gambar: number
   tipe: number
   status: number
   urutan: number
@@ -92,6 +98,8 @@ export type InformasiSekolahMinAggregateInputType = {
   judul?: true
   slug?: true
   konten?: true
+  ringkasan?: true
+  gambar?: true
   tipe?: true
   status?: true
   urutan?: true
@@ -105,6 +113,8 @@ export type InformasiSekolahMaxAggregateInputType = {
   judul?: true
   slug?: true
   konten?: true
+  ringkasan?: true
+  gambar?: true
   tipe?: true
   status?: true
   urutan?: true
@@ -118,6 +128,8 @@ export type InformasiSekolahCountAggregateInputType = {
   judul?: true
   slug?: true
   konten?: true
+  ringkasan?: true
+  gambar?: true
   tipe?: true
   status?: true
   urutan?: true
@@ -218,6 +230,8 @@ export type InformasiSekolahGroupByOutputType = {
   judul: string
   slug: string
   konten: string
+  ringkasan: string | null
+  gambar: string | null
   tipe: $Enums.Tipe
   status: $Enums.Status
   urutan: number
@@ -254,6 +268,8 @@ export type InformasiSekolahWhereInput = {
   judul?: Prisma.StringFilter<"InformasiSekolah"> | string
   slug?: Prisma.StringFilter<"InformasiSekolah"> | string
   konten?: Prisma.StringFilter<"InformasiSekolah"> | string
+  ringkasan?: Prisma.StringNullableFilter<"InformasiSekolah"> | string | null
+  gambar?: Prisma.StringNullableFilter<"InformasiSekolah"> | string | null
   tipe?: Prisma.EnumTipeFilter<"InformasiSekolah"> | $Enums.Tipe
   status?: Prisma.EnumStatusFilter<"InformasiSekolah"> | $Enums.Status
   urutan?: Prisma.IntFilter<"InformasiSekolah"> | number
@@ -267,6 +283,8 @@ export type InformasiSekolahOrderByWithRelationInput = {
   judul?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   konten?: Prisma.SortOrder
+  ringkasan?: Prisma.SortOrderInput | Prisma.SortOrder
+  gambar?: Prisma.SortOrderInput | Prisma.SortOrder
   tipe?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
@@ -283,6 +301,8 @@ export type InformasiSekolahWhereUniqueInput = Prisma.AtLeast<{
   judul?: Prisma.StringFilter<"InformasiSekolah"> | string
   slug?: Prisma.StringFilter<"InformasiSekolah"> | string
   konten?: Prisma.StringFilter<"InformasiSekolah"> | string
+  ringkasan?: Prisma.StringNullableFilter<"InformasiSekolah"> | string | null
+  gambar?: Prisma.StringNullableFilter<"InformasiSekolah"> | string | null
   tipe?: Prisma.EnumTipeFilter<"InformasiSekolah"> | $Enums.Tipe
   status?: Prisma.EnumStatusFilter<"InformasiSekolah"> | $Enums.Status
   urutan?: Prisma.IntFilter<"InformasiSekolah"> | number
@@ -296,6 +316,8 @@ export type InformasiSekolahOrderByWithAggregationInput = {
   judul?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   konten?: Prisma.SortOrder
+  ringkasan?: Prisma.SortOrderInput | Prisma.SortOrder
+  gambar?: Prisma.SortOrderInput | Prisma.SortOrder
   tipe?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
@@ -317,6 +339,8 @@ export type InformasiSekolahScalarWhereWithAggregatesInput = {
   judul?: Prisma.StringWithAggregatesFilter<"InformasiSekolah"> | string
   slug?: Prisma.StringWithAggregatesFilter<"InformasiSekolah"> | string
   konten?: Prisma.StringWithAggregatesFilter<"InformasiSekolah"> | string
+  ringkasan?: Prisma.StringNullableWithAggregatesFilter<"InformasiSekolah"> | string | null
+  gambar?: Prisma.StringNullableWithAggregatesFilter<"InformasiSekolah"> | string | null
   tipe?: Prisma.EnumTipeWithAggregatesFilter<"InformasiSekolah"> | $Enums.Tipe
   status?: Prisma.EnumStatusWithAggregatesFilter<"InformasiSekolah"> | $Enums.Status
   urutan?: Prisma.IntWithAggregatesFilter<"InformasiSekolah"> | number
@@ -329,6 +353,8 @@ export type InformasiSekolahCreateInput = {
   judul: string
   slug: string
   konten: string
+  ringkasan?: string | null
+  gambar?: string | null
   tipe: $Enums.Tipe
   status: $Enums.Status
   urutan: number
@@ -342,6 +368,8 @@ export type InformasiSekolahUncheckedCreateInput = {
   judul: string
   slug: string
   konten: string
+  ringkasan?: string | null
+  gambar?: string | null
   tipe: $Enums.Tipe
   status: $Enums.Status
   urutan: number
@@ -354,6 +382,8 @@ export type InformasiSekolahUpdateInput = {
   judul?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
@@ -367,6 +397,8 @@ export type InformasiSekolahUncheckedUpdateInput = {
   judul?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
@@ -380,6 +412,8 @@ export type InformasiSekolahCreateManyInput = {
   judul: string
   slug: string
   konten: string
+  ringkasan?: string | null
+  gambar?: string | null
   tipe: $Enums.Tipe
   status: $Enums.Status
   urutan: number
@@ -392,6 +426,8 @@ export type InformasiSekolahUpdateManyMutationInput = {
   judul?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
@@ -405,6 +441,8 @@ export type InformasiSekolahUncheckedUpdateManyInput = {
   judul?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
@@ -418,6 +456,8 @@ export type InformasiSekolahCountOrderByAggregateInput = {
   judul?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   konten?: Prisma.SortOrder
+  ringkasan?: Prisma.SortOrder
+  gambar?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
@@ -436,6 +476,8 @@ export type InformasiSekolahMaxOrderByAggregateInput = {
   judul?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   konten?: Prisma.SortOrder
+  ringkasan?: Prisma.SortOrder
+  gambar?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
@@ -449,6 +491,8 @@ export type InformasiSekolahMinOrderByAggregateInput = {
   judul?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   konten?: Prisma.SortOrder
+  ringkasan?: Prisma.SortOrder
+  gambar?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   status?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
@@ -477,6 +521,8 @@ export type InformasiSekolahSelect<ExtArgs extends runtime.Types.Extensions.Inte
   judul?: boolean
   slug?: boolean
   konten?: boolean
+  ringkasan?: boolean
+  gambar?: boolean
   tipe?: boolean
   status?: boolean
   urutan?: boolean
@@ -490,6 +536,8 @@ export type InformasiSekolahSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   judul?: boolean
   slug?: boolean
   konten?: boolean
+  ringkasan?: boolean
+  gambar?: boolean
   tipe?: boolean
   status?: boolean
   urutan?: boolean
@@ -503,6 +551,8 @@ export type InformasiSekolahSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   judul?: boolean
   slug?: boolean
   konten?: boolean
+  ringkasan?: boolean
+  gambar?: boolean
   tipe?: boolean
   status?: boolean
   urutan?: boolean
@@ -516,6 +566,8 @@ export type InformasiSekolahSelectScalar = {
   judul?: boolean
   slug?: boolean
   konten?: boolean
+  ringkasan?: boolean
+  gambar?: boolean
   tipe?: boolean
   status?: boolean
   urutan?: boolean
@@ -524,7 +576,7 @@ export type InformasiSekolahSelectScalar = {
   deleted_at?: boolean
 }
 
-export type InformasiSekolahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"info_id" | "judul" | "slug" | "konten" | "tipe" | "status" | "urutan" | "created_at" | "uptadet_at" | "deleted_at", ExtArgs["result"]["informasiSekolah"]>
+export type InformasiSekolahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"info_id" | "judul" | "slug" | "konten" | "ringkasan" | "gambar" | "tipe" | "status" | "urutan" | "created_at" | "uptadet_at" | "deleted_at", ExtArgs["result"]["informasiSekolah"]>
 
 export type $InformasiSekolahPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InformasiSekolah"
@@ -534,6 +586,8 @@ export type $InformasiSekolahPayload<ExtArgs extends runtime.Types.Extensions.In
     judul: string
     slug: string
     konten: string
+    ringkasan: string | null
+    gambar: string | null
     tipe: $Enums.Tipe
     status: $Enums.Status
     urutan: number
@@ -967,6 +1021,8 @@ export interface InformasiSekolahFieldRefs {
   readonly judul: Prisma.FieldRef<"InformasiSekolah", 'String'>
   readonly slug: Prisma.FieldRef<"InformasiSekolah", 'String'>
   readonly konten: Prisma.FieldRef<"InformasiSekolah", 'String'>
+  readonly ringkasan: Prisma.FieldRef<"InformasiSekolah", 'String'>
+  readonly gambar: Prisma.FieldRef<"InformasiSekolah", 'String'>
   readonly tipe: Prisma.FieldRef<"InformasiSekolah", 'Tipe'>
   readonly status: Prisma.FieldRef<"InformasiSekolah", 'Status'>
   readonly urutan: Prisma.FieldRef<"InformasiSekolah", 'Int'>

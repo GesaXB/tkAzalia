@@ -5,7 +5,7 @@ import VisionMissionSection from "../AboutComponent/VissionMissionSection";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen pt-36 pb-20 bg-white font-sans">
+    <main className="min-h-screen pb-20 bg-white font-sans">
       <HeroSection />
       <HistorySection />
       <VisionMissionSection />

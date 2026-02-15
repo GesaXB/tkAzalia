@@ -10,8 +10,6 @@ export interface AuthPayload {
 export interface AuthenticatedRequest extends NextRequest {
   user: AuthPayload;
 }
-
-// Define the handler type
 export type ApiHandler<T = unknown> = (
   req: AuthenticatedRequest,
   ...args: unknown[]
@@ -42,7 +40,6 @@ export function authMiddleware<T = unknown>(
         );
       }
 
-      // Type assertion for payload
       const authPayload = payload as AuthPayload;
 
       if (allowedRoles.length > 0 && !allowedRoles.includes(authPayload.role)) {
@@ -52,7 +49,6 @@ export function authMiddleware<T = unknown>(
         );
       }
 
-      // Create authenticated request with proper typing
       const authenticatedReq = req as AuthenticatedRequest;
       authenticatedReq.user = authPayload;
 
@@ -113,7 +109,6 @@ export function authMiddleware2<T = Record<string, unknown>>(
     } catch (error) {
       console.error('Auth middleware error:', error);
 
-      // Type guard for error
       const errorMessage = error instanceof Error
         ? error.message
         : 'Internal server error';

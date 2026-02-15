@@ -41,7 +41,10 @@ export const Tipe = {
   misi: 'misi',
   fasilitas: 'fasilitas',
   kontak: 'kontak',
-  syarat_pendaftaran: 'syarat_pendaftaran'
+  syarat_pendaftaran: 'syarat_pendaftaran',
+  berita: 'berita',
+  artikel: 'artikel',
+  kegiatan: 'kegiatan'
 } as const
 
 export type Tipe = (typeof Tipe)[keyof typeof Tipe]

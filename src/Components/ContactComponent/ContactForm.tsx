@@ -1,11 +1,10 @@
 "use client";
 
-import { Mail, MessageSquare, Send, User } from "lucide-react";
 
 export default function ContactForm() {
   return (
     <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl border-t-4 border-[#01793B] h-full min-h-[600px] flex flex-col">
-      
+
       <h3 className="text-2xl font-bold text-gray-800 mb-2">Kirim Pesan</h3>
       <p className="text-gray-500 mb-8 text-sm">Silakan isi formulir di bawah ini, kami akan membalas secepatnya.</p>
 
@@ -51,8 +50,6 @@ export default function ContactForm() {
     </div>
   );
 }
-
-// --- SUB COMPONENTS ---
 
 function FormInput({
   label,

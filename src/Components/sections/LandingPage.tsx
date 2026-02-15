@@ -3,36 +3,37 @@ import ProgramSection from "../HomeComponent/ProgramSection";
 import TestimonialSection from "../HomeComponent/TestimonialSection";
 import VisionMissionSection from "../HomeComponent/VisionMissionSection";
 import WhyChooseSection from "../HomeComponent/WhyChooseSection";
+import BlogSection from "../HomeComponent/BlogSection";
 
 export default function LandingPage() {
   return (
-    <div className="bg-white">
-      <div className="relative bg-gradient-to-b from-white via-[#F0F9F1] to-white">
-        <HeroSection />
-      </div>
+    <div className="bg-white min-h-screen">
+      {/* Margin kiri-kanan konsisten untuk kesan modern */}
+      <div className="px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14 max-w-[1600px] mx-auto">
+        <div className="relative bg-gradient-to-b from-white via-[#F0F9F1] to-white -mx-5 sm:-mx-6 md:-mx-8 lg:-mx-10 xl:-mx-14 px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14">
+          <HeroSection />
+        </div>
 
-      <div className="relative -mt-12 md:-mt-16 pb-15">
-        <VisionMissionSection />
-      </div>
+        <div className="relative -mt-8 md:-mt-10 pb-6">
+          <VisionMissionSection />
+        </div>
 
-      <div className="bg-[#F8F9FA] mt-0 pt-12 md:pt-20 pb-20">
-        <div className="container mx-auto px-4">
+        <div className="bg-[#F8F9FA] -mx-5 sm:-mx-6 md:-mx-8 lg:-mx-10 xl:-mx-14 px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-10 md:pt-12 pb-12 md:pb-14">
           <WhyChooseSection />
         </div>
-      </div>
 
-      <div className="bg-white pt-12 md:pt-20">
-        <div className="container mx-auto px-4">
+        <div className="pt-10 md:pt-12 pb-12 md:pb-14">
           <ProgramSection />
         </div>
-      </div>
 
-      <div className="bg-[#F8F9FA] pt-12 md:pt-20 pb-12 md:pb-20">
-        <div className="container mx-auto px-4">
+        <div className="bg-[#F8F9FA] -mx-5 sm:-mx-6 md:-mx-8 lg:-mx-10 xl:-mx-14 px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-10 md:pt-12 pb-12 md:pb-14">
           <TestimonialSection />
         </div>
-      </div>
 
+        <div className="pt-10 md:pt-12 pb-14 md:pb-16">
+          <BlogSection />
+        </div>
+      </div>
     </div>
   );
 }

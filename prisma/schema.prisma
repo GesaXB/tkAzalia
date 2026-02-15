@@ -31,14 +31,23 @@ enum Role {
   user
 }
 
+model Kelas {
+  kelas_id   Int     @id @default(autoincrement())
+  nama       String  @unique
+  urutan     Int     @default(0)
+  siswa      Siswa[]
+}
+
 model Siswa {
   siswa_id      Int         @id @default(autoincrement())
   user_id       Int         @unique
+  kelas_id      Int?
   status_ppdb   StatusPpdb  @default(menunggu)
   catatan_ppdb  String?
   berkas        BerkasSiswa[]
 
-  user User @relation(fields: [user_id], references: [user_id])
+  user  User  @relation(fields: [user_id], references: [user_id])
+  kelas Kelas? @relation(fields: [kelas_id], references: [kelas_id])
 }
 
 enum StatusPpdb {
@@ -83,6 +92,8 @@ model InformasiSekolah {
   judul      String
   slug       String
   konten     String
+  ringkasan  String?
+  gambar     String?
   tipe       Tipe
   status     Status
   urutan     Int
@@ -98,9 +109,20 @@ enum Tipe {
   fasilitas
   kontak
   syarat_pendaftaran
+  berita
+  artikel
+  kegiatan
 }
 
 enum Status {
   draft
   published
+}
+
+model PpdbSetting {
+  id              Int      @id @default(autoincrement())
+  tanggal_mulai   DateTime
+  tanggal_selesai DateTime
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 }

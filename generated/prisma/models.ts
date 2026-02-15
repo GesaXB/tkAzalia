@@ -9,8 +9,10 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Kelas'
 export type * from './models/Siswa'
 export type * from './models/BerkasSiswa'
 export type * from './models/JenisBerkas'
 export type * from './models/InformasiSekolah'
+export type * from './models/PpdbSetting'
 export type * from './commonInputTypes'

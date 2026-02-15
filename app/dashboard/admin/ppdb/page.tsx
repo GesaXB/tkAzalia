@@ -6,19 +6,13 @@ import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import AdminPpdbSection from "@/Components/Dashboard/Admin/AdminPpdbSection";
 import { clearToken } from "@/lib/client/session";
 import { fetchProfile } from "@/lib/client/auth";
-import { AdminPpdbSiswa, listPpdbSiswa, updatePpdbStatus } from "@/lib/client/admin";
-
-interface StatusDraft {
-  status_ppdb: "menunggu" | "lulus" | "tidak_lulus";
-  catatan_ppdb: string;
-}
+import { AdminPpdbSiswa, listPpdbSiswa } from "@/lib/client/admin";
 
 export default function AdminPpdbPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ppdbList, setPpdbList] = useState<AdminPpdbSiswa[]>([]);
-  const [drafts, setDrafts] = useState<Record<number, StatusDraft>>({});
   const statusOptions = useMemo(() => ["menunggu", "lulus", "tidak_lulus"], []);
 
   useEffect(() => {
@@ -49,37 +43,6 @@ export default function AdminPpdbPage() {
     router.push("/");
   };
 
-  const handleDraftChange = (siswaId: number, field: keyof StatusDraft, value: string) => {
-    setDrafts((prev) => ({
-      ...prev,
-      [siswaId]: {
-        status_ppdb: prev[siswaId]?.status_ppdb || "menunggu",
-        catatan_ppdb: prev[siswaId]?.catatan_ppdb || "",
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleUpdateStatus = async (siswaId: number) => {
-    const draft = drafts[siswaId];
-    if (!draft) {
-      return;
-    }
-    const response = await updatePpdbStatus({
-      siswa_id: siswaId,
-      status_ppdb: draft.status_ppdb,
-      catatan_ppdb: draft.catatan_ppdb || null,
-    });
-    if (!response.success) {
-      setError(response.error || "Gagal memperbarui status");
-      return;
-    }
-    const refreshed = await listPpdbSiswa();
-    if (refreshed.success && refreshed.data) {
-      setPpdbList(refreshed.data);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
@@ -95,8 +58,10 @@ export default function AdminPpdbPage() {
       sidebarTitle="Admin Menu"
       items={[
         { label: "Ringkasan", href: "/dashboard/admin" },
+        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
+        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
         { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Informasi", href: "/dashboard/admin/informasi" },
+        { label: "Blog", href: "/dashboard/admin/informasi" },
         { label: "Profil", href: "/dashboard/admin/profile" },
       ]}
       onLogout={handleLogout}
@@ -107,13 +72,7 @@ export default function AdminPpdbPage() {
         </div>
       ) : null}
 
-      <AdminPpdbSection
-        ppdbList={ppdbList}
-        drafts={drafts}
-        statusOptions={statusOptions}
-        onDraftChange={handleDraftChange}
-        onUpdateStatus={handleUpdateStatus}
-      />
+      <AdminPpdbSection ppdbList={ppdbList} statusOptions={statusOptions} />
     </DashboardShell>
   );
 }

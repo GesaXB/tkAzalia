@@ -2,11 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types';
 import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware/auth';
 import { ensureSiswaForUser } from '@/lib/ppdb';
+import { checkPpdbOpen } from '@/lib/ppdbSetting';
 import path from 'path';
 import fs from 'fs';
 
 async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
   try {
+    if (req.user.role !== 'admin') {
+      const ppdb = await checkPpdbOpen();
+      if (!ppdb.open) {
+        return NextResponse.json(
+          { success: false, error: ppdb.message || 'PPDB tidak dibuka' },
+          { status: 403 }
+        );
+      }
+    }
     const siswa = await ensureSiswaForUser(req.user.userId);
     const formData = await (req as NextRequest).formData();
     const file = formData.get('file') as File | null;
