@@ -1,6 +1,6 @@
+import { StatusPpdb } from '@/types';
 import { apiRequest } from './api';
 import { getToken } from './session';
-import { StatusPpdb } from '@/types';
 
 export async function uploadBlogImage(file: File): Promise<{ success: true; data: { url: string } } | { success: false; error: string }> {
   const token = getToken();
@@ -179,4 +179,17 @@ export async function updateJadwalPpdb(payload: PpdbJadwalPayload) {
 
 export async function resetJadwalPpdb() {
   return apiRequest<null>('/api/admin/ppdb/jadwal', { method: 'DELETE' }, true);
+}
+
+export interface UpdateBerkasValidasiPayload {
+  berkas_siswa_id: number;
+  status_validasi: 'valid' | 'tidak_valid' | 'menunggu';
+  catatan_validasi?: string;
+}
+
+export async function updateBerkasValidasi(payload: UpdateBerkasValidasiPayload) {
+  return apiRequest('/api/admin/ppdb/validasi-berkas', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }, true);
 }

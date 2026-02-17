@@ -4,6 +4,7 @@ import icon from '../public/logotk.png';
 import "../styles/globals.css";
 
 import AppShell from "@/Components/layout/AppShell";
+import { ToastProvider } from "@/context/ToastContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,7 +52,9 @@ export default function RootLayout({
         className="flex flex-col min-h-screen bg-white text-gray-900 antialiased"
         suppressHydrationWarning
       >
-        <AppShell>{children}</AppShell>
+        <ToastProvider>
+          <AppShell>{children}</AppShell>
+        </ToastProvider>
       </body>
     </html>
   );

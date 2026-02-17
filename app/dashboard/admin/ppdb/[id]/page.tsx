@@ -1,29 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import Link from "next/link";
 import DashboardShell from "@/Components/Dashboard/DashboardShell";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
+import { useToast } from "@/context/ToastContext";
 import {
   AdminPpdbSiswa,
   getPpdbSiswaById,
   updatePpdbStatus,
   type UpdatePpdbPayload,
 } from "@/lib/client/admin";
+import { fetchProfile } from "@/lib/client/auth";
+import { clearToken } from "@/lib/client/session";
 import {
   ArrowLeft,
+  CheckCircle,
+  Clock,
+  ExternalLink,
   FileText,
-  User,
   Mail,
   Phone,
-  ExternalLink,
-  CheckCircle,
-  XCircle,
-  Clock,
+  User,
   X,
+  XCircle,
 } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function statusLabel(s: string) {
   const map: Record<string, string> = {
@@ -56,7 +57,9 @@ function useFileFullUrl(path: string | null | undefined) {
       return;
     }
     const p = path.startsWith("http") ? path : path.startsWith("/") ? path : `/${path}`;
-    setUrl(p.startsWith("http") ? p : `${window.location.origin}${p}`);
+    const finalUrl = p.startsWith("http") ? p : `${window.location.origin}${p}`;
+    console.log('File Access Debug:', { original: path, processed: p, final: finalUrl });
+    setUrl(finalUrl);
   }, [path]);
   return url;
 }
@@ -139,6 +142,9 @@ export default function AdminPpdbDetailPage() {
   const [catatanPpdb, setCatatanPpdb] = useState("");
   const [previewBerkas, setPreviewBerkas] = useState<{ nama_file: string; path_file: string; tipe_file: string } | null>(null);
 
+  const [validating, setValidating] = useState<number | null>(null);
+  const toast = useToast();
+
   useEffect(() => {
     if (!Number.isInteger(id) || id < 1) {
       setError("ID tidak valid");
@@ -192,10 +198,46 @@ export default function AdminPpdbDetailPage() {
     });
     setSaving(false);
     if (!res.success) {
-      setError(res.error || "Gagal menyimpan keputusan");
+      const msg = res.error || "Gagal menyimpan keputusan";
+      setError(msg);
+      toast.error(msg);
       return;
     }
     setSiswa((prev) => (prev ? { ...prev, status_ppdb: statusPpdb, catatan_ppdb: catatanPpdb.trim() || null } : null));
+    toast.success("Keputusan berhasil disimpan");
+  };
+
+  const handleValidasi = async (berkasId: number, status: 'valid' | 'tidak_valid') => {
+    if (!siswa) return;
+    setValidating(berkasId);
+
+    // Import dynamically to avoid circular dependencies if any, though here it's fine to use directly
+    const { updateBerkasValidasi } = await import("@/lib/client/admin");
+
+    const res = await updateBerkasValidasi({
+      berkas_siswa_id: berkasId,
+      status_validasi: status,
+    });
+
+    setValidating(null);
+
+    if (!res.success) {
+      toast.error(res.error || "Gagal memvalidasi berkas");
+      return;
+    }
+
+    // Update local state
+    setSiswa(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        berkas: prev.berkas.map(b =>
+          b.berkas_siswa_id === berkasId
+            ? { ...b, status_validasi: status }
+            : b
+        )
+      };
+    });
   };
 
   if (loading) {
@@ -316,7 +358,7 @@ export default function AdminPpdbDetailPage() {
               Berkas yang diunggah
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
-              Periksa file untuk memastikan dokumen benar, lalu beri keputusan di bawah.
+              Periksa file untuk memastikan dokumen benar, lalu beri keputusan validasi.
             </p>
           </div>
           <div className="divide-y divide-gray-50">
@@ -328,10 +370,12 @@ export default function AdminPpdbDetailPage() {
               siswa.berkas.map((b) => {
                 const path = b.path_file ?? "";
                 const url = path ? (path.startsWith("http") ? path : `${path.startsWith("/") ? "" : "/"}${path}`) : null;
+                const isValidating = validating === b.berkas_siswa_id;
+
                 return (
                   <div
                     key={b.berkas_siswa_id}
-                    className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 hover:bg-gray-50/50"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 hover:bg-gray-50/50"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
@@ -344,7 +388,31 @@ export default function AdminPpdbDetailPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
+                      <div className="flex items-center gap-1 mr-2">
+                        {b.status_validasi !== 'valid' && (
+                          <button
+                            type="button"
+                            disabled={isValidating}
+                            onClick={() => handleValidasi(b.berkas_siswa_id, 'valid')}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 disabled:opacity-50 transition-colors"
+                          >
+                            {isValidating ? '...' : 'Set Valid'}
+                          </button>
+                        )}
+                        {b.status_validasi !== 'tidak_valid' && (
+                          <button
+                            type="button"
+                            disabled={isValidating}
+                            onClick={() => handleValidasi(b.berkas_siswa_id, 'tidak_valid')}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 disabled:opacity-50 transition-colors"
+                          >
+                            {isValidating ? '...' : 'Set Invalid'}
+                          </button>
+                        )}
+                      </div>
+
                       {url ? (
                         <>
                           <button
@@ -360,7 +428,7 @@ export default function AdminPpdbDetailPage() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 rounded-lg border border-[#01793B] bg-[#01793B] px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700"
                           >
-                            Buka di tab baru
+                            Buka
                             <ExternalLink size={14} />
                           </a>
                         </>
@@ -427,3 +495,4 @@ export default function AdminPpdbDetailPage() {
     </DashboardShell>
   );
 }
+

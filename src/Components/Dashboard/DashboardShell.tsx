@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Menu, PanelLeftClose } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import LogoutModal from "./LogoutModal";
 
 export interface SidebarItem {
@@ -35,11 +35,16 @@ export default function DashboardShell({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [greetingMascot, setGreetingMascot] = useState("");
 
   useEffect(() => {
     const stored =
       typeof window !== "undefined" && localStorage.getItem("dashboard-sidebar-open");
     if (stored !== null) setSidebarOpen(stored === "true");
+
+    // Set random friendly mascot
+    const mascots = ["👋", "🌟", "🚀", "😺", "✨", "🌈", "🎈"];
+    setGreetingMascot(mascots[Math.floor(Math.random() * mascots.length)]);
   }, []);
 
   const setSidebarOpenAndStore = (open: boolean) => {
@@ -102,11 +107,10 @@ export default function DashboardShell({
                     key={item.href}
                     href={item.href}
                     prefetch
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive
-                        ? "bg-emerald-500/10 text-emerald-700"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                    }`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
+                      ? "bg-emerald-500/10 text-emerald-700"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }`}
                   >
                     <span className="truncate">{item.label}</span>
                   </Link>
@@ -144,9 +148,9 @@ export default function DashboardShell({
 
         <motion.main
           className="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }} // Light custom ease
           key={pathname}
         >
           {children}

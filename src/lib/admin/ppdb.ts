@@ -54,3 +54,17 @@ export async function updatePpdbStatus(
   return updated;
 }
 
+export async function updateBerkasValidasi(
+  berkasId: number,
+  status: 'valid' | 'tidak_valid' | 'menunggu',
+  catatan?: string | null
+) {
+  return prisma.berkasSiswa.update({
+    where: { berkas_siswa_id: berkasId },
+    data: {
+      status_validasi: status,
+      catatan_validasi: catatan || '',
+    },
+  });
+}
+

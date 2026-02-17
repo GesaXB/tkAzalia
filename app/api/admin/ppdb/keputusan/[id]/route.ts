@@ -1,16 +1,17 @@
-import { NextResponse } from 'next/server';
-import { ApiResponse } from '@/types';
-import { authMiddleware } from '@/lib/middleware/auth';
 import { getPpdbSiswaById } from '@/lib/admin/ppdb';
+import { AuthenticatedRequest, authMiddleware } from '@/lib/middleware/auth';
+import { ApiResponse } from '@/types';
+import { NextResponse } from 'next/server';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
 async function getHandler(
-  _req: Request,
-  context: RouteContext
+  req: AuthenticatedRequest,
+  ...args: unknown[]
 ): Promise<NextResponse<ApiResponse>> {
+  const context = args[0] as RouteContext;
   const id = Number((await context.params).id);
   if (!Number.isInteger(id) || id < 1) {
     return NextResponse.json(

@@ -11,9 +11,15 @@ interface StatCardProps {
   description?: string;
 }
 
+import { motion } from "framer-motion";
+
 export default function StatCard({ title, value, href, icon, description }: StatCardProps) {
   const content = (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+    <motion.div
+      className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm"
+      whileHover={{ scale: 1.02, y: -2, boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)" }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-medium text-slate-500">{title}</p>
@@ -33,7 +39,7 @@ export default function StatCard({ title, value, href, icon, description }: Stat
           Lihat detail →
         </span>
       )}
-    </div>
+    </motion.div>
   );
 
   if (href && !href.startsWith("#")) {
