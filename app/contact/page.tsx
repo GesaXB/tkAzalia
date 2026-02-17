@@ -3,12 +3,9 @@ import ContactHero from "@/Components/ContactComponent/ContactHero";
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen pt-0.5 bg-white">
-      
+    <main className="min-h-screen bg-[#F8F9FA] overflow-hidden">
       <ContactHero />
-      
       <ContactContent />
-      
     </main>
   );
 }

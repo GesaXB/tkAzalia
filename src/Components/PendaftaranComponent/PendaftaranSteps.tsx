@@ -1,52 +1,54 @@
-interface StepCardProps {
-  number: number;
-  title: string;
-  description: string;
-}
+"use client";
+import { ClipboardEdit, UserCheck, CreditCard, School } from "lucide-react";
+import { motion } from "framer-motion";
 
-function StepCard({ number, title, description }: StepCardProps) {
-  return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden group hover:-translate-y-1 transition-transform">
-      <div className="w-12 h-12 bg-[#01793B] text-white flex items-center justify-center rounded-full text-xl font-bold mx-auto mb-4">
-        {number}
-      </div>
-      <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-500 text-sm">{description}</p>
-    </div>
-  );
-}
+const steps = [
+  { id: 1, title: "Isi Formulir", desc: "Lengkapi data diri anak & orang tua secara online.", icon: ClipboardEdit },
+  { id: 2, title: "Wawancara", desc: "Observasi anak & wawancara orang tua (Offline).", icon: UserCheck },
+  { id: 3, title: "Daftar Ulang", desc: "Pembayaran administrasi & pengambilan seragam.", icon: CreditCard },
+  { id: 4, title: "Siap Sekolah", desc: "Selamat! Ananda resmi menjadi siswa TK Azalia.", icon: School },
+];
 
 export default function PendaftaranSteps() {
-  const steps = [
-    {
-      number: 1,
-      title: "Buat Akun",
-      description: "Lakukan pendaftaran akun orang tua melalui website ini."
-    },
-    {
-      number: 2,
-      title: "Isi Formulir",
-      description: "Lengkapi data diri anak dan orang tua serta upload dokumen."
-    },
-    {
-      number: 3,
-      title: "Observasi",
-      description: "Jadwal observasi/wawancara akan diinformasikan via WhatsApp/Email."
-    },
-    {
-      number: 4,
-      title: "Pengumuman",
-      description: "Hasil seleksi akan diumumkan melalui akun Anda."
-    }
-  ];
-
   return (
-    <section className="max-w-7xl mx-auto px-4 mb-20">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">Alur Pendaftaran</h2>
-      <div className="grid md:grid-cols-4 gap-6">
-        {steps.map((step) => (
-          <StepCard key={step.number} {...step} />
-        ))}
+    <section className="py-20 bg-white">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Alur Pendaftaran</h2>
+          <p className="text-gray-600">4 Langkah mudah bergabung dengan keluarga besar TK Azalia</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+          {/* Garis penghubung (hanya di desktop) */}
+          <div className="hidden md:block absolute top-12 left-0 w-full h-1 bg-gray-100 -z-0"></div>
+
+          {steps.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <motion.div 
+                key={step.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+                className="relative z-10 flex flex-col items-center text-center"
+              >
+                <div className="w-24 h-24 bg-white border-4 border-green-50 rounded-full flex items-center justify-center mb-6 shadow-lg group hover:border-[#01793B] transition-colors duration-300">
+                  <div className="w-16 h-16 bg-[#01793B] rounded-full flex items-center justify-center text-white">
+                    <Icon className="w-8 h-8" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed px-4">{step.desc}</p>
+                
+                {/* Number Badge */}
+                <div className="absolute top-0 right-8 md:right-16 bg-yellow-400 text-[#01793B] w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">
+                  {step.id}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
