@@ -5,7 +5,7 @@ import { Users, Baby, GraduationCap } from "lucide-react";
 
 const kelompokData = [
   {
-    name: "Kelompok A (A1 & A2)",
+    name: "Kelompok A",
     age: "Usia 4 - 5 Tahun",
     desc: "Fokus pada adaptasi lingkungan, kemandirian dasar, serta pengenalan huruf dan angka melalui bermain.",
     icon: Baby,
