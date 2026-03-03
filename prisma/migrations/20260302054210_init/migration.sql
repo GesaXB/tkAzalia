@@ -2,10 +2,13 @@
 CREATE TYPE "Role" AS ENUM ('admin', 'user');
 
 -- CreateEnum
+CREATE TYPE "StatusPpdb" AS ENUM ('menunggu', 'lulus', 'tidak_lulus');
+
+-- CreateEnum
 CREATE TYPE "StatusValidasi" AS ENUM ('menunggu', 'valid', 'tidak_valid');
 
 -- CreateEnum
-CREATE TYPE "Tipe" AS ENUM ('profil', 'visi', 'misi', 'fasilitas', 'kontak', 'syarat_pendaftaran');
+CREATE TYPE "Tipe" AS ENUM ('profil', 'visi', 'misi', 'fasilitas', 'kontak', 'syarat_pendaftaran', 'berita', 'artikel', 'kegiatan');
 
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('draft', 'published');
@@ -26,9 +29,21 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Kelas" (
+    "kelas_id" SERIAL NOT NULL,
+    "nama" TEXT NOT NULL,
+    "urutan" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "Kelas_pkey" PRIMARY KEY ("kelas_id")
+);
+
+-- CreateTable
 CREATE TABLE "Siswa" (
     "siswa_id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
+    "kelas_id" INTEGER,
+    "status_ppdb" "StatusPpdb" NOT NULL DEFAULT 'menunggu',
+    "catatan_ppdb" TEXT,
 
     CONSTRAINT "Siswa_pkey" PRIMARY KEY ("siswa_id")
 );
@@ -64,6 +79,8 @@ CREATE TABLE "InformasiSekolah" (
     "judul" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "konten" TEXT NOT NULL,
+    "ringkasan" TEXT,
+    "gambar" TEXT,
     "tipe" "Tipe" NOT NULL,
     "status" "Status" NOT NULL,
     "urutan" INTEGER NOT NULL,
@@ -72,6 +89,17 @@ CREATE TABLE "InformasiSekolah" (
     "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "InformasiSekolah_pkey" PRIMARY KEY ("info_id")
+);
+
+-- CreateTable
+CREATE TABLE "PpdbSetting" (
+    "id" SERIAL NOT NULL,
+    "tanggal_mulai" TIMESTAMP(3) NOT NULL,
+    "tanggal_selesai" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "PpdbSetting_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -84,16 +112,22 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "User_no_telp_key" ON "User"("no_telp");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Kelas_nama_key" ON "Kelas"("nama");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Siswa_user_id_key" ON "Siswa"("user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BerkasSiswa_siswa_id_key" ON "BerkasSiswa"("siswa_id");
+CREATE UNIQUE INDEX "BerkasSiswa_siswa_id_jenis_berkas_id_key" ON "BerkasSiswa"("siswa_id", "jenis_berkas_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "JenisBerkas_nama_berkas_key" ON "JenisBerkas"("nama_berkas");
 
 -- AddForeignKey
 ALTER TABLE "Siswa" ADD CONSTRAINT "Siswa_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Siswa" ADD CONSTRAINT "Siswa_kelas_id_fkey" FOREIGN KEY ("kelas_id") REFERENCES "Kelas"("kelas_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BerkasSiswa" ADD CONSTRAINT "BerkasSiswa_jenis_berkas_id_fkey" FOREIGN KEY ("jenis_berkas_id") REFERENCES "JenisBerkas"("jenis_berkas_id") ON DELETE RESTRICT ON UPDATE CASCADE;

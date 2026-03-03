@@ -1,16 +1,22 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Menu, PanelLeftClose } from "lucide-react";
+import { Menu, PanelLeftClose, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import LogoutModal from "./LogoutModal";
 
-export interface SidebarItem {
+export interface SidebarSubItem {
   label: string;
   href: string;
+}
+
+export interface SidebarItem {
+  label: string;
+  href?: string;
+  submenu?: SidebarSubItem[];
 }
 
 interface DashboardShellProps {
@@ -36,6 +42,7 @@ export default function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [greetingMascot, setGreetingMascot] = useState("");
+  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const stored =
@@ -57,6 +64,24 @@ export default function DashboardShell({
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
     onLogout();
+  };
+
+  const toggleMenu = (label: string) => {
+    setExpandedMenus((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(label)) {
+        newSet.delete(label);
+      } else {
+        newSet.add(label);
+      }
+      return newSet;
+    });
+  };
+
+  const isMenuExpanded = (label: string) => expandedMenus.has(label);
+  const isSubmenuActive = (submenu: SidebarSubItem[] | undefined) => {
+    if (!submenu) return false;
+    return submenu.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
   };
 
   return (
@@ -97,20 +122,77 @@ export default function DashboardShell({
             </div>
             <nav className="space-y-0.5" aria-label="Dashboard menu">
               {items.map((item) => {
-                const isBase =
-                  item.href === "/dashboard/admin" || item.href === "/dashboard/siswa";
-                const isActive = isBase
-                  ? pathname === item.href
-                  : pathname === item.href || pathname.startsWith(item.href + "/");
+                const hasSubmenu = item.submenu && item.submenu.length > 0;
+                const isExpanded = isMenuExpanded(item.label);
+                const isActive = item.href ? (
+                  item.href === "/dashboard/admin" || item.href === "/dashboard/siswa"
+                    ? pathname === item.href
+                    : pathname === item.href || pathname.startsWith(item.href + "/")
+                ) : isSubmenuActive(item.submenu);
+
+                if (hasSubmenu) {
+                  return (
+                    <div key={item.label} className="space-y-0.5">
+                      <button
+                        onClick={() => toggleMenu(item.label)}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? "bg-emerald-500/10 text-emerald-700"
+                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                        }`}
+                      >
+                        <span className="truncate flex-1 text-left">{item.label}</span>
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="shrink-0"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </motion.div>
+                      </button>
+
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="space-y-0.5 pl-3"
+                        >
+                          {item.submenu?.map((subitem) => {
+                            const isSubitemActive =
+                              pathname === subitem.href || pathname.startsWith(subitem.href + "/");
+                            return (
+                              <Link
+                                key={subitem.href}
+                                href={subitem.href}
+                                prefetch
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                                  isSubitemActive
+                                    ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                }`}
+                              >
+                                <span className="truncate">{subitem.label}</span>
+                              </Link>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={item.href ?? "/"}
                     prefetch
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                      ? "bg-emerald-500/10 text-emerald-700"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                      }`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? "bg-emerald-500/10 text-emerald-700"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
                   >
                     <span className="truncate">{item.label}</span>
                   </Link>

@@ -44,23 +44,62 @@ export interface KelasItem {
   urutan: number;
 }
 
+export interface SiswaMeData {
+  siswa_id: number;
+  kelas_id: number | null;
+  kelas: KelasItem | null;
+  status_ppdb: string;
+  // Data Calon Siswa
+  nama_anak: string | null;
+  nama_panggilan: string | null;
+  tempat_lahir: string | null;
+  tanggal_lahir: string | null;
+  jenis_kelamin: string | null;
+  anak_ke: number | null;
+  // Data Orang Tua / Wali
+  nama_ayah: string | null;
+  pekerjaan_ayah: string | null;
+  nama_ibu: string | null;
+  pekerjaan_ibu: string | null;
+  no_whatsapp: string | null;
+  alamat_rumah: string | null;
+}
+
+export interface UpdateSiswaPayload {
+  kelas_id?: number | null;
+  nama_anak?: string | null;
+  nama_panggilan?: string | null;
+  tempat_lahir?: string | null;
+  tanggal_lahir?: string | null;
+  jenis_kelamin?: string | null;
+  anak_ke?: number | null;
+  nama_ayah?: string | null;
+  pekerjaan_ayah?: string | null;
+  nama_ibu?: string | null;
+  pekerjaan_ibu?: string | null;
+  no_whatsapp?: string | null;
+  alamat_rumah?: string | null;
+}
+
 export async function getListKelas() {
   return apiRequest<KelasItem[]>('/api/kelas', { method: 'GET' });
 }
 
 export async function getSiswaMe() {
-  return apiRequest<{
-    siswa_id: number;
-    kelas_id: number | null;
-    kelas: KelasItem | null;
-    status_ppdb: string;
-  }>('/api/ppdb/siswa', { method: 'GET' }, true);
+  return apiRequest<SiswaMeData>('/api/ppdb/siswa', { method: 'GET' }, true);
 }
 
 export async function updateSiswaKelas(kelasId: number | null) {
-  return apiRequest<{ siswa_id: number; kelas_id: number | null; kelas: KelasItem | null }>('/api/ppdb/siswa', {
+  return apiRequest<SiswaMeData>('/api/ppdb/siswa', {
     method: 'PATCH',
     body: JSON.stringify({ kelas_id: kelasId }),
+  }, true);
+}
+
+export async function updateSiswaData(payload: UpdateSiswaPayload) {
+  return apiRequest<SiswaMeData>('/api/ppdb/siswa', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
   }, true);
 }
 

@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import SiswaUploadSection from "@/Components/Dashboard/Siswa/SiswaUploadSection";
 import SiswaBerkasSection from "@/Components/Dashboard/Siswa/SiswaBerkasSection";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
 import {
   BerkasSiswaItem,
   CreateBerkasPayload,
@@ -22,10 +18,7 @@ import {
 import { getJadwalPpdb } from "@/lib/client/public";
 
 export default function SiswaBerkasPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [profileName, setProfileName] = useState<string>("");
   const [berkasList, setBerkasList] = useState<BerkasSiswaItem[]>([]);
   const [jenisBerkasList, setJenisBerkasList] = useState<JenisBerkasItem[]>([]);
   const [form, setForm] = useState<CreateBerkasPayload>({
@@ -41,19 +34,7 @@ export default function SiswaBerkasPage() {
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
       setError(null);
-      const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
-      }
-      if (profile.data.role === "admin") {
-        router.push("/dashboard/admin");
-        return;
-      }
-      setProfileName(profile.data.nama_lengkap);
-      await ensureSiswa();
       const [jenisRes, berkasResponse, jadwalRes] = await Promise.all([
         listJenisBerkas(),
         listBerkas(),
@@ -68,14 +49,12 @@ export default function SiswaBerkasPage() {
       }
       setBerkasList(berkasResponse.data || []);
       setPpdbDibuka(jadwalRes.success && jadwalRes.data?.dibuka === true);
-      setLoading(false);
     };
     load();
-  }, [router]);
+  }, []);
 
   const handleLogout = () => {
-    clearToken();
-    router.push("/");
+    // No longer needed - layout handles logout
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -173,31 +152,32 @@ export default function SiswaBerkasPage() {
     if (refreshed.success && refreshed.data) setBerkasList(refreshed.data);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
-        Memuat berkas...
-      </div>
-    );
-  }
-
   return (
-    <DashboardShell
-      title="Berkas PPDB"
-      subtitle={`Halo, ${profileName}`}
-      sidebarTitle="Siswa Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/siswa" },
-        { label: "Panduan PPDB", href: "/dashboard/siswa/panduan" },
-        { label: "Status PPDB", href: "/dashboard/siswa/status" },
-        { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
-        { label: "Profil", href: "/dashboard/siswa/profile" },
-      ]}
-      onLogout={handleLogout}
-    >
+    <>
+      {/* Page Header */}
+      <div className="mb-8 bg-linear-to-r from-[#01793B]/5 to-[#01793B]/10 rounded-2xl p-6 border border-[#01793B]/10">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[#01793B]/15 flex items-center justify-center flex-shrink-0">
+            <svg className="w-6 h-6 text-[#01793B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8m0 8l-6-2m6 2l6-2m-6-8l-6-2m6 2l6-2m0-4V5m0 14l-6 2m6-2l6 2" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900">Kelengkapan Berkas</h1>
+            <p className="text-gray-600 mt-2 leading-relaxed">
+              Unggah semua dokumen pendukung yang diperlukan untuk melengkapi berkas pendaftaran Anda. Pastikan semua berkas sudah diunggah sebelum batas waktu PPDB.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
-          {error}
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+          <svg className="h-5 w-5 shrink-0 mt-0.5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <div>
+            <p className="font-semibold text-red-900">Terjadi kesalahan</p>
+            <p className="text-red-800 text-sm mt-0.5">{error}</p>
+          </div>
         </div>
       ) : null}
 
@@ -207,13 +187,13 @@ export default function SiswaBerkasPage() {
           <div>
             <p className="font-semibold">Periode pendaftaran PPDB telah berakhir</p>
             <p className="text-sm mt-0.5 opacity-90">
-              Anda tidak dapat mengunggah, mengubah, atau menghapus berkas. Hanya melihat daftar berkas yang sudah diunggah.
+              Anda hanya dapat melihat daftar berkas yang sudah diunggah. Upload, perubahan, atau penghapusan berkas tidak lagi tersedia.
             </p>
           </div>
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         <SiswaUploadSection
           form={form}
           fileName={fileName}
@@ -232,7 +212,7 @@ export default function SiswaBerkasPage() {
           uploadDisabled={!ppdbDibuka}
         />
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

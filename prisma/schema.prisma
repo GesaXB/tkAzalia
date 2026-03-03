@@ -39,18 +39,36 @@ model Kelas {
 }
 
 model Siswa {
-  siswa_id      Int         @id @default(autoincrement())
-  user_id       Int         @unique
-  kelas_id      Int?
-  status_ppdb   StatusPpdb  @default(menunggu)
-  catatan_ppdb  String?
-  berkas        BerkasSiswa[]
+  siswa_id          Int         @id @default(autoincrement())
+  user_id           Int         @unique
+  kelas_id          Int?
+  status_ppdb       StatusPpdb  @default(belum)
+  catatan_ppdb      String?
+  
+  // Data Calon Siswa
+  nama_anak         String?
+  nama_panggilan    String?
+  tempat_lahir      String?
+  tanggal_lahir     DateTime?
+  jenis_kelamin     String?
+  anak_ke           Int?
+  
+  // Data Orang Tua / Wali
+  nama_ayah         String?
+  pekerjaan_ayah    String?
+  nama_ibu          String?
+  pekerjaan_ibu     String?
+  no_whatsapp       String?
+  alamat_rumah      String?
+  
+  berkas            BerkasSiswa[]
 
   user  User  @relation(fields: [user_id], references: [user_id])
   kelas Kelas? @relation(fields: [kelas_id], references: [kelas_id])
 }
 
 enum StatusPpdb {
+  belum
   menunggu
   lulus
   tidak_lulus

@@ -105,7 +105,19 @@ export const SiswaScalarFieldEnum = {
   user_id: 'user_id',
   kelas_id: 'kelas_id',
   status_ppdb: 'status_ppdb',
-  catatan_ppdb: 'catatan_ppdb'
+  catatan_ppdb: 'catatan_ppdb',
+  nama_anak: 'nama_anak',
+  nama_panggilan: 'nama_panggilan',
+  tempat_lahir: 'tempat_lahir',
+  tanggal_lahir: 'tanggal_lahir',
+  jenis_kelamin: 'jenis_kelamin',
+  anak_ke: 'anak_ke',
+  nama_ayah: 'nama_ayah',
+  pekerjaan_ayah: 'pekerjaan_ayah',
+  nama_ibu: 'nama_ibu',
+  pekerjaan_ibu: 'pekerjaan_ibu',
+  no_whatsapp: 'no_whatsapp',
+  alamat_rumah: 'alamat_rumah'
 } as const
 
 export type SiswaScalarFieldEnum = (typeof SiswaScalarFieldEnum)[keyof typeof SiswaScalarFieldEnum]

@@ -1,7 +1,7 @@
 import { useToast } from "@/context/ToastContext";
 import { getListKelas, getSiswaMe, updateSiswaKelas, type KelasItem } from "@/lib/client/ppdb";
 import { motion } from "framer-motion";
-import { Check, Lock, School, Users } from "lucide-react";
+import { AlertCircle, Check, Lock, School, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 
@@ -75,6 +75,31 @@ export default function ClassSelection() {
     );
   }
 
+  // Show notification if no classes are available
+  if (kelasList.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 mb-2">
+          <School className="w-5 h-5 text-[#01793B]" />
+          <h3 className="text-lg font-bold text-gray-900">Pilih Kelas</h3>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3"
+        >
+          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-red-900">Belum ada kelas yang dibuat</p>
+            <p className="text-sm text-red-800 mt-1">
+              Admin belum membuat data kelas. Silakan menghubungi admin untuk membuat kelas terlebih dahulu sebelum melakukan pendaftaran.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
   // Helper to guess age group based on class name (simple logic)
   const getAgeGroup = (name: string) => {
     if (name.toLowerCase().includes("a")) return "Usia 4-5 Tahun";
@@ -102,6 +127,22 @@ export default function ClassSelection() {
           </span>
         )}
       </div>
+
+      {!selectedKelasId && !existingSelection && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 mb-4"
+        >
+          <AlertCircle className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-orange-900">Kelas belum dipilih</p>
+            <p className="text-sm text-orange-800 mt-1">
+              Silakan pilih salah satu kelas di bawah untuk melanjutkan proses pendaftaran.
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       <motion.div
         className="grid md:grid-cols-2 gap-4"

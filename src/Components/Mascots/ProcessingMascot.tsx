@@ -42,10 +42,10 @@ export default function ProcessingMascot() {
         >
           {/* Glass Handle */}
           <line x1="80" y1="120" x2="60" y2="140" stroke="#3B82F6" strokeWidth="8" strokeLinecap="round" />
-          
+
           {/* Glass Rim */}
           <circle cx="95" cy="105" r="30" stroke="#3B82F6" strokeWidth="6" fill="#BFDBFE" fillOpacity="0.3" />
-          
+
           {/* Glass Reflection */}
           <path d="M85 95 Q105 95 105 115" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.6" />
         </motion.g>
