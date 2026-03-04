@@ -41,17 +41,12 @@ export default function DashboardShell({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [greetingMascot, setGreetingMascot] = useState("");
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const stored =
       typeof window !== "undefined" && localStorage.getItem("dashboard-sidebar-open");
     if (stored !== null) setSidebarOpen(stored === "true");
-
-    // Set random friendly mascot
-    const mascots = ["👋", "🌟", "🚀", "😺", "✨", "🌈", "🎈"];
-    setGreetingMascot(mascots[Math.floor(Math.random() * mascots.length)]);
   }, []);
 
   const setSidebarOpenAndStore = (open: boolean) => {

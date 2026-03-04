@@ -28,7 +28,7 @@ export default function SiswaProfilePage() {
   const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get tab from query params
+
     const tab = searchParams?.get("tab") as TabType;
     if (tab === "sandi") {
       setActiveTab("sandi");
@@ -78,7 +78,7 @@ export default function SiswaProfilePage() {
     setPasswordError(null);
     setPasswordSuccess(null);
 
-    // Validate form
+
     if (!passwordForm.password_lama || !passwordForm.password_baru || !passwordForm.konfirmasi_sandi) {
       setPasswordError("Semua field wajib diisi");
       return;

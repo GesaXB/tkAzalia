@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Di sini nanti logika kirim email reset password
+
     console.log("Reset link dikirim ke:", email);
     setIsSubmitted(true);
   };
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
         <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
           
           {!isSubmitted ? (
-            /* TAMPILAN FORMULIR */
+
             <form className="space-y-6" onSubmit={handleSubmit}>
               
               {/* INPUT EMAIL */}
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
               </button>
             </form>
           ) : (
-            /* TAMPILAN SUKSES (Jika sudah submit) */
+
             <div className="text-center space-y-4 animate-in fade-in zoom-in duration-300">
               <div className="w-16 h-16 bg-green-100 text-[#01793B] rounded-full flex items-center justify-center mx-auto mb-4">
                  <Mail size={32} />

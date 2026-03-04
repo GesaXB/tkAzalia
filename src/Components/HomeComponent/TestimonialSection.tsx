@@ -42,17 +42,13 @@ const testimonials = [
 export default function TestimonialSection() {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  
-  // STATE BARU: Untuk menyimpan posisi scroll (0 sampai 100)
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // FUNGSI BARU: Menghitung persentase scroll
   const handleScroll = () => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
       const totalScroll = scrollWidth - clientWidth;
       
-      // Hindari pembagian dengan nol
       if (totalScroll > 0) {
         const progress = (scrollLeft / totalScroll) * 100;
         setScrollProgress(progress);
@@ -60,7 +56,6 @@ export default function TestimonialSection() {
     }
   };
 
-  // Efek Auto-Scroll
   useEffect(() => {
     if (isHovered) return;
 

@@ -3,7 +3,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Clock, Music, Heart, BookOpen, Smile, Utensils, LogOut } from "lucide-react";
 
-// JADWAL BARU SESUAI PERMINTAAN
 const schedule = [
   { 
     time: "07.30 - 08.00", 
@@ -56,16 +55,12 @@ export default function ProgramTimeline() {
          </p>
       </div>
 
-      {/* TIMELINE CONTAINER */}
       <div className="relative">
-        {/* Garis Tengah Vertikal */}
         <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 top-0 h-full w-1 bg-green-100 rounded-full"></div>
 
-        {/* Jarak antar card diperkecil menjadi space-y-8 */}
         <div className="space-y-8">
           {schedule.map((item, idx) => {
             const Icon = item.icon;
-            // Menentukan posisi kiri/kanan untuk tampilan desktop agar zig-zag
             const isEven = idx % 2 === 0;
             
             return (
@@ -77,22 +72,18 @@ export default function ProgramTimeline() {
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
                 className={`relative flex items-center ${isEven ? 'md:flex-row-reverse' : ''}`}
               >
-                {/* Titik di Tengah (Diperkecil) */}
                 <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-6 h-6 bg-white border-[3px] border-[#108043] rounded-full z-10 flex items-center justify-center shadow-sm">
                     <div className="w-2 h-2 bg-[#108043] rounded-full"></div>
                 </div>
 
-                {/* Spacer untuk Desktop agar layout zig-zag */}
                 <div className="hidden md:block w-1/2"></div>
 
-                {/* Card Content dengan Hover Lift */}
                 <motion.div 
                   whileHover={{ 
-                    y: -5, // Efek terangkat juga dibuat lebih subtle (lembut)
+                    y: -5,
                     scale: 1.01,
                     boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" 
                   }}
-                  // Jarak margin kiri disesuaikan dengan titik yang baru
                   className={`ml-12 md:ml-0 md:w-1/2 ${isEven ? 'md:pr-10' : 'md:pl-10'} cursor-pointer`}
                 >
                   {/* Card Padding dan Rounded diperkecil */}

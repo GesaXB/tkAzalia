@@ -56,7 +56,6 @@ export default function ContactForm() {
   );
 }
 
-// Styling Input Modern
 function FormInput({
   label,
   type,

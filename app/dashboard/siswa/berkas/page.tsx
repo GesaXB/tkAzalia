@@ -54,7 +54,6 @@ export default function SiswaBerkasPage() {
   }, []);
 
   const handleLogout = () => {
-    // No longer needed - layout handles logout
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

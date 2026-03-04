@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardShell from "@/Components/Dashboard/DashboardShell";
+import ConfirmModal from "@/Components/Dashboard/ConfirmModal";
 import { clearToken } from "@/lib/client/session";
 import { fetchProfile } from "@/lib/client/auth";
 import {
@@ -12,7 +13,7 @@ import {
   updateKelasAdmin,
   deleteKelasAdmin,
 } from "@/lib/client/admin";
-import { Plus, Pencil, Trash2, X, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check, BookOpen } from "lucide-react";
 
 export default function AdminKelasPage() {
   const router = useRouter();
@@ -26,6 +27,8 @@ export default function AdminKelasPage() {
   const [newNama, setNewNama] = useState("");
   const [newUrutan, setNewUrutan] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<KelasItem | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -97,15 +100,25 @@ export default function AdminKelasPage() {
     cancelEdit();
   };
 
-  const handleDelete = async (kelasId: number) => {
-    if (!confirm("Hapus kelas ini? Siswa yang memilih kelas ini akan direset pilihan kelasnya.")) return;
+  const openDeleteModal = (kelas: KelasItem) => {
+    setDeleteTarget(kelas);
+    setDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     setError(null);
-    const res = await deleteKelasAdmin(kelasId);
+    setSaving(true);
+    const res = await deleteKelasAdmin(deleteTarget.kelas_id);
+    setSaving(false);
     if (!res.success) {
       setError(res.error || "Gagal menghapus");
+      setDeleteModal(false);
       return;
     }
-    setList((prev) => prev.filter((x) => x.kelas_id !== kelasId));
+    setList((prev) => prev.filter((x) => x.kelas_id !== deleteTarget.kelas_id));
+    setDeleteModal(false);
+    setDeleteTarget(null);
   };
 
   if (loading) {
@@ -128,6 +141,7 @@ export default function AdminKelasPage() {
         { label: "PPDB", href: "/dashboard/admin/ppdb" },
         { label: "Blog", href: "/dashboard/admin/informasi" },
         { label: "Profil", href: "/dashboard/admin/profile" },
+        { label: "← Kembali ke Beranda", href: "/" },
       ]}
       onLogout={handleLogout}
     >
@@ -139,13 +153,21 @@ export default function AdminKelasPage() {
         )}
 
         <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Daftar Kelas</h2>
+          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100">
+                <BookOpen size={20} className="text-[#01793B]" />
+              </div>
+              <div>
+                <h2 className="font-bold text-gray-900 text-lg">Daftar Kelas</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Total {list.length} kelas</p>
+              </div>
+            </div>
             {!showForm && (
               <button
                 type="button"
                 onClick={() => setShowForm(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
               >
                 <Plus size={18} />
                 Tambah Kelas
@@ -154,84 +176,115 @@ export default function AdminKelasPage() {
           </div>
 
           {showForm && (
-            <form onSubmit={handleCreate} className="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap gap-3">
-              <input
-                value={newNama}
-                onChange={(e) => setNewNama(e.target.value)}
-                placeholder="Nama kelas (contoh: Kelompok A)"
-                className="px-3 py-2 rounded-lg border border-gray-200 text-sm flex-1 min-w-[200px]"
-                required
-              />
-              <input
-                type="number"
-                value={newUrutan}
-                onChange={(e) => setNewUrutan(Number(e.target.value) || 0)}
-                placeholder="Urutan"
-                className="w-20 px-3 py-2 rounded-lg border border-gray-200 text-sm"
-              />
-              <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60">
-                {saving ? "Menyimpan..." : "Simpan"}
-              </button>
-              <button type="button" onClick={() => setShowForm(false)} className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                Batal
-              </button>
+            <form onSubmit={handleCreate} className="p-6 border-b border-gray-100 bg-emerald-50/40 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Nama Kelas</label>
+                  <input
+                    value={newNama}
+                    onChange={(e) => setNewNama(e.target.value)}
+                    placeholder="Contoh: Kelompok A"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Urutan</label>
+                  <input
+                    type="number"
+                    value={newUrutan}
+                    onChange={(e) => setNewUrutan(Number(e.target.value) || 0)}
+                    placeholder="Contoh: 1"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-5 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors">
+                  {saving ? "Menyimpan..." : "Simpan"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="rounded-lg border border-gray-200 px-5 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                  Batal
+                </button>
+              </div>
             </form>
           )}
 
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-gray-100">
             {list.length === 0 ? (
-              <div className="px-5 py-8 text-center text-sm text-gray-500">
-                Belum ada kelas. Klik &quot;Tambah Kelas&quot; untuk menambah.
+              <div className="px-6 py-12 text-center">
+                <div className="flex justify-center mb-3">
+                  <BookOpen size={32} className="text-gray-300" />
+                </div>
+                <p className="text-sm text-gray-500">Belum ada kelas</p>
+                <p className="text-xs text-gray-400 mt-1">Klik &quot;Tambah Kelas&quot; untuk menambah kelas baru</p>
               </div>
             ) : (
               list.map((k) => (
-                <div key={k.kelas_id} className="px-5 py-4 flex items-center justify-between gap-4">
+                <div key={k.kelas_id} className="px-6 py-4 hover:bg-gray-50/50 transition-colors">
                   {editingId === k.kelas_id ? (
-                    <form onSubmit={handleUpdate} className="flex flex-wrap gap-2 flex-1">
-                      <input
-                        value={editNama}
-                        onChange={(e) => setEditNama(e.target.value)}
-                        className="px-3 py-2 rounded-lg border border-gray-200 text-sm flex-1 min-w-[180px]"
-                        required
-                      />
-                      <input
-                        type="number"
-                        value={editUrutan}
-                        onChange={(e) => setEditUrutan(Number(e.target.value) || 0)}
-                        className="w-16 px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                      />
-                      <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-3 py-2 text-sm text-white hover:bg-emerald-700">
-                        <Check size={18} />
-                      </button>
-                      <button type="button" onClick={cancelEdit} className="rounded-lg border border-gray-200 px-3 py-2 text-sm hover:bg-gray-50">
-                        <X size={18} />
-                      </button>
+                    <form onSubmit={handleUpdate} className="space-y-3">
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Nama Kelas</label>
+                          <input
+                            value={editNama}
+                            onChange={(e) => setEditNama(e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Urutan</label>
+                          <input
+                            type="number"
+                            value={editUrutan}
+                            onChange={(e) => setEditUrutan(Number(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2 pt-1">
+                        <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-3 py-2 text-sm text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors inline-flex items-center gap-1">
+                          <Check size={16} /> Simpan
+                        </button>
+                        <button type="button" onClick={cancelEdit} className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors inline-flex items-center gap-1">
+                          <X size={16} /> Batal
+                        </button>
+                      </div>
                     </form>
                   ) : (
-                    <>
-                      <div>
-                        <p className="font-medium text-gray-900">{k.nama}</p>
-                        <p className="text-xs text-gray-500">Urutan: {k.urutan}</p>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-gray-900">{k.nama}</h3>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                            #{k.urutan}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500">ID: {k.kelas_id}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => startEdit(k)}
-                          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100"
+                          className="p-2.5 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors"
                           aria-label="Ubah"
+                          title="Ubah kelas"
                         >
                           <Pencil size={18} />
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDelete(k.kelas_id)}
-                          className="p-2 rounded-lg text-red-600 hover:bg-red-50"
+                          onClick={() => openDeleteModal(k)}
+                          className="p-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
                           aria-label="Hapus"
+                          title="Hapus kelas"
                         >
                           <Trash2 size={18} />
                         </button>
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               ))
@@ -239,6 +292,21 @@ export default function AdminKelasPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        open={deleteModal}
+        title="Hapus Kelas?"
+        description={deleteTarget ? `Yakin ingin menghapus kelas "${deleteTarget.nama}"? Siswa yang memilih kelas ini akan direset pilihan kelasnya.` : ""}
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        isDanger={true}
+        isLoading={saving}
+        onClose={() => {
+          setDeleteModal(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={handleDelete}
+      />
     </DashboardShell>
   );
 }

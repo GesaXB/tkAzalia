@@ -280,7 +280,6 @@ export default function SiswaDataPpdbPage() {
   );
 }
 
-// Komponen Input Kecil
 function FormInput({
   label,
   placeholder,

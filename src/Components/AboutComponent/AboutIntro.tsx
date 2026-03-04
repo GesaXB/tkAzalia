@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function AboutIntro() {
   return (
-    // HAPUS overflow-hidden disini agar kotak hijau yang menonjol keluar tidak terpotong
+
     <section className="max-w-6xl mx-auto px-6 pt-10 pb-20">
       <motion.h2 
         initial={{ opacity: 0, y: 20 }}

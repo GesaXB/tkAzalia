@@ -12,9 +12,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
   const statusKey = status?.status_ppdb?.toLowerCase() || "menunggu";
   const catatan = status?.catatan_ppdb;
 
-  // Render logic based on status
   const renderStatusContent = () => {
-    // STATUS: BELUM LENGKAP - Data belum disimpan
     if (statusKey === "belum") {
       return (
         <motion.div
@@ -32,7 +30,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
 
             <div className="flex-1 space-y-3">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm text-slate-700 text-xs font-bold uppercase tracking-wide shadow-sm ring-1 ring-slate-200">
-                ⏳ Belum Lengkap
+                Belum Lengkap
               </div>
 
               <div>
@@ -41,7 +39,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
                 </h3>
                 <p className="mt-2 text-slate-700 font-medium leading-relaxed max-w-xl">
                   Ayo segera selesaikan pengisian data pendaftaran dan upload berkas persyaratan.
-                  Semakin cepat data lengkap, semakin cepat kami bisa memverifikasi! 🚀
+                  Semakin cepat data lengkap, semakin cepat kami bisa memverifikasi!
                 </p>
               </div>
 
@@ -65,7 +63,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
 
               {catatan && (
                 <div className="mt-4 p-4 bg-white/70 backdrop-blur-md rounded-2xl border border-slate-200 shadow-sm text-sm text-slate-700">
-                  <span className="font-bold mr-1">📌 Catatan:</span> {catatan}
+                  <span className="font-bold mr-1">Catatan:</span> {catatan}
                 </div>
               )}
             </div>
@@ -74,7 +72,6 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
       );
     }
 
-    // Check for both "diterima" (legacy/alternate) and "lulus" (schema default)
     if (statusKey === "diterima" || statusKey === "lulus") {
       return (
         <motion.div
@@ -102,13 +99,13 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
                 </h3>
                 <p className="mt-2 text-emerald-800/80 font-medium leading-relaxed max-w-xl">
                   Yeay! Selamat bergabung menjadi keluarga besar TK Azalia.
-                  Siapkan senyum terbaikmu untuk hari pertama sekolah nanti ya! 🏫✨
+                  Siapkan senyum terbaikmu untuk hari pertama sekolah nanti ya!
                 </p>
               </div>
 
               {catatan && (
                 <div className="mt-4 p-4 bg-white/70 backdrop-blur-md rounded-2xl border border-emerald-100 shadow-sm text-sm text-emerald-900">
-                  <span className="font-bold mr-1">💌 Pesan dari Sekolah:</span> {catatan}
+                  <span className="font-bold mr-1">Pesan dari Sekolah:</span> {catatan}
                 </div>
               )}
             </div>
@@ -142,7 +139,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
                 </h3>
                 <p className="mt-2 text-rose-800/80 font-medium leading-relaxed max-w-xl">
                   Jangan berkecil hati. Kamu tetap hebat dan istimewa!
-                  Mungkin saat ini belum berjodoh, tapi masa depan cerah menantimu. Teruslah belajar dan bermain! 🚀
+                  Mungkin saat ini belum berjodoh, tapi masa depan cerah menantimu. Teruslah belajar dan bermain!
                 </p>
               </div>
 

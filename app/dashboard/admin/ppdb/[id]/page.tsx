@@ -47,8 +47,6 @@ function validasiBadge(s: string) {
     </span>
   );
 }
-
-/** Full URL untuk file di public (client-only supaya load benar) */
 function useFileFullUrl(path: string | null | undefined) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -211,7 +209,6 @@ export default function AdminPpdbDetailPage() {
     if (!siswa) return;
     setValidating(berkasId);
 
-    // Import dynamically to avoid circular dependencies if any, though here it's fine to use directly
     const { updateBerkasValidasi } = await import("@/lib/client/admin");
 
     const res = await updateBerkasValidasi({
@@ -226,7 +223,6 @@ export default function AdminPpdbDetailPage() {
       return;
     }
 
-    // Update local state
     setSiswa(prev => {
       if (!prev) return null;
       return {

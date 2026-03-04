@@ -60,13 +60,9 @@ export default function ProgramHeroNew() {
         </motion.p>
       </div>
 
-      {/* --- WAVE SVG (PERBAIKAN) --- */}
       <div className="absolute bottom-0 left-0 w-full leading-[0] z-20">
         <svg 
             viewBox="0 0 1440 320" 
-            // PERBAIKAN DISINI:
-            // 1. h-[80px] md:h-[140px]: Membatasi tinggi gelombang agar tidak menutupi teks.
-            // 2. preserveAspectRatio="none": Memaksa gelombang gepeng/stretch sesuai tinggi yang kita atur.
             className="w-full h-[80px] md:h-[140px] block"
             preserveAspectRatio="none"
         >

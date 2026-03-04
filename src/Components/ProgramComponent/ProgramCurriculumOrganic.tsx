@@ -3,7 +3,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Heart, Brain, Hand, Smile, Palette, BookOpen } from "lucide-react";
 
-// Data Hardcode dengan Ikon Lucide
 const aspects = [
   { title: "Nilai Agama & Moral", desc: "Menanamkan perilaku mulia dan kebiasaan beribadah sederhana.", icon: Heart, color: "bg-green-100 text-green-600", border: "hover:border-green-400" },
   { title: "Kognitif & Logika", desc: "Mengembangkan kemampuan berpikir kritis dan pemecahan masalah.", icon: Brain, color: "bg-blue-100 text-blue-600", border: "hover:border-blue-400" },
@@ -34,7 +33,6 @@ export default function ProgramCurriculumOrganic() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              // INOVASI: Bentuk rounded yang tidak simetris (Organic Shape)
               className={`bg-white p-8 rounded-[2rem_1rem_2rem_1rem] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] border-2 border-transparent ${item.border} transition-all duration-300 group`}
             >
               <div className={`w-16 h-16 ${item.color} rounded-2xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center mb-6 shadow-sm`}>

@@ -25,6 +25,7 @@ const SISWA_SIDEBAR_ITEMS = [
       { label: "Ubah Sandi", href: "/dashboard/siswa/profile?tab=sandi" },
     ]
   },
+  { label: "← Kembali ke Beranda", href: "/" },
 ];
 
 export default function SiswaLayout({

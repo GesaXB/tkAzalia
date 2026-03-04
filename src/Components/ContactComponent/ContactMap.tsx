@@ -9,11 +9,9 @@ export default function ContactMap() {
           style={{ border: 0 }}
           allowFullScreen={true}
           loading="lazy"
-          // Class grayscale dihapus agar map tetap berwarna
           className="transition-all duration-500"
         ></iframe>
         
-        {/* Label di atas Map */}
         <div className="absolute bottom-4 right-4 bg-white px-4 py-2 rounded-full text-xs font-bold shadow-md text-gray-800 flex items-center gap-1">
             <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             Lokasi TK Azalia

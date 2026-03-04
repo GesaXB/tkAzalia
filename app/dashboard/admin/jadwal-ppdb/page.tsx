@@ -67,6 +67,7 @@ export default function AdminJadwalPpdbPage() {
         { label: "PPDB", href: "/dashboard/admin/ppdb" },
         { label: "Blog", href: "/dashboard/admin/informasi" },
         { label: "Profil", href: "/dashboard/admin/profile" },
+        { label: "← Kembali ke Beranda", href: "/" },
       ]}
       onLogout={handleLogout}
     >

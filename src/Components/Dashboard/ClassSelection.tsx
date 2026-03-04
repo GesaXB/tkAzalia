@@ -42,7 +42,6 @@ export default function ClassSelection() {
   }, [toast]);
 
   const initiateSelect = (kelasId: number) => {
-    // If already locked (existingSelection is present), do nothing
     if (existingSelection) return;
 
     setConfirmModal({ open: true, kelasId });
@@ -75,7 +74,6 @@ export default function ClassSelection() {
     );
   }
 
-  // Show notification if no classes are available
   if (kelasList.length === 0) {
     return (
       <div className="space-y-4">
@@ -100,7 +98,6 @@ export default function ClassSelection() {
     );
   }
 
-  // Helper to guess age group based on class name (simple logic)
   const getAgeGroup = (name: string) => {
     if (name.toLowerCase().includes("a")) return "Usia 4-5 Tahun";
     if (name.toLowerCase().includes("b")) return "Usia 5-6 Tahun";

@@ -2,37 +2,36 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Data Dummy Kurikulum (Aman tanpa Database)
 const aspects = [
   {
     title: "Nilai Agama & Moral",
     desc: "Mengenalkan doa harian, surat pendek, dan perilaku mulia sejak dini.",
-    icon: "🕌",
+    icon: "",
   },
   {
     title: "Fisik Motorik",
     desc: "Melatih koordinasi gerak tubuh, kesehatan, dan ketangkasan anak.",
-    icon: "🏃",
+    icon: "",
   },
   {
     title: "Kognitif",
     desc: "Mengembangkan kemampuan berpikir logis, mengenal angka, dan pemecahan masalah.",
-    icon: "🧩",
+    icon: "",
   },
   {
     title: "Bahasa",
     desc: "Memperkaya kosakata, kemampuan bercerita, dan persiapan membaca.",
-    icon: "📚",
+    icon: "",
   },
   {
     title: "Sosial Emosional",
     desc: "Membangun rasa percaya diri, kemandirian, dan kerjasama dengan teman.",
-    icon: "🤝",
+    icon: "",
   },
   {
     title: "Seni & Kreativitas",
     desc: "Mengekspresikan imajinasi melalui menggambar, menyanyi, dan prakarya.",
-    icon: "🎨",
+    icon: "",
   },
 ];
 

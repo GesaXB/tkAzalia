@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import SectionCard from "../SectionCard";
+import ConfirmModal from "../ConfirmModal";
 import { getJadwalPpdbAdmin, updateJadwalPpdb, resetJadwalPpdb } from "@/lib/client/admin";
 
 interface AdminJadwalSectionProps {
@@ -27,6 +28,7 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
   const [selesai, setSelesai] = useState(jadwal ? formatDateLocal(jadwal.tanggal_selesai) : "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,18 +46,23 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
     onSaved();
   };
 
-  const handleReset = async () => {
-    if (!confirm("Yakin ingin mereset jadwal PPDB? Semua pengaturan tanggal akan dihapus.")) return;
+  const handleReset = () => {
+    setShowResetModal(true);
+  };
+
+  const handleConfirmReset = async () => {
     setError(null);
     setSaving(true);
     const res = await resetJadwalPpdb();
     setSaving(false);
     if (!res.success) {
       setError(res.error || "Gagal mereset");
+      setShowResetModal(false);
       return;
     }
     setMulai("");
     setSelesai("");
+    setShowResetModal(false);
     onSaved();
   };
 
@@ -121,6 +128,18 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
           )}
         </div>
       </form>
+
+      <ConfirmModal
+        open={showResetModal}
+        title="Reset Jadwal PPDB?"
+        description="Yakin ingin mereset jadwal PPDB? Semua pengaturan tanggal akan dihapus dan sistem PPDB tidak akan beroperasi sampai jadwal baru ditetapkan."
+        confirmLabel="Reset"
+        cancelLabel="Batal"
+        isDanger={true}
+        isLoading={saving}
+        onClose={() => setShowResetModal(false)}
+        onConfirm={handleConfirmReset}
+      />
     </SectionCard>
   );
 }

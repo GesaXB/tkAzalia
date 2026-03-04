@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function ContactContent() {
   return (
-    // Margin top negatif (-mt-20) membuat kotak konten naik ke atas banner, terlihat premium
+
     <section className="max-w-7xl mx-auto px-4 mb-24 relative z-20 -mt-20">
       <motion.div 
         initial={{ opacity: 0, y: 50 }}

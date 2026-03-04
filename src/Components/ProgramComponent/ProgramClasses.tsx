@@ -44,22 +44,18 @@ export default function ProgramClasses() {
           return (
             <motion.div
               key={idx}
-              // ANIMASI MUNCUL: Dibuat lebih cepat (0.4s) agar terasa ringan
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
-              
-              // EFEK MELAYANG (HOVER LIFT): Card terangkat ke atas saat di-hover
               whileHover={{ 
-                y: -20, // Mengangkat kartu sejauh 20px ke atas
+                y: -20,
                 scale: 1.02,
-                boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.15)" 
+                boxShadow: \"0 30px 60px -12px rgba(0, 0, 0, 0.15)\" 
               }}
-              
               className="group bg-white p-8 rounded-[2.5rem] border-2 border-gray-100 shadow-md transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer"
             >
-              {/* Dekorasi lingkaran di dalam card */}
+
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-gray-50 rounded-full group-hover:bg-green-50 transition-colors duration-500 -z-10"></div>
 
               <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:rotate-6 transition-transform duration-500`}>

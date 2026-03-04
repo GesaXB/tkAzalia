@@ -15,7 +15,6 @@ interface SiswaBerkasSectionProps {
     payload: Partial<CreateBerkasPayload>,
     newFile?: File
   ) => Promise<void>;
-  /** Saat true (PPDB berakhir), tombol Ubah dan Hapus disembunyikan; hanya Lihat yang aktif. */
   uploadDisabled?: boolean;
 }
 
