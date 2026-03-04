@@ -51,7 +51,7 @@ export default function ProgramClasses() {
               whileHover={{ 
                 y: -20,
                 scale: 1.02,
-                boxShadow: \"0 30px 60px -12px rgba(0, 0, 0, 0.15)\" 
+                boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.15)" 
               }}
               className="group bg-white p-8 rounded-[2.5rem] border-2 border-gray-100 shadow-md transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer"
             >

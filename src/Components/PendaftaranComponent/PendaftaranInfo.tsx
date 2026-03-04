@@ -3,7 +3,8 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 
 export default function PendaftaranInfo() {
   return (
-    <section className="py-10 px-6 max-w-7xl mx-auto">
+    // PERBAIKAN: Mengganti py-10 menjadi pt-10 pb-24 md:pb-32 untuk memberi jarak ekstra di bawah kartu
+    <section className="pt-10 pb-24 md:pb-32 px-6 max-w-7xl mx-auto">
       {/* Tambahkan 'items-stretch' untuk menyamakan tinggi otomatis */}
       <div className="grid md:grid-cols-2 gap-8 items-stretch">
         

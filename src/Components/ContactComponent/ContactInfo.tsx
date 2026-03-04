@@ -18,8 +18,10 @@ export default function ContactInfo() {
             title="Alamat Sekolah"
             content={
               <>
-                Jl. Pendidikan No. 123, Purwokerto,<br />
-                Jawa Tengah, Indonesia 53123
+                Jl. Raya Gn. Tugel, Windusara, Karangklesem,<br />
+                Kec. Purwokerto Sel., Kabupaten Banyumas,<br />
+                Jawa Tengah 53144
+                 
               </>
             }
           />
@@ -29,8 +31,8 @@ export default function ContactInfo() {
             title="Telepon & WhatsApp"
             content={
               <>
-                (0281) 1234567 <br />
-                <span className="font-semibold text-green-600">+62 812-3456-7890 (Admin WA)</span>
+                (0815) 15405099 <br />
+                <span className="font-semibold text-green-600">+62-815-1540-5099</span>
               </>
             }
           />
@@ -40,8 +42,7 @@ export default function ContactInfo() {
             title="Email"
             content={
               <>
-                info@tkazalia.sch.id<br />
-                admin@tkazalia.sch.id
+                @tkazalia.sch.id<br />
               </>
             }
           />
@@ -51,8 +52,8 @@ export default function ContactInfo() {
             title="Jam Operasional"
             content={
               <>
-                Senin - Jumat: 07.00 - 14.00 WIB<br />
-                Sabtu: 07.00 - 12.00 WIB
+                Hari: Senin - Jumat<br />
+                Jam: 07.30 - 13.00
               </>
             }
           />
