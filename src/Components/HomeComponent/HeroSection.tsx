@@ -6,16 +6,14 @@ import { ArrowRight } from 'lucide-react';
 
 export default function HeroSection() {
   return (
-    <section className="relative text-center flex flex-col items-center justify-center min-h-[85vh] px-4 overflow-hidden bg-gradient-to-b from-white to-green-50/30">
+    <section className="relative text-center flex flex-col items-center justify-center min-h-[85vh] px-4 overflow-hidden bg-gradient-to-b from-green-100 to-green-50/30">
       
-      {/* Background Decoration tetap ada, tapi kita tambah blur sedikit biar fokus ke teks */}
       <div className="absolute inset-0 z-0 opacity-60">
          <BackgroundDecoration />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-2 text-center -mt-10 md:-mt-20">
 
-        {/* Judul Utama */}
         <motion.h1 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -28,7 +26,6 @@ export default function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* Deskripsi */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,7 +37,6 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        {/* Tombol CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

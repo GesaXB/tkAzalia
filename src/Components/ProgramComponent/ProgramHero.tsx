@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 export default function ProgramHero() {
   return (
     <section className="relative bg-[#108043] pt-32 pb-40 px-6 text-center text-white overflow-hidden">
-      {/* Background Pattern Halus */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
         <div className="absolute bottom-10 right-10 w-64 h-64 bg-yellow-300 rounded-full blur-3xl mix-blend-overlay"></div>

@@ -11,42 +11,36 @@ export default function RejectMascot() {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Background Circle */}
         <circle cx="100" cy="100" r="80" fill="#FFE4E6" opacity="0.5" />
 
-        {/* Bear Head */}
         <motion.path
           d="M60 70C60 40 140 40 140 70V120C140 150 60 150 60 120V70Z"
-          fill="#F43F5E" // Rose-500
+          fill="#F43F5E" 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, type: "spring" }}
         />
 
-        {/* Ears */}
         <circle cx="50" cy="50" r="15" fill="#F43F5E" />
         <circle cx="150" cy="50" r="15" fill="#F43F5E" />
 
-        {/* Eyes (Calm/Closed) */}
         <motion.path
-          d="M80 90 Q90 95 100 90" // Winking/Happy closed eye
+          d="M80 90 Q90 95 100 90" 
           stroke="white"
           strokeWidth="4"
           strokeLinecap="round"
           fill="none"
         />
         <motion.path
-           d="M110 85 L130 85" // Flat calm eye
+           d="M110 85 L130 85" 
            stroke="white"
            strokeWidth="4"
            strokeLinecap="round"
         />
 
-        {/* Snout */}
         <ellipse cx="100" cy="110" rx="25" ry="15" fill="#FECDD3" />
         <circle cx="100" cy="105" r="5" fill="#881337" />
 
-        {/* Arms (Hugging) */}
         <motion.path
           d="M50 120 Q30 140 60 150"
           stroke="#F43F5E"
@@ -58,7 +52,6 @@ export default function RejectMascot() {
           transition={{ duration: 1.5, repeat: Infinity, repeatType: "mirror" }}
         />
         
-        {/* Heart */}
         <motion.path
           d="M130 130 C130 130 140 120 150 130 C160 140 150 150 140 160 L130 170" // Simplified heart
           fill="#FFB3B3"

@@ -5,9 +5,12 @@ import { Sparkles } from "lucide-react";
 
 export default function ProgramHeroNew() {
   return (
-    <section className="relative bg-gradient-to-br from-[#108043] to-[#085c30] pt-36 pb-40 md:pb-60 px-6 text-center text-white overflow-hidden">
+    <section className="relative bg-gradient-to-br from-[#01793B] to-[#015c2e] pt-36 pb-40 md:pb-60 px-6 text-center text-white overflow-hidden">
+
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:24px_24px]"></div>
+      <div className="absolute top-20 right-10 w-64 h-64 bg-yellow-400 rounded-full blur-[100px] opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-10 left-10 w-48 h-48 bg-blue-400 rounded-full blur-[80px] opacity-20"></div>
       
-      {/* --- BACKGROUND ANIMATION --- */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div 
           animate={{ y: [-10, 10, -10], opacity: [0.3, 0.5, 0.3] }} 
@@ -21,8 +24,6 @@ export default function ProgramHeroNew() {
         ></motion.div>
       </div>
 
-      {/* --- KONTEN UTAMA --- */}
-      {/* Tambahkan z-30 agar teks PASTI DI ATAS gelombang jika tidak sengaja bertabrakan */}
       <div className="max-w-4xl mx-auto relative z-30">
         
         <motion.div

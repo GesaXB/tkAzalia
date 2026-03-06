@@ -1,11 +1,5 @@
-import ContactContent from "@/Components/ContactComponent/ContactContent";
-import ContactHero from "@/Components/ContactComponent/ContactHero";
+import ContactSection from "@/Components/sections/ContactPage";
 
-export default function ContactPage() {
-  return (
-    <main className="min-h-screen bg-[#F8F9FA] overflow-hidden">
-      <ContactHero />
-      <ContactContent />
-    </main>
-  );
+export default function Page() {
+  return <ContactSection />;
 }

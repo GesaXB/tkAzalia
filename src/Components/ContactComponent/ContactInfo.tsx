@@ -1,10 +1,10 @@
 import ContactInfoItem from "./ContactInfoItem";
-import { MapPin, Phone, Mail, Clock } from "lucide-react"; // Kita ganti SVG manual dengan Lucide biar rapi
+import { MapPin, Phone, Mail, Clock } from "lucide-react"; 
 
 export default function ContactInfo() {
   return (
     <div className="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-gray-100 relative overflow-hidden group">
-      {/* Dekorasi Hover */}
+
       <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full transition-transform duration-500 group-hover:scale-150 -z-0"></div>
 
       <div className="relative z-10">

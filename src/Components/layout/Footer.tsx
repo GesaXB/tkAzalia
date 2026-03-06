@@ -102,9 +102,6 @@ export default function Footer() {
         {/* --- BAGIAN BAWAH (COPYRIGHT) --- */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           <p>© 2026 TK Azalia. All Rights Reserved.</p>
-          <p className="mt-2 md:mt-0">
-            Website developed by <span className="text-white font-medium">SMK Telkom Purwokerto</span>
-          </p>
         </div>
 
       </div>

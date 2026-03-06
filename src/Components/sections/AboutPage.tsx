@@ -1,15 +1,18 @@
-import HeroSection from "../AboutComponent/HeroSection";
-import HistorySection from "../AboutComponent/HistorySection";
-import PrincipalSection from "../AboutComponent/PrincipalSection";
-import VisionMissionSection from "../AboutComponent/VissionMissionSection";
+import React from "react";
+import AboutHero from "@/Components/AboutComponent/AboutHero";
+import AboutIntro from "@/Components/AboutComponent/AboutIntro";
+import AboutVisionMission from "@/Components/AboutComponent/AboutVisionMission";
+import AboutPrograms from "@/Components/AboutComponent/AboutPrograms";
+import AboutLearningAreas from "@/Components/AboutComponent/AboutLearningAreas";
 
-export default function AboutPage() {
+export default function AboutSection() {
   return (
-    <main className="min-h-screen pb-20 bg-white font-sans">
-      <HeroSection />
-      <HistorySection />
-      <VisionMissionSection />
-      <PrincipalSection />
+    <main className="w-full bg-white min-h-screen flex flex-col gap-8 md:gap-20">
+      <AboutHero />
+      <AboutIntro />
+      <AboutVisionMission />
+      <AboutPrograms />
+      <AboutLearningAreas />
     </main>
   );
 }

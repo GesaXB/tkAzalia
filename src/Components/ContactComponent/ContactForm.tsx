@@ -36,10 +36,10 @@ export default function ContactForm() {
   return (
     <div className="bg-white rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-gray-100 h-full flex flex-col relative overflow-hidden">
       
-      {/* Aksen atas hijau */}
+
       <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#01793B] to-emerald-500"></div>
 
-      {/* Konten FAQ */}
+
       <div className="p-8 md:p-10 flex-grow overflow-y-auto">
         <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
            <HelpCircle className="w-6 h-6 text-[#01793B]" /> Tanya Jawab
@@ -83,14 +83,14 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Call to Action: Hubungi Admin (Di bagian bawah card) */}
+
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 border-t border-gray-100 mt-auto">
          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
                 <h4 className="font-bold text-gray-900 text-sm mb-1">Tidak menemukan jawaban?</h4>
                 <p className="text-xs text-gray-500">Tanyakan langsung ke admin kami.</p>
             </div>
-            {/* Ganti href dengan link wa.me/nomor-admin */}
+
             <a 
               href="https://wa.me/6281234567890" 
               target="_blank" 

@@ -18,7 +18,6 @@ export default function AboutIntro() {
       </motion.h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Bagian Teks (Kiri) */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -40,7 +39,6 @@ export default function AboutIntro() {
           </p>
         </motion.div>
         
-        {/* Bagian Gambar (Kanan) */}
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -48,19 +46,10 @@ export default function AboutIntro() {
           transition={{ duration: 0.8 }}
           className="flex justify-center items-center mt-8 md:mt-0 pl-6 pb-6 order-1 md:order-2"
         >
-           {/* Tambahkan z-0 disini untuk membuat konteks tumpukan baru */}
            <div className="relative w-full max-w-[450px] aspect-[4/3] group z-0">
              
-             {/* KOTAK HIJAU: 
-                 Ganti '-z-10' menjadi 'z-0'. 
-                 Posisinya absolute, dia akan berada di belakang karena urutan HTML-nya duluan 
-             */}
              <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 w-full h-full bg-[#108043]/90 rounded-2xl z-0 transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-2"></div>
 
-             {/* CONTAINER GAMBAR:
-                 Tambahkan 'relative z-10'. 
-                 Ini memaksa gambar duduk DI ATAS kotak hijau (layer 1 vs layer 0)
-             */}
              <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-200 border border-gray-100 z-10">
                <Image 
                   src="/foto-kegiatan.jpeg" 

@@ -6,7 +6,7 @@ export default function ContactHero() {
   return (
     <section className="relative w-full pt-20 pb-28 md:pt-28 md:pb-36 flex items-center justify-center overflow-hidden mb-12 min-h-[400px]">
       
-      {/* Background Image Parallax */}
+
       <div className="absolute inset-0 z-0">
         <Image
           src="/fasilitas.jpeg" 
@@ -15,7 +15,7 @@ export default function ContactHero() {
           className="object-cover"
           priority
         />
-        {/* Overlay Gradient: Agar teks putih terbaca jelas & terlihat mahal */}
+
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
       </div>
 

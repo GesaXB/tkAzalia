@@ -1,15 +1,13 @@
-import PendaftaranCTA from "../PendaftaranComponent/PendaftaranCta";
-import PendaftaranHero from "../PendaftaranComponent/PendaftaranHero";
-import PendaftaranSteps from "../PendaftaranComponent/PendaftaranSteps";
-import RequirementsAndFees from "../PendaftaranComponent/RequirementsAndFees";
+import PendaftaranHero from "@/Components/PendaftaranComponent/PendaftaranHero";
+import PendaftaranInfo from "@/Components/PendaftaranComponent/PendaftaranInfo";
+import PendaftaranSteps from "@/Components/PendaftaranComponent/PendaftaranSteps";
 
-export default function PendaftaranPage() {
+export default function PendaftaranSection() {
   return (
-    <main className="min-h-screen pt-36 pb-20 bg-gray-50 font-sans">
+    <main className="min-h-screen bg-white">
       <PendaftaranHero />
       <PendaftaranSteps />
-      <RequirementsAndFees />
-      <PendaftaranCTA />
+      <PendaftaranInfo />
     </main>
   );
 }

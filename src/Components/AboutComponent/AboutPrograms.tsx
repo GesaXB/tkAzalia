@@ -35,7 +35,7 @@ export default function AboutPrograms() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.2 }}
-            whileHover={{ y: -10 }} // Efek Hover: Kartu naik ke atas
+            whileHover={{ y: -10 }} 
             className="flex flex-col rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white h-full border border-gray-100"
           >
             {/* Header Hijau */}
