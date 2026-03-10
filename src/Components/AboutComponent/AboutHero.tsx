@@ -1,8 +1,16 @@
 "use client"; // Wajib untuk animasi
-import React from "react";
+import { getToken } from "@/lib/client/session";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function AboutHero() {
+  const [hasToken, setHasToken] = useState(false);
+
+  useEffect(() => {
+    setHasToken(!!getToken());
+  }, []);
+
   return (
     <section className="relative bg-[#108043] pt-32 pb-48 px-4 text-center text-white overflow-hidden">
       {/* Background Pattern (Hiasan Halus) */}
@@ -13,7 +21,7 @@ export default function AboutHero() {
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* JUDUL */}
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -23,7 +31,7 @@ export default function AboutHero() {
         </motion.h1>
 
         {/* QUOTE */}
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -33,18 +41,24 @@ export default function AboutHero() {
         </motion.p>
 
         {/* BUTTONS */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="flex flex-col sm:flex-row justify-center gap-4"
         >
-          <button className="bg-white text-[#108043] px-8 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-gray-100 hover:scale-105 transition-all shadow-lg active:scale-95">
-            DAFTAR SEKARANG
-          </button>
-          <button className="border-2 border-white text-white px-8 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-white/10 hover:scale-105 transition-all active:scale-95">
-            LIHAT PROGRAM
-          </button>
+          {(!hasToken) && (
+            <Link href="/auth/register">
+              <button className="bg-white text-[#108043] px-8 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-gray-100 hover:scale-105 transition-all shadow-lg active:scale-95 w-full sm:w-auto">
+                DAFTAR SEKARANG
+              </button>
+            </Link>
+          )}
+          <Link href="/program">
+            <button className="border-2 border-white text-white px-8 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-white/10 hover:scale-105 transition-all active:scale-95 w-full sm:w-auto">
+              LIHAT PROGRAM
+            </button>
+          </Link>
         </motion.div>
       </div>
 

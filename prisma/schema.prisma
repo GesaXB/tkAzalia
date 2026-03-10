@@ -34,6 +34,7 @@ enum Role {
 model Kelas {
   kelas_id   Int     @id @default(autoincrement())
   nama       String  @unique
+  deskripsi  String?
   urutan     Int     @default(0)
   siswa      Siswa[]
 }
@@ -44,7 +45,7 @@ model Siswa {
   kelas_id          Int?
   status_ppdb       StatusPpdb  @default(belum)
   catatan_ppdb      String?
-  
+
   // Data Calon Siswa
   nama_anak         String?
   nama_panggilan    String?
@@ -52,7 +53,7 @@ model Siswa {
   tanggal_lahir     DateTime?
   jenis_kelamin     String?
   anak_ke           Int?
-  
+
   // Data Orang Tua / Wali
   nama_ayah         String?
   pekerjaan_ayah    String?
@@ -60,7 +61,7 @@ model Siswa {
   pekerjaan_ibu     String?
   no_whatsapp       String?
   alamat_rumah      String?
-  
+
   berkas            BerkasSiswa[]
 
   user  User  @relation(fields: [user_id], references: [user_id])

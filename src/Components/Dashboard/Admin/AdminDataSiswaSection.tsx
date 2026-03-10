@@ -1,0 +1,138 @@
+"use client";
+
+import { AdminPpdbSiswa, KelasItem } from "@/lib/client/admin";
+import { ChevronRight, Search } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import SectionCard from "../SectionCard";
+
+interface AdminDataSiswaSectionProps {
+  ppdbList: AdminPpdbSiswa[];
+  kelasList: KelasItem[];
+}
+
+export default function AdminDataSiswaSection({
+  ppdbList,
+  kelasList,
+}: AdminDataSiswaSectionProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterKelas, setFilterKelas] = useState<string>("");
+
+  const filteredList = useMemo(() => {
+    let list = ppdbList;
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      list = list.filter(
+        (item) =>
+          (item.nama_anak || "").toLowerCase().includes(q) ||
+          (item.user.nama_lengkap).toLowerCase().includes(q) ||
+          (item.user.email).toLowerCase().includes(q)
+      );
+    }
+    if (filterKelas) {
+      list = list.filter((item) => String(item.kelas_id) === filterKelas);
+    }
+    return list;
+  }, [ppdbList, searchQuery, filterKelas]);
+
+  return (
+    <SectionCard
+      title="Data Calon Siswa"
+      description="Daftar lengkap informasi pribadi calon siswa yang mendaftar."
+    >
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari nama anak atau orang tua..."
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B]"
+            />
+          </div>
+          <select
+            value={filterKelas}
+            onChange={(e) => setFilterKelas(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white w-full sm:w-auto focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B]"
+          >
+            <option value="">Semua kelas</option>
+            {kelasList.map((k) => (
+              <option key={k.kelas_id} value={k.kelas_id}>
+                {k.nama}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-gray-100">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-3">Peserta</th>
+                <th className="px-4 py-3">TTL</th>
+                <th className="px-4 py-3">Gender</th>
+                <th className="px-4 py-3">Kelas</th>
+                <th className="px-4 py-3 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50 bg-white">
+              {filteredList.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-gray-500">
+                    Tidak ada data ditemukan.
+                  </td>
+                </tr>
+              ) : (
+                filteredList.map((item) => (
+                  <tr key={item.siswa_id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-900 line-clamp-1">
+                          {item.nama_anak || item.user.nama_lengkap}
+                        </span>
+                        <span className="text-xs text-gray-500 line-clamp-1">
+                          Orang tua: {item.user.nama_lengkap}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      <div className="flex flex-col">
+                        <span className="truncate">{item.tempat_lahir || "-"}</span>
+                        <span className="text-xs truncate">
+                          {item.tanggal_lahir ? new Date(item.tanggal_lahir).toLocaleDateString("id-ID") : "-"}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {item.jenis_kelamin || "-"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {item.kelas ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                          {item.kelas.nama}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Link
+                        href={`/dashboard/admin/ppdb/${item.siswa_id}`}
+                        className="inline-flex items-center gap-1 text-[#01793B] font-medium hover:underline"
+                      >
+                        Detail
+                        <ChevronRight size={14} />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </SectionCard>
+  );
+}

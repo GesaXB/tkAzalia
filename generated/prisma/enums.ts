@@ -18,6 +18,7 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 
 export const StatusPpdb = {
+  belum: 'belum',
   menunggu: 'menunggu',
   lulus: 'lulus',
   tidak_lulus: 'tidak_lulus'

@@ -1,21 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { deleteKelas, getKelasById, updateKelas } from '@/lib/admin/kelas';
+import { AuthenticatedRequest, authMiddleware } from '@/lib/middleware/auth';
 import { ApiResponse } from '@/types';
-import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware/auth';
-import { updateKelas, deleteKelas, getKelasById } from '@/lib/admin/kelas';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-async function putHandler(req: AuthenticatedRequest, context: RouteContext): Promise<NextResponse<ApiResponse>> {
+async function putHandler(req: AuthenticatedRequest, context: any): Promise<NextResponse<ApiResponse>> {
   const id = Number((await context.params).id);
   if (!Number.isInteger(id) || id < 1) {
     return NextResponse.json({ success: false, error: 'ID tidak valid' }, { status: 400 });
   }
   try {
-    const body = (await (req as NextRequest).json()) as { nama?: string; urutan?: number };
-    const data: { nama?: string; urutan?: number } = {};
+    const body = (await (req as NextRequest).json()) as { nama?: string; deskripsi?: string; urutan?: number };
+    const data: { nama?: string; deskripsi?: string | null; urutan?: number } = {};
     if (typeof body.nama === 'string' && body.nama.trim()) data.nama = body.nama.trim();
+    if (typeof body.deskripsi === 'string') data.deskripsi = body.deskripsi.trim() || null;
     if (typeof body.urutan === 'number') data.urutan = body.urutan;
     if (Object.keys(data).length === 0) {
       return NextResponse.json({ success: false, error: 'Tidak ada data yang diubah' }, { status: 400 });
@@ -31,7 +32,7 @@ async function putHandler(req: AuthenticatedRequest, context: RouteContext): Pro
   }
 }
 
-async function deleteHandler(_req: AuthenticatedRequest, context: RouteContext): Promise<NextResponse<ApiResponse>> {
+async function deleteHandler(_req: AuthenticatedRequest, context: any): Promise<NextResponse<ApiResponse>> {
   const id = Number((await context.params).id);
   if (!Number.isInteger(id) || id < 1) {
     return NextResponse.json({ success: false, error: 'ID tidak valid' }, { status: 400 });

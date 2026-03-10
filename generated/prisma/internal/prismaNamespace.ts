@@ -985,6 +985,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const KelasScalarFieldEnum = {
   kelas_id: 'kelas_id',
   nama: 'nama',
+  deskripsi: 'deskripsi',
   urutan: 'urutan'
 } as const
 

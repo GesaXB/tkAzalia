@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { InformasiSekolahItem, uploadBlogImage } from "@/lib/client/admin";
-import SectionCard from "../SectionCard";
-import { FileText, Image as ImageIcon, Search, X, Upload } from "lucide-react";
+import { Edit2, FileText, Image as ImageIcon, Search, Trash2, Upload, X } from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface InfoFormState {
   judul: string;
@@ -102,357 +101,343 @@ export default function AdminInformasiSection({
   const isEditOpen = editingId != null && String(editingId) === infoUpdate.info_id;
 
   return (
-    <SectionCard
-      title="Blog"
-      description="Kelola artikel blog dengan gambar, kategori, dan konten lengkap."
-    >
-      <div className="space-y-8">
-        {/* Form buat artikel baru */}
-        <form
-          onSubmit={onCreate}
-          className="rounded-xl border border-gray-100 bg-gray-50/50 p-5 space-y-4"
-        >
-          <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-            <FileText size={18} />
-            Buat Artikel Baru
-          </h3>
+    <div className="space-y-6">
+      {/* Search and Filters */}
+      <div className="flex flex-wrap items-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input
-            value={infoForm.judul}
-            onChange={(e) => onChangeInfoForm({ ...infoForm, judul: e.target.value })}
-            placeholder="Judul artikel"
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-            required
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari artikel..."
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
           />
-          <input
-            value={infoForm.slug}
-            onChange={(e) => onChangeInfoForm({ ...infoForm, slug: e.target.value })}
-            placeholder="Slug URL (contoh: berita-acara-tahunan)"
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-            required
-          />
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
-              <ImageIcon size={14} />
-              Gambar (unggah file atau isi URL)
-            </label>
-            <div className="flex gap-2 flex-wrap">
-              <label className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm cursor-pointer hover:bg-gray-50">
-                <Upload size={16} />
-                {uploadingCreate ? "Mengunggah..." : "Pilih file"}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp"
-                  className="hidden"
-                  onChange={handleCreateImageChange}
-                  disabled={uploadingCreate}
-                />
-              </label>
-              <input
-                value={infoForm.gambar}
-                onChange={(e) => onChangeInfoForm({ ...infoForm, gambar: e.target.value })}
-                placeholder="URL gambar (opsional)"
-                className="flex-1 min-w-[180px] px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-              />
+        </div>
+        <div className="flex gap-2">
+          <select
+            value={filterTipe}
+            onChange={(e) => setFilterTipe(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
+          >
+            <option value="">Semua Tipe</option>
+            {TIPE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
+          >
+            <option value="">Status</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600">
+              <FileText size={20} />
             </div>
-            {infoForm.gambar && (
-              <img
-                src={infoForm.gambar}
-                alt="Preview"
-                className="h-20 w-auto rounded-lg border border-gray-200 object-cover"
-              />
-            )}
-          </div>
-          <textarea
-            value={infoForm.ringkasan}
-            onChange={(e) => onChangeInfoForm({ ...infoForm, ringkasan: e.target.value })}
-            placeholder="Ringkasan / excerpt (opsional)"
-            rows={2}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all resize-none"
-          />
-          <textarea
-            value={infoForm.konten}
-            onChange={(e) => onChangeInfoForm({ ...infoForm, konten: e.target.value })}
-            placeholder="Konten artikel"
-            rows={4}
-            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all resize-none"
-            required
-          />
-          <div className="grid gap-3 sm:grid-cols-3">
-            <select
-              value={infoForm.tipe}
-              onChange={(e) => onChangeInfoForm({ ...infoForm, tipe: e.target.value })}
-              className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-            >
-              {TIPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={infoForm.status}
-              onChange={(e) => onChangeInfoForm({ ...infoForm, status: e.target.value })}
-              className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-            <input
-              type="number"
-              value={infoForm.urutan}
-              onChange={(e) =>
-                onChangeInfoForm({ ...infoForm, urutan: Number(e.target.value) || 1 })
-              }
-              placeholder="Urutan"
-              min={1}
-              className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all"
-            />
+            <div>
+              <h2 className="font-bold text-gray-900 text-lg">Kelola Artikel</h2>
+              <p className="text-xs text-gray-500">Buat dan edit berita atau artikel sekolah</p>
+            </div>
           </div>
           <button
-            type="submit"
-            className="px-4 py-2.5 rounded-lg bg-[#01793B] text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
+            type="button"
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
           >
-            Simpan Artikel
+            <Upload size={16} />
+            Buat Baru
           </button>
-        </form>
+        </div>
 
-        {/* Filter & pencarian + daftar artikel */}
-        <div>
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari judul atau slug..."
-                className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400"
-              />
+        <div className="p-6 bg-slate-50 border-b border-gray-100">
+          <form onSubmit={onCreate} className="space-y-4 max-w-4xl mx-auto bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3 className="font-bold text-gray-900 border-l-4 border-emerald-500 pl-3">Form Artikel Baru</h3>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-gray-700">Judul Artikel</label>
+                <input
+                  value={infoForm.judul}
+                  onChange={(e) => onChangeInfoForm({ ...infoForm, judul: e.target.value })}
+                  placeholder="Masukkan judul..."
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-gray-700">Slug (URL)</label>
+                <input
+                  value={infoForm.slug}
+                  onChange={(e) => onChangeInfoForm({ ...infoForm, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                  placeholder="link-artikel-anda"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
+                  required
+                />
+              </div>
+
+              <div className="sm:col-span-2 space-y-1">
+                <label className="text-xs font-bold text-gray-700">Sampul & Konten</label>
+                <div className="flex gap-2">
+                  <label className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-700 text-xs font-bold cursor-pointer hover:bg-emerald-100 transition-all">
+                    <Upload size={16} />
+                    {uploadingCreate ? "..." : "Pilih File"}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleCreateImageChange} disabled={uploadingCreate} />
+                  </label>
+                  <input
+                    value={infoForm.gambar}
+                    onChange={(e) => onChangeInfoForm({ ...infoForm, gambar: e.target.value })}
+                    placeholder="Atau URL gambar..."
+                    className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                  />
+                </div>
+                {infoForm.gambar && <img src={infoForm.gambar} className="h-16 rounded-lg mt-2 object-cover border border-gray-100" />}
+              </div>
+
+              <div className="sm:col-span-2 space-y-1">
+                <textarea
+                  value={infoForm.ringkasan}
+                  onChange={(e) => onChangeInfoForm({ ...infoForm, ringkasan: e.target.value })}
+                  placeholder="Ringkasan singkat..."
+                  rows={2}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2 space-y-1">
+                <textarea
+                  value={infoForm.konten}
+                  onChange={(e) => onChangeInfoForm({ ...infoForm, konten: e.target.value })}
+                  placeholder="Tulis artikel lengkap di sini..."
+                  rows={6}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3 sm:col-span-2 bg-slate-50 p-3 rounded-lg border border-gray-100">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase">Kategori</label>
+                  <select
+                    value={infoForm.tipe}
+                    onChange={(e) => onChangeInfoForm({ ...infoForm, tipe: e.target.value })}
+                    className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs bg-white outline-none"
+                  >
+                    {TIPE_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase">Status</label>
+                  <select
+                    value={infoForm.status}
+                    onChange={(e) => onChangeInfoForm({ ...infoForm, status: e.target.value })}
+                    className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs bg-white outline-none"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase">Urutan</label>
+                  <input
+                    type="number"
+                    value={infoForm.urutan}
+                    onChange={(e) => onChangeInfoForm({ ...infoForm, urutan: Number(e.target.value) || 1 })}
+                    min={1}
+                    className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs outline-none"
+                  />
+                </div>
+              </div>
             </div>
-            <select
-              value={filterTipe}
-              onChange={(e) => setFilterTipe(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
-            >
-              <option value="">Semua tipe</option>
-              {TIPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
-            >
-              <option value="">Semua status</option>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
 
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">Daftar Artikel</h3>
+            <div className="flex justify-end pt-2">
+              <button
+                type="submit"
+                className="px-6 py-2.5 rounded-lg bg-[#01793B] text-white font-bold text-sm shadow-sm hover:bg-emerald-700 transition-all"
+              >
+                Simpan & Publikasikan
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="p-6">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            Daftar Artikel
+          </h3>
+
           {filteredList.length === 0 ? (
-            <p className="text-sm text-gray-500 py-8 text-center rounded-xl border border-dashed border-gray-200">
-              {infoList.length === 0
-                ? "Belum ada artikel."
-                : "Tidak ada artikel yang cocok dengan filter."}
-            </p>
+            <div className="py-12 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+              <p className="text-gray-400 text-sm font-medium">Belum ada artikel ditemukan.</p>
+            </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredList.map((info) => (
-                <article
+                <div
                   key={info.info_id}
-                  className="group rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-100 transition-all duration-300"
+                  className="group flex flex-col bg-white rounded-xl border border-gray-100 shadow-sm hover:border-emerald-200 transition-all overflow-hidden"
                 >
-                  <button
-                    type="button"
-                    onClick={() => onSelectInfo?.(info)}
-                    className="w-full text-left block"
-                  >
-                    <div className="aspect-video bg-gray-100 relative overflow-hidden">
-                      {info.gambar ? (
-                        <img
-                          src={info.gambar}
-                          alt={info.judul}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-300">
-                          <ImageIcon size={40} />
-                        </div>
-                      )}
-                      <span
-                        className={`absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium ${
-                          info.status === "published"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-amber-100 text-amber-700"
-                        }`}
-                      >
+                  <div className="aspect-video relative overflow-hidden bg-gray-100">
+                    {info.gambar ? (
+                      <img src={info.gambar} alt={info.judul} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-300">
+                        <ImageIcon size={24} />
+                      </div>
+                    )}
+                    <div className="absolute top-2 left-2 flex gap-1.5">
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${info.status === 'published' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'
+                        }`}>
                         {info.status}
                       </span>
-                      <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-xs font-medium bg-white/90 text-gray-600">
-                        {TIPE_OPTIONS.find((o) => o.value === info.tipe)?.label || info.tipe}
-                      </span>
                     </div>
-                    <div className="p-4">
-                      <h4 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-emerald-700 transition-colors">
-                        {info.judul}
-                      </h4>
-                      <p className="text-xs text-gray-500 mt-0.5">{info.slug}</p>
-                      <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                        {info.ringkasan || info.konten}
-                      </p>
-                    </div>
-                  </button>
-                  {onDeleteInfo && (
-                    <div className="px-4 pb-4 pt-0">
+                  </div>
+
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h4 className="font-bold text-gray-900 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-tight mb-2">
+                      {info.judul}
+                    </h4>
+                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-4">
+                      {info.ringkasan || info.konten}
+                    </p>
+
+                    <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-50">
                       <button
-                        type="button"
-                        onClick={(ev) => {
-                          ev.stopPropagation();
-                          onDeleteInfo(info.info_id);
-                        }}
-                        className="text-xs text-red-600 hover:text-red-700 hover:underline"
+                        onClick={() => onSelectInfo?.(info)}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-700"
                       >
-                        Hapus
+                        <Edit2 size={14} />
+                        Edit
                       </button>
+                      {onDeleteInfo && (
+                        <button
+                          onClick={() => onDeleteInfo(info.info_id)}
+                          className="p-1.5 text-gray-300 hover:text-red-500 transition-colors"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
-                  )}
-                </article>
+                  </div>
+                </div>
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Modal edit */}
+      {/* Edit Modal Refactored */}
       {isEditOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-          onClick={onCloseEditModal}
-        >
-          <div
-            className="bg-white rounded-xl shadow-xl border border-gray-100 max-w-lg w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sticky top-0 bg-white border-b border-gray-100 px-5 py-4 flex items-center justify-between">
-              <h3 className="text-base font-semibold text-gray-900">Edit Artikel</h3>
-              <button
-                type="button"
-                onClick={onCloseEditModal}
-                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100"
-                aria-label="Tutup"
-              >
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseEditModal}>
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900">Edit Artikel</h3>
+              <button onClick={onCloseEditModal} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400">
                 <X size={20} />
               </button>
             </div>
-            <form onSubmit={onUpdate} className="p-5 space-y-4">
-              <input type="hidden" value={infoUpdate.info_id} readOnly />
-              <input
-                value={infoUpdate.judul}
-                onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, judul: e.target.value })}
-                placeholder="Judul"
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400"
-                required
-              />
-              <input
-                value={infoUpdate.slug}
-                onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, slug: e.target.value })}
-                placeholder="Slug"
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400"
-                required
-              />
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-gray-600 flex items-center gap-2">
-                  <ImageIcon size={14} />
-                  Gambar (unggah file atau isi URL)
-                </label>
-                <div className="flex gap-2 flex-wrap">
-                  <label className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm cursor-pointer hover:bg-gray-50">
-                    <Upload size={16} />
-                    {uploadingEdit ? "Mengunggah..." : "Pilih file"}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/gif,image/webp"
-                      className="hidden"
-                      onChange={handleEditImageChange}
-                      disabled={uploadingEdit}
-                    />
-                  </label>
+
+            <form onSubmit={onUpdate} className="overflow-y-auto p-6 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-700">Judul</label>
                   <input
-                    value={infoUpdate.gambar}
-                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, gambar: e.target.value })}
-                    placeholder="URL gambar"
-                    className="flex-1 min-w-[180px] px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400"
+                    value={infoUpdate.judul}
+                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, judul: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none"
+                    required
                   />
                 </div>
-                {infoUpdate.gambar && (
-                  <img
-                    src={infoUpdate.gambar}
-                    alt="Preview"
-                    className="h-20 w-auto rounded-lg border border-gray-200 object-cover"
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-700">Slug</label>
+                  <input
+                    value={infoUpdate.slug}
+                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, slug: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
+                    required
                   />
-                )}
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-xs font-bold text-gray-700">Media</label>
+                  <div className="flex gap-2">
+                    <label className="shrink-0 flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 text-xs font-bold cursor-pointer transition-colors">
+                      <Upload size={14} />
+                      {uploadingEdit ? "..." : "Pilih"}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleEditImageChange} disabled={uploadingEdit} />
+                    </label>
+                    <input
+                      value={infoUpdate.gambar}
+                      onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, gambar: e.target.value })}
+                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                      placeholder="URL Gambar"
+                    />
+                  </div>
+                  {infoUpdate.gambar && <img src={infoUpdate.gambar} alt="Preview" className="h-16 rounded-lg mt-1 object-cover border border-gray-100" />}
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <textarea
+                    value={infoUpdate.ringkasan}
+                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, ringkasan: e.target.value })}
+                    rows={2}
+                    placeholder="Ringkasan..."
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                  />
+                </div>
+                <div className="sm:col-span-2 space-y-1">
+                  <textarea
+                    value={infoUpdate.konten}
+                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, konten: e.target.value })}
+                    rows={6}
+                    placeholder="Isi konten..."
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-3 sm:col-span-2 bg-slate-50 p-3 rounded-lg border border-gray-100">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Tipe</label>
+                    <select value={infoUpdate.tipe} onChange={e => onChangeInfoUpdate({ ...infoUpdate, tipe: e.target.value })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none">
+                      {TIPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Status</label>
+                    <select value={infoUpdate.status} onChange={e => onChangeInfoUpdate({ ...infoUpdate, status: e.target.value })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none">
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase">Urutan</label>
+                    <input type="number" value={infoUpdate.urutan} onChange={e => onChangeInfoUpdate({ ...infoUpdate, urutan: Number(e.target.value) || 1 })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none" />
+                  </div>
+                </div>
               </div>
-              <textarea
-                value={infoUpdate.ringkasan}
-                onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, ringkasan: e.target.value })}
-                placeholder="Ringkasan"
-                rows={2}
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 resize-none"
-              />
-              <textarea
-                value={infoUpdate.konten}
-                onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, konten: e.target.value })}
-                placeholder="Konten"
-                rows={4}
-                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 resize-none"
-                required
-              />
-              <div className="grid gap-3 sm:grid-cols-3">
-                <select
-                  value={infoUpdate.tipe}
-                  onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, tipe: e.target.value })}
-                  className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white"
-                >
-                  {TIPE_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={infoUpdate.status}
-                  onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, status: e.target.value })}
-                  className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                </select>
-                <input
-                  type="number"
-                  value={infoUpdate.urutan}
-                  onChange={(e) =>
-                    onChangeInfoUpdate({ ...infoUpdate, urutan: Number(e.target.value) || 1 })
-                  }
-                  min={1}
-                  className="px-3 py-2.5 rounded-lg border border-gray-200 text-sm bg-white"
-                />
-              </div>
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 rounded-lg bg-[#01793B] text-white text-sm font-medium hover:bg-emerald-700"
-                >
-                  Simpan
+
+              <div className="flex gap-3 pt-3">
+                <button type="submit" className="flex-1 bg-[#01793B] text-white py-2.5 rounded-lg font-bold text-sm shadow-md hover:bg-emerald-700">
+                  Simpan Perubahan
                 </button>
-                <button
-                  type="button"
-                  onClick={onCloseEditModal}
-                  className="px-4 py-2.5 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50"
-                >
+                <button type="button" onClick={onCloseEditModal} className="px-6 py-2.5 rounded-lg border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50">
                   Batal
                 </button>
               </div>
@@ -460,6 +445,6 @@ export default function AdminInformasiSection({
           </div>
         </div>
       )}
-    </SectionCard>
+    </div>
   );
 }

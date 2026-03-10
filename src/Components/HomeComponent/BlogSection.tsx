@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { listInformasiPublik } from "@/lib/client/public";
 import type { PublicInformasiSekolahItem } from "@/lib/client/public";
-import { ImageIcon, ArrowRight } from "lucide-react";
+import { listInformasiPublik } from "@/lib/client/public";
+import { ArrowRight, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const KATEGORI_LABEL: Record<string, string> = {
   berita: "Berita",
@@ -44,111 +44,105 @@ export default function BlogSection() {
   const displayPosts = posts.slice(0, 12);
 
   return (
-    <section className="bg-white py-8 md:py-10">
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            Blog & Artikel
-          </h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#01793B] to-emerald-600 rounded-full mx-auto mb-4" />
-          <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-            Artikel, berita, dan informasi terkini dari TK Azalia.
-          </p>
+    <section className="bg-slate-50 py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
+              Berita & <span className="text-[#01793B]">Informasi</span>
+            </h2>
+            <p className="text-slate-600">
+              Kumpulan update terbaru dan artikel menarik dari sekolah kami.
+            </p>
+          </div>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 mt-4 text-[#01793B] text-sm font-semibold hover:text-emerald-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white border border-slate-200 text-[#01793B] font-semibold hover:bg-slate-50 transition-colors shadow-sm"
           >
-            Lihat semua artikel
-            <ArrowRight size={16} />
+            Lihat Semua
+            <ArrowRight size={18} />
           </Link>
         </div>
 
         {loading ? (
-          <div className="flex gap-4 overflow-hidden">
+          <div className="flex gap-6 overflow-hidden">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[260px] rounded-xl border border-gray-100 bg-gray-50 overflow-hidden animate-pulse"
+                className="flex-shrink-0 w-[300px] rounded-2xl bg-white border border-slate-100 p-4 animate-pulse"
               >
-                <div className="aspect-video bg-gray-200" />
-                <div className="p-4 space-y-2">
-                  <div className="h-3 bg-gray-200 rounded w-1/3" />
-                  <div className="h-4 bg-gray-200 rounded w-full" />
+                <div className="aspect-video bg-slate-100 rounded-xl mb-4" />
+                <div className="space-y-3">
+                  <div className="h-4 bg-slate-100 rounded-full w-1/3" />
+                  <div className="h-5 bg-slate-100 rounded-full w-full" />
                 </div>
               </div>
             ))}
           </div>
         ) : displayPosts.length === 0 ? (
-          <div className="py-12 text-center rounded-xl border border-dashed border-gray-200 bg-[#F8F9FA]">
-            <p className="text-gray-500 text-sm">Belum ada artikel.</p>
-            <Link
-              href="/blog"
-              className="mt-3 inline-flex items-center gap-2 text-[#01793B] text-sm font-semibold hover:underline"
-            >
-              Ke halaman Blog
-              <ArrowRight size={14} />
-            </Link>
+          <div className="py-20 text-center rounded-2xl bg-white border border-dashed border-slate-200">
+            <ImageIcon size={40} className="mx-auto text-slate-300 mb-4" />
+            <p className="text-slate-500">Belum ada artikel yang dipublikasikan.</p>
           </div>
         ) : (
-          <>
-            <div className="relative">
-              <div
-                className="scroll-horizontal flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth"
-                style={{ scrollbarGutter: "stable" }}
-              >
-                {displayPosts.map((post) => (
-                  <Link
-                    key={post.info_id}
-                    href={`/blog/${post.slug}`}
-                    className="group flex-shrink-0 w-[260px] snap-start rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm hover:shadow-lg hover:border-[#01793B]/20 transition-all duration-300"
-                  >
-                    <div className="aspect-video bg-gray-100 relative overflow-hidden">
-                      {post.gambar ? (
-                        <img
-                          src={post.gambar}
-                          alt={post.judul}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-300">
-                          <ImageIcon size={40} />
-                        </div>
-                      )}
-                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-xs font-medium bg-white/95 text-gray-700 shadow-sm">
+          <div className="relative">
+            <div className="scroll-horizontal flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth hide-scrollbar">
+              {displayPosts.map((post) => (
+                <Link
+                  key={post.info_id}
+                  href={`/blog/${post.slug}`}
+                  className="group flex-shrink-0 w-[280px] md:w-[320px] snap-start bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col"
+                >
+                  <div className="aspect-video bg-slate-50 relative overflow-hidden">
+                    {post.gambar ? (
+                      <img
+                        src={post.gambar}
+                        alt={post.judul}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-200">
+                        <ImageIcon size={32} />
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3">
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-white/95 text-slate-800 shadow-sm">
                         {KATEGORI_LABEL[post.tipe] || post.tipe}
                       </span>
                     </div>
-                    <div className="p-4">
-                      {post.created_at && (
-                        <time className="text-xs text-gray-500">
-                          {formatDate(post.created_at)}
-                        </time>
-                      )}
-                      <h3 className="mt-1 font-bold text-gray-900 line-clamp-2 group-hover:text-[#01793B] transition-colors text-sm">
-                        {post.judul}
-                      </h3>
-                      <p className="mt-1.5 text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                        {post.ringkasan || post.konten}
-                      </p>
-                      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#01793B] group-hover:gap-1.5 transition-all">
-                        Baca selengkapnya
-                        <ArrowRight size={14} />
-                      </span>
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-1">
+                    <time className="text-[10px] font-semibold text-slate-400 uppercase mb-2">
+                      {formatDate(post.created_at)}
+                    </time>
+                    <h3 className="text-lg font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-[#01793B] transition-colors mb-3">
+                      {post.judul}
+                    </h3>
+                    <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-4">
+                      {post.ringkasan || post.konten}
+                    </p>
+                    <div className="mt-auto flex items-center text-sm font-bold text-[#01793B] gap-1 group-hover:gap-2 transition-all">
+                      Baca Selengkapnya
+                      <ArrowRight size={16} />
                     </div>
-                  </Link>
-                ))}
-              </div>
-              <div
-                className="pointer-events-none absolute right-0 top-0 bottom-3 w-8 bg-gradient-to-l from-white to-transparent hidden sm:block"
-                aria-hidden
-              />
+                  </div>
+                </Link>
+              ))}
             </div>
-            <p className="text-center text-xs text-gray-400 mt-3">
-              Geser untuk melihat lebih banyak
-            </p>
-          </>
+          </div>
         )}
       </div>
+
+      <style jsx global>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </section>
   );
 }

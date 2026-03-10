@@ -1,80 +1,69 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
-import AdminPpdbSection from "@/Components/Dashboard/Admin/AdminPpdbSection";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
-import { AdminPpdbSiswa, listPpdbSiswa } from "@/lib/client/admin";
+import AdminDataPendaftarSection from "@/Components/Dashboard/Admin/AdminDataPendaftarSection";
+import { useDashboard } from "@/context/DashboardContext";
+import { AdminPpdbSiswa, KelasItem, listKelasAdmin, listPpdbSiswa } from "@/lib/client/admin";
+import { useEffect, useState } from "react";
 
-export default function AdminPpdbPage() {
-  const router = useRouter();
+export default function AdminDataPendaftarPage() {
+  const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ppdbList, setPpdbList] = useState<AdminPpdbSiswa[]>([]);
-  const statusOptions = useMemo(() => ["menunggu", "lulus", "tidak_lulus"], []);
+  const [kelasList, setKelasList] = useState<KelasItem[]>([]);
+
+  useEffect(() => {
+    setDashboardInfo("Data Pendaftar", "Kelola informasi calon siswa dan orang tua dalam satu tempat");
+  }, []);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
-      const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
-      }
-      if (profile.data.role !== "admin") {
-        router.push("/dashboard/siswa");
-        return;
-      }
-      const ppdbResponse = await listPpdbSiswa();
+      const [ppdbResponse, kelasResponse] = await Promise.all([
+        listPpdbSiswa(),
+        listKelasAdmin(),
+      ]);
+
       if (!ppdbResponse.success) {
         setError(ppdbResponse.error || "Gagal memuat data PPDB");
+      } else {
+        setPpdbList(ppdbResponse.data || []);
       }
-      setPpdbList(ppdbResponse.data || []);
+
+      if (!kelasResponse.success) {
+        console.error("Gagal memuat data kelas:", kelasResponse.error);
+      } else {
+        setKelasList(kelasResponse.data || []);
+      }
+
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, []);
 
-  const handleLogout = () => {
-    clearToken();
-    router.push("/");
-  };
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
-        Memuat data PPDB...
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-400 font-medium font-outfit">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-[#01793B]/20 border-t-[#01793B] rounded-full animate-spin"></div>
+          <span>Memuat data pendaftar...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <DashboardShell
-      title="PPDB"
-      subtitle="Kelola status PPDB calon siswa"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
-      {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
+    <>
+      {error && (
+        <div className="text-sm font-bold text-red-600 bg-red-50 border border-red-100 rounded-2xl px-6 py-4 mb-6 flex items-center gap-3">
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
           {error}
         </div>
-      ) : null}
+      )}
 
-      <AdminPpdbSection ppdbList={ppdbList} statusOptions={statusOptions} />
-    </DashboardShell>
+      <AdminDataPendaftarSection ppdbList={ppdbList} kelasList={kelasList} />
+    </>
   );
 }
-

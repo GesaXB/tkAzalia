@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import AdminJadwalSection from "@/Components/Dashboard/Admin/AdminJadwalSection";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
+import { useDashboard } from "@/context/DashboardContext";
 import { getJadwalPpdbAdmin } from "@/lib/client/admin";
+import { useEffect, useState } from "react";
 
 export default function AdminJadwalPpdbPage() {
-  const router = useRouter();
+  const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setDashboardInfo("Jadwal PPDB", "Atur periode pendaftaran PPDB TK Azalia");
+  }, []);
+
   const [jadwal, setJadwal] = useState<{
     id: number;
     tanggal_mulai: string;
@@ -21,31 +23,18 @@ export default function AdminJadwalPpdbPage() {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
-      }
-      if (profile.data.role !== "admin") {
-        router.push("/dashboard/siswa");
-        return;
-      }
       const res = await getJadwalPpdbAdmin();
       if (res.success && res.data) setJadwal(res.data);
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, []);
 
   const handleSaved = async () => {
     const res = await getJadwalPpdbAdmin();
     if (res.success && res.data) setJadwal(res.data);
   };
 
-  const handleLogout = () => {
-    clearToken();
-    router.push("/");
-  };
 
   if (loading) {
     return (
@@ -56,22 +45,6 @@ export default function AdminJadwalPpdbPage() {
   }
 
   return (
-    <DashboardShell
-      title="Jadwal PPDB"
-      subtitle="Atur periode pendaftaran PPDB TK Azalia"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
-      <AdminJadwalSection jadwal={jadwal} onSaved={handleSaved} />
-    </DashboardShell>
+    <AdminJadwalSection jadwal={jadwal} onSaved={handleSaved} />
   );
 }

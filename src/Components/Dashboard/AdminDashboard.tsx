@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import DashboardShell from "./DashboardShell";
-import StatCard from "./StatCard";
-import { clearToken } from "@/lib/client/session";
+import { useDashboard } from "@/context/DashboardContext";
+import { listInformasiSekolah, listPpdbSiswa } from "@/lib/client/admin";
 import { fetchProfile } from "@/lib/client/auth";
-import { listPpdbSiswa, listInformasiSekolah } from "@/lib/client/admin";
-import { Users, FileText, User } from "lucide-react";
+import { clearToken } from "@/lib/client/session";
+import { FileText, User, Users } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import StatCard from "./StatCard";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -19,6 +19,12 @@ export default function AdminDashboard() {
   const [lulusCount, setLulusCount] = useState(0);
   const [tidakLulusCount, setTidakLulusCount] = useState(0);
   const [totalInfo, setTotalInfo] = useState(0);
+
+  const { setDashboardInfo } = useDashboard();
+
+  useEffect(() => {
+    setDashboardInfo("Ringkasan Admin", "Kelola PPDB dan informasi sekolah");
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -64,21 +70,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <DashboardShell
-      title="Ringkasan Admin"
-      subtitle="Kelola PPDB dan informasi sekolah"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
+    <>
       {error && (
         <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-2 mb-6">
           {error}
@@ -131,6 +123,6 @@ export default function AdminDashboard() {
           </div>
         </Link>
       </div>
-    </DashboardShell>
+    </>
   );
 }

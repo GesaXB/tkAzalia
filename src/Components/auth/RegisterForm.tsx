@@ -2,23 +2,24 @@
 
 import { validateRegisterForm } from "@/lib/auth-validation";
 import { register } from "@/lib/client/auth";
+import { getToken } from "@/lib/client/session";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormInput from "./FormInput";
 import {
-    IconEmail,
-    IconError,
-    IconEye,
-    IconEyeOff,
-    IconLock,
-    IconPhone,
-    IconShield,
-    IconSpinner,
-    IconUser,
-    IconUsername,
+  IconEmail,
+  IconError,
+  IconEye,
+  IconEyeOff,
+  IconLock,
+  IconPhone,
+  IconShield,
+  IconSpinner,
+  IconUser,
+  IconUsername,
 } from "./icons";
 
 export default function RegisterForm() {
@@ -35,6 +36,13 @@ export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -167,11 +175,11 @@ export default function RegisterForm() {
               />
               <label htmlFor="terms" className="text-xs text-slate-600">
                 Saya menyetujui{" "}
-                <Link href="/syarat-ketentuan" className="text-[#01793B] hover:underline">
+                <Link href="/terms-and-conditions" className="text-[#01793B] hover:underline">
                   Syarat & Ketentuan
                 </Link>{" "}
                 dan{" "}
-                <Link href="/kebijakan-privasi" className="text-[#01793B] hover:underline">
+                <Link href="/privacy-policy" className="text-[#01793B] hover:underline">
                   Kebijakan Privasi
                 </Link>
               </label>

@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import SectionCard from "@/Components/Dashboard/SectionCard";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
+import { useDashboard } from "@/context/DashboardContext";
+import { AuthUser, fetchProfile, updateProfile } from "@/lib/client/auth";
+import { useEffect, useState } from "react";
 
 export default function AdminProfilePage() {
-  const router = useRouter();
+  const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,33 +14,26 @@ export default function AdminProfilePage() {
   const [form, setForm] = useState({ nama_lengkap: "", email: "", no_telp: "" });
 
   useEffect(() => {
+    setDashboardInfo("Profil Admin", "Detail akun administrator");
+  }, []);
+
+  useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
       const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
+      if (profile.success && profile.data) {
+        setUser(profile.data);
+        setForm({
+          nama_lengkap: profile.data.nama_lengkap,
+          email: profile.data.email,
+          no_telp: profile.data.no_telp,
+        });
       }
-      if (profile.data.role !== "admin") {
-        router.push("/dashboard/siswa");
-        return;
-      }
-      setUser(profile.data);
-      setForm({
-        nama_lengkap: profile.data.nama_lengkap,
-        email: profile.data.email,
-        no_telp: profile.data.no_telp,
-      });
       setLoading(false);
     };
     load();
-  }, [router]);
-
-  const handleLogout = () => {
-    clearToken();
-    router.push("/");
-  };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,37 +54,23 @@ export default function AdminProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-500 font-outfit">
         Memuat profil...
       </div>
     );
   }
 
   return (
-    <DashboardShell
-      title="Profil Admin"
-      subtitle="Detail akun administrator"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
+    <>
       {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2 mb-4" >
           {error}
         </div>
       ) : null}
 
       <SectionCard title="Informasi Akun" description="Data dasar akun admin. Ubah lalu simpan.">
         {user ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 font-outfit">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Username</label>
               <input
@@ -119,7 +96,7 @@ export default function AdminProfilePage() {
                 type="text"
                 value={form.nama_lengkap}
                 onChange={(e) => setForm((f) => ({ ...f, nama_lengkap: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
                 required
               />
             </div>
@@ -129,7 +106,7 @@ export default function AdminProfilePage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
                 required
               />
             </div>
@@ -139,14 +116,14 @@ export default function AdminProfilePage() {
                 type="text"
                 value={form.no_telp}
                 onChange={(e) => setForm((f) => ({ ...f, no_telp: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
+              className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors"
             >
               {saving ? "Menyimpan…" : "Simpan perubahan"}
             </button>
@@ -155,6 +132,6 @@ export default function AdminProfilePage() {
           <p className="text-sm text-gray-500">Data profil tidak tersedia.</p>
         )}
       </SectionCard>
-    </DashboardShell>
+    </>
   );
 }

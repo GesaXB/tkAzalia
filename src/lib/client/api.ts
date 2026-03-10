@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/types';
-import { getToken } from './session';
+import { clearToken, getToken } from './session';
 
 export async function apiRequest<T>(
   path: string,
@@ -40,6 +40,9 @@ export async function apiRequest<T>(
   }
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearToken();
+    }
     return {
       success: false,
       error: (data && typeof data === 'object' && 'error' in data && data.error) || 'Request gagal',

@@ -9,16 +9,17 @@ import { useEffect, useState } from "react";
 const SISWA_SIDEBAR_ITEMS = [
   { label: "Ringkasan", href: "/dashboard/siswa" },
   { label: "Panduan PPDB", href: "/dashboard/siswa/panduan" },
-  { 
+  {
     label: "Data Pendaftaran",
     submenu: [
-      { label: "Data Pendaftaran", href: "/dashboard/siswa/data-ppdb" },
+      { label: "Data Siswa", href: "/dashboard/siswa/data-siswa" },
+      { label: "Data Orang Tua", href: "/dashboard/siswa/data-ortu" },
       { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
       { label: "Pilih Kelas", href: "/dashboard/siswa/kelas" }
     ]
   },
   { label: "Status PPDB", href: "/dashboard/siswa/status" },
-  { 
+  {
     label: "Akun",
     submenu: [
       { label: "Edit Profil", href: "/dashboard/siswa/profile?tab=profil" },

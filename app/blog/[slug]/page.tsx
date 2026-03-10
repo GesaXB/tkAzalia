@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { getArtikelBySlug } from "@/lib/client/public";
 import type { PublicInformasiSekolahItem } from "@/lib/client/public";
+import { getArtikelBySlug } from "@/lib/client/public";
 import { ArrowLeft, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const KATEGORI_LABEL: Record<string, string> = {
   berita: "Berita",
@@ -92,53 +92,51 @@ export default function BlogDetailPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <article className="pt-24 pb-16">
+      <article className="pt-20 pb-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[#01793B] transition-colors mb-10"
           >
             <ArrowLeft size={16} />
-            Kembali ke Blog
+            Kembali
           </Link>
 
-          <header>
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 mb-4">
+          <header className="mb-8">
+            <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 mb-4">
               {KATEGORI_LABEL[post.tipe] || post.tipe}
             </span>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight mb-4">
               {post.judul}
             </h1>
             {post.created_at && (
-              <time className="block mt-3 text-sm text-gray-500">
+              <time className="text-sm text-slate-400 font-medium">
                 {formatDate(post.created_at)}
               </time>
             )}
           </header>
 
-          {post.gambar && (
-            <div className="mt-8 aspect-video rounded-2xl overflow-hidden bg-gray-50">
+          {post.gambar ? (
+            <div className="mb-10 aspect-video rounded-xl overflow-hidden bg-slate-50 border border-slate-100">
               <img
                 src={post.gambar}
                 alt={post.judul}
                 className="w-full h-full object-cover"
               />
             </div>
-          )}
-
-          {!post.gambar && (
-            <div className="mt-8 aspect-video rounded-2xl bg-gray-50 flex items-center justify-center">
-              <ImageIcon size={64} className="text-gray-200" />
+          ) : (
+            <div className="mb-10 aspect-video rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100">
+              <ImageIcon size={48} className="text-slate-200" />
             </div>
           )}
 
-          <div className="mt-8 prose prose-gray max-w-none prose-p:text-gray-600 prose-p:leading-relaxed prose-headings:text-gray-900">
+          <div className="prose prose-slate max-w-none prose-p:text-slate-600 prose-p:leading-relaxed prose-headings:text-slate-900">
             {post.ringkasan && (
-              <p className="text-lg text-gray-700 font-medium mb-6">
+              <div className="text-lg text-slate-700 font-semibold mb-8 border-l-4 border-emerald-500 pl-6 py-1">
                 {post.ringkasan}
-              </p>
+              </div>
             )}
-            <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+            <div className="whitespace-pre-wrap text-slate-700 leading-relaxed text-base md:text-lg">
               {post.konten}
             </div>
           </div>

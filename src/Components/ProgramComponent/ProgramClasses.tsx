@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
-import { Users, Baby, GraduationCap } from "lucide-react";
+import { Baby, GraduationCap, Users } from "lucide-react";
 
 const kelompokData = [
   {
@@ -48,10 +47,10 @@ export default function ProgramClasses() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
-              whileHover={{ 
+              whileHover={{
                 y: -20,
                 scale: 1.02,
-                boxShadow: \"0 30px 60px -12px rgba(0, 0, 0, 0.15)\" 
+                boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.15)"
               }}
               className="group bg-white p-8 rounded-[2.5rem] border-2 border-gray-100 shadow-md transition-all duration-300 flex flex-col h-full relative overflow-hidden cursor-pointer"
             >
@@ -64,13 +63,13 @@ export default function ProgramClasses() {
 
               <h3 className="text-2xl font-bold text-gray-900 mb-1">{item.name}</h3>
               <p className="text-sm font-bold text-[#108043] mb-5 tracking-widest uppercase">{item.age}</p>
-              
+
               <p className="text-gray-600 leading-relaxed text-base flex-grow font-medium">
                 {item.desc}
               </p>
 
               <div className="mt-8 pt-6 border-t border-gray-100 flex items-center gap-2 text-xs font-bold text-[#108043]/60">
-                <Users className="w-4 h-4" /> 
+                <Users className="w-4 h-4" />
                 <span>Tersedia 20 Kursi / Kelas</span>
               </div>
             </motion.div>

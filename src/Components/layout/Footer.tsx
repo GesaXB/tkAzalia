@@ -5,10 +5,10 @@ export default function Footer() {
   return (
     <footer className="bg-[#111111] text-white pt-16 pb-8 border-t-4 border-[#01793B]">
       <div className="container mx-auto px-6 max-w-7xl">
-        
+
         {/* --- BAGIAN ATAS (GRID 4 KOLOM) --- */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          
+
           {/* KOLOM 1: IDENTITAS SEKOLAH */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-white mb-2 relative inline-block">
@@ -16,15 +16,15 @@ export default function Footer() {
               {/* Garis Bawah Putih Pendek */}
               <span className="absolute -bottom-2 left-0 w-10 h-1 bg-white rounded-full"></span>
             </h3>
-            
+
             <div className="flex items-center gap-3 mt-4">
-               {/* Logo Sekolah */}
+              {/* Logo Sekolah */}
               <div className="relative w-12 h-12 bg-white rounded-full p-1">
-                <Image 
-                    src="/logotk.png" 
-                    alt="Logo TK Azalia" 
-                    fill 
-                    className="object-contain p-1" 
+                <Image
+                  src="/logotk.png"
+                  alt="Logo TK Azalia"
+                  fill
+                  className="object-contain p-1"
                 />
               </div>
               <span className="font-bold text-xl tracking-wide">TK AZALIA</span>
@@ -101,8 +101,14 @@ export default function Footer() {
 
         {/* --- BAGIAN BAWAH (COPYRIGHT) --- */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© 2026 TK Azalia. All Rights Reserved.</p>
-          <p className="mt-2 md:mt-0">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <p>© 2026 TK Azalia. All Rights Reserved.</p>
+            <div className="flex gap-4">
+              <Link href="/privacy-policy" className="hover:text-white transition-colors">Kebijakan Privasi</Link>
+              <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Syarat & Ketentuan</Link>
+            </div>
+          </div>
+          <p className="mt-4 md:mt-0">
             Website developed by <span className="text-white font-medium">SMK Telkom Purwokerto</span>
           </p>
         </div>

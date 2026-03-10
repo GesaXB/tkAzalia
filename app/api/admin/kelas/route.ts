@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { createKelas, listKelas } from '@/lib/admin/kelas';
+import { AuthenticatedRequest, authMiddleware } from '@/lib/middleware/auth';
 import { ApiResponse } from '@/types';
-import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware/auth';
-import { listKelas, createKelas } from '@/lib/admin/kelas';
+import { NextRequest, NextResponse } from 'next/server';
 
 async function getHandler(): Promise<NextResponse<ApiResponse>> {
   try {
@@ -18,6 +18,7 @@ async function getHandler(): Promise<NextResponse<ApiResponse>> {
 
 interface CreateBody {
   nama: string;
+  deskripsi?: string;
   urutan?: number;
 }
 
@@ -31,7 +32,7 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
       );
     }
     const urutan = typeof body.urutan === 'number' ? body.urutan : 0;
-    const data = await createKelas(body.nama.trim(), urutan);
+    const data = await createKelas(body.nama.trim(), body.deskripsi || null, urutan);
     return NextResponse.json({ success: true, data, message: 'Kelas berhasil ditambah' }, { status: 201 });
   } catch (err) {
     console.error('POST /api/admin/kelas:', err);

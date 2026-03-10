@@ -27,6 +27,7 @@ export async function uploadBlogImage(file: File): Promise<{ success: true; data
 export interface KelasItem {
   kelas_id: number;
   nama: string;
+  deskripsi?: string | null;
   urutan: number;
 }
 
@@ -36,6 +37,20 @@ export interface AdminPpdbSiswa {
   kelas_id?: number | null;
   status_ppdb?: StatusPpdb;
   catatan_ppdb?: string | null;
+  // Student Data
+  nama_anak?: string | null;
+  nama_panggilan?: string | null;
+  tempat_lahir?: string | null;
+  tanggal_lahir?: string | null;
+  jenis_kelamin?: string | null;
+  anak_ke?: number | null;
+  // Parent Data
+  nama_ayah?: string | null;
+  pekerjaan_ayah?: string | null;
+  nama_ibu?: string | null;
+  pekerjaan_ibu?: string | null;
+  no_whatsapp?: string | null;
+  alamat_rumah?: string | null;
   user: {
     user_id: number;
     username: string;
@@ -70,14 +85,14 @@ export async function listKelasAdmin() {
   return apiRequest<KelasItem[]>('/api/admin/kelas', { method: 'GET' }, true);
 }
 
-export async function createKelasAdmin(payload: { nama: string; urutan?: number }) {
+export async function createKelasAdmin(payload: { nama: string; deskripsi?: string; urutan?: number }) {
   return apiRequest<KelasItem>('/api/admin/kelas', {
     method: 'POST',
     body: JSON.stringify(payload),
   }, true);
 }
 
-export async function updateKelasAdmin(kelasId: number, payload: { nama?: string; urutan?: number }) {
+export async function updateKelasAdmin(kelasId: number, payload: { nama?: string; deskripsi?: string; urutan?: number }) {
   return apiRequest<KelasItem>(`/api/admin/kelas/${kelasId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
@@ -192,4 +207,31 @@ export async function updateBerkasValidasi(payload: UpdateBerkasValidasiPayload)
     method: 'POST',
     body: JSON.stringify(payload),
   }, true);
+}
+
+export interface JenisBerkasItem {
+  jenis_berkas_id: number;
+  nama_berkas: string;
+}
+
+export async function listJenisBerkas() {
+  return apiRequest<JenisBerkasItem[]>('/api/admin/jenis-berkas', { method: 'GET' }, true);
+}
+
+export async function createJenisBerkas(payload: { nama_berkas: string }) {
+  return apiRequest<JenisBerkasItem>('/api/admin/jenis-berkas', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }, true);
+}
+
+export async function updateJenisBerkas(id: number, payload: { nama_berkas: string }) {
+  return apiRequest<JenisBerkasItem>(`/api/admin/jenis-berkas/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }, true);
+}
+
+export async function deleteJenisBerkas(id: number) {
+  return apiRequest(`/api/admin/jenis-berkas/${id}`, { method: 'DELETE' }, true);
 }

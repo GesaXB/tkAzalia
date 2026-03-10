@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Menu, PanelLeftClose, ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, PanelLeftClose } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,17 +79,35 @@ export default function DashboardShell({
     return submenu.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
   };
 
+  const closeSidebarOnMobile = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setSidebarOpenAndStore(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full flex bg-white">
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+          onClick={() => setSidebarOpenAndStore(false)}
+        />
+      )}
       <motion.aside
-        className="shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden"
+        className={`shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden z-50 ${sidebarOpen ? "fixed inset-y-0 left-0 lg:relative" : "w-0"
+          }`}
         initial={false}
         animate={{ width: sidebarOpen ? SIDEBAR_WIDTH : 0 }}
         transition={{ type: "spring", damping: 28, stiffness: 220 }}
       >
         <div className="w-[260px] min-h-full flex flex-col">
           <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-4 border-b border-slate-100">
-            <Link href={items[0]?.href ?? "#"} className="flex items-center gap-3 shrink-0 min-w-0">
+            <Link
+              href={items[0]?.href ?? "#"}
+              onClick={closeSidebarOnMobile}
+              className="flex items-center gap-3 shrink-0 min-w-0"
+            >
               <div className="relative h-10 w-10 shrink-0 rounded-xl overflow-hidden bg-emerald-50 ring-1 ring-slate-200/80">
                 <Image
                   src="/logotk.png"
@@ -130,11 +148,10 @@ export default function DashboardShell({
                     <div key={item.label} className="space-y-0.5">
                       <button
                         onClick={() => toggleMenu(item.label)}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                          isActive
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
                             ? "bg-emerald-500/10 text-emerald-700"
                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                        }`}
+                          }`}
                       >
                         <span className="truncate flex-1 text-left">{item.label}</span>
                         <motion.div
@@ -162,11 +179,11 @@ export default function DashboardShell({
                                 key={subitem.href}
                                 href={subitem.href}
                                 prefetch
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                                  isSubitemActive
+                                onClick={closeSidebarOnMobile}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isSubitemActive
                                     ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
                                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                                }`}
+                                  }`}
                               >
                                 <span className="truncate">{subitem.label}</span>
                               </Link>
@@ -183,11 +200,11 @@ export default function DashboardShell({
                     key={item.href}
                     href={item.href ?? "/"}
                     prefetch
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive
+                    onClick={closeSidebarOnMobile}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
                         ? "bg-emerald-500/10 text-emerald-700"
                         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                    }`}
+                      }`}
                   >
                     <span className="truncate">{item.label}</span>
                   </Link>

@@ -1,12 +1,12 @@
 "use client";
 
 import { login } from "@/lib/client/auth";
-import { setToken } from "@/lib/client/session";
+import { getToken, setToken } from "@/lib/client/session";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -14,6 +14,13 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -104,11 +111,11 @@ export default function LoginForm() {
                   required
                 />
               </div>
-              <div className="text-right mt-2">
+              {/* <div className="text-right mt-2">
                 <Link href="/auth/forgotpassword" className="text-sm text-[#01793B] hover:underline font-medium">
                   Lupa Password?
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             {error && (
@@ -146,18 +153,20 @@ export default function LoginForm() {
                 Daftar di sini
               </Link>
             </p>
+
+            <div className="mt-6 flex justify-center gap-4 text-xs text-slate-400">
+              <Link href="/terms-and-conditions" className="hover:text-[#01793B] transition-colors">Syarat & Ketentuan</Link>
+              <Link href="/privacy-policy" className="hover:text-[#01793B] transition-colors">Kebijakan Privasi</Link>
+            </div>
           </form>
         </div>
       </motion.div>
-
-      {/* Bagian Kiri - Branding dengan background putih untuk logo */}
       <motion.div
         className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#01793B] to-emerald-800 relative overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
-        {/* Pattern overlay */}
         <div className="absolute inset-0 opacity-10">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -189,18 +198,14 @@ export default function LoginForm() {
               </div>
             </div>
 
-            {/* Teks dengan efek glow */}
             <h2 className="text-4xl font-bold mb-3 text-white drop-shadow-lg">TK Azalia</h2>
             <p className="text-emerald-100 text-lg mb-4 font-light">Masa Depan Cemerlang</p>
 
-            {/* Dekoratif divider */}
             <div className="flex items-center justify-center gap-2 mb-8">
               <div className="w-12 h-0.5 bg-white/40 rounded-full"></div>
               <div className="w-2 h-2 bg-white rounded-full"></div>
               <div className="w-12 h-0.5 bg-white/40 rounded-full"></div>
             </div>
-
-            {/* Fitur-fitur dengan ikon */}
             <div className="space-y-4">
               <div className="flex items-center justify-center gap-3 text-emerald-50 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

@@ -1,11 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import AdminInformasiSection from "@/Components/Dashboard/Admin/AdminInformasiSection";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
+import { useDashboard } from "@/context/DashboardContext";
 import {
   InformasiSekolahItem,
   createInformasiSekolah,
@@ -13,10 +9,15 @@ import {
   listInformasiSekolah,
   updateInformasiSekolah,
 } from "@/lib/client/admin";
+import { useEffect, useState } from "react";
 
 export default function AdminInformasiPage() {
-  const router = useRouter();
+  const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setDashboardInfo("Blog", "Kelola artikel blog untuk website");
+  }, []);
   const [error, setError] = useState<string | null>(null);
   const [infoList, setInfoList] = useState<InformasiSekolahItem[]>([]);
   const [infoForm, setInfoForm] = useState({
@@ -46,15 +47,6 @@ export default function AdminInformasiPage() {
     const load = async () => {
       setLoading(true);
       setError(null);
-      const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
-      }
-      if (profile.data.role !== "admin") {
-        router.push("/dashboard/siswa");
-        return;
-      }
       const infoResponse = await listInformasiSekolah();
       if (!infoResponse.success) {
         setError(infoResponse.error || "Gagal memuat informasi sekolah");
@@ -63,12 +55,8 @@ export default function AdminInformasiPage() {
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, []);
 
-  const handleLogout = () => {
-    clearToken();
-    router.push("/");
-  };
 
   const handleCreateInfo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -200,23 +188,9 @@ export default function AdminInformasiPage() {
   }
 
   return (
-    <DashboardShell
-      title="Blog"
-      subtitle="Kelola artikel blog untuk website"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
+    <>
       {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2 mb-4">
           {error}
         </div>
       ) : null}
@@ -234,7 +208,7 @@ export default function AdminInformasiPage() {
         editingId={editingId}
         onCloseEditModal={handleCloseEditModal}
       />
-    </DashboardShell>
+    </>
   );
 }
 

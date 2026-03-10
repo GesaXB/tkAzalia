@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { fetchProfile } from "@/lib/client/auth";
+import { clearToken } from "@/lib/client/session";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function DashboardPage() {
     const route = async () => {
       const profile = await fetchProfile();
       if (!profile.success || !profile.data) {
+        clearToken();
         router.push("/auth/login");
         return;
       }

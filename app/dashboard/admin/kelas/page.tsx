@@ -1,67 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import DashboardShell from "@/Components/Dashboard/DashboardShell";
 import ConfirmModal from "@/Components/Dashboard/ConfirmModal";
-import { clearToken } from "@/lib/client/session";
-import { fetchProfile } from "@/lib/client/auth";
+import { useDashboard } from "@/context/DashboardContext";
 import {
+  createKelasAdmin,
+  deleteKelasAdmin,
   KelasItem,
   listKelasAdmin,
-  createKelasAdmin,
   updateKelasAdmin,
-  deleteKelasAdmin,
 } from "@/lib/client/admin";
-import { Plus, Pencil, Trash2, X, Check, BookOpen } from "lucide-react";
+import { BookOpen, Check, Pencil, Plus, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function AdminKelasPage() {
-  const router = useRouter();
+  const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [list, setList] = useState<KelasItem[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editNama, setEditNama] = useState("");
+  const [editDeskripsi, setEditDeskripsi] = useState("");
   const [editUrutan, setEditUrutan] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [newNama, setNewNama] = useState("");
+  const [newDeskripsi, setNewDeskripsi] = useState("");
   const [newUrutan, setNewUrutan] = useState(0);
   const [saving, setSaving] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<KelasItem | null>(null);
 
   useEffect(() => {
+    setDashboardInfo("Kelola Kelas", "Tambah atau ubah kelas PPDB (Kelompok A, B, dll.)");
+  }, []);
+
+  useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
-      const profile = await fetchProfile();
-      if (!profile.success || !profile.data) {
-        router.push("/auth/login");
-        return;
-      }
-      if (profile.data.role !== "admin") {
-        router.push("/dashboard/siswa");
-        return;
-      }
       const res = await listKelasAdmin();
       if (!res.success) setError(res.error || "Gagal memuat kelas");
       setList(res.data || []);
       setLoading(false);
     };
     load();
-  }, [router]);
-
-  const handleLogout = () => {
-    clearToken();
-    router.push("/");
-  };
+  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNama.trim()) return;
     setSaving(true);
     setError(null);
-    const res = await createKelasAdmin({ nama: newNama.trim(), urutan: newUrutan });
+    const res = await createKelasAdmin({
+      nama: newNama.trim(),
+      deskripsi: newDeskripsi.trim() || undefined,
+      urutan: newUrutan,
+    });
     setSaving(false);
     if (!res.success) {
       setError(res.error || "Gagal menambah kelas");
@@ -69,19 +62,22 @@ export default function AdminKelasPage() {
     }
     setList((prev) => [...prev, res.data!].sort((a, b) => a.urutan - b.urutan));
     setNewNama("");
-    setNewUrutan(list.length);
+    setNewDeskripsi("");
+    setNewUrutan(list.length + 1);
     setShowForm(false);
   };
 
   const startEdit = (k: KelasItem) => {
     setEditingId(k.kelas_id);
     setEditNama(k.nama);
+    setEditDeskripsi(k.deskripsi || "");
     setEditUrutan(k.urutan);
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditNama("");
+    setEditDeskripsi("");
     setEditUrutan(0);
   };
 
@@ -90,7 +86,11 @@ export default function AdminKelasPage() {
     if (editingId == null) return;
     setSaving(true);
     setError(null);
-    const res = await updateKelasAdmin(editingId, { nama: editNama.trim(), urutan: editUrutan });
+    const res = await updateKelasAdmin(editingId, {
+      nama: editNama.trim(),
+      deskripsi: editDeskripsi.trim() || undefined,
+      urutan: editUrutan,
+    });
     setSaving(false);
     if (!res.success) {
       setError(res.error || "Gagal memperbarui");
@@ -123,28 +123,14 @@ export default function AdminKelasPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-500 font-outfit">
         Memuat kelas...
       </div>
     );
   }
 
   return (
-    <DashboardShell
-      title="Kelola Kelas"
-      subtitle="Tambah atau ubah kelas PPDB (Kelompok A, B, dll.)"
-      sidebarTitle="Admin Menu"
-      items={[
-        { label: "Ringkasan", href: "/dashboard/admin" },
-        { label: "Jadwal PPDB", href: "/dashboard/admin/jadwal-ppdb" },
-        { label: "Kelas PPDB", href: "/dashboard/admin/kelas" },
-        { label: "PPDB", href: "/dashboard/admin/ppdb" },
-        { label: "Blog", href: "/dashboard/admin/informasi" },
-        { label: "Profil", href: "/dashboard/admin/profile" },
-        { label: "← Kembali ke Beranda", href: "/" },
-      ]}
-      onLogout={handleLogout}
-    >
+    <>
       <div className="space-y-6">
         {error && (
           <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-2">
@@ -189,13 +175,23 @@ export default function AdminKelasPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-2">Urutan</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Urutan Tampil</label>
                   <input
                     type="number"
                     value={newUrutan}
                     onChange={(e) => setNewUrutan(Number(e.target.value) || 0)}
                     placeholder="Contoh: 1"
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Deskripsi (Opsional)</label>
+                  <textarea
+                    value={newDeskripsi}
+                    onChange={(e) => setNewDeskripsi(e.target.value)}
+                    placeholder="Jelaskan detail kelas ini..."
+                    rows={3}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
                   />
                 </div>
               </div>
@@ -243,6 +239,15 @@ export default function AdminKelasPage() {
                             className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                           />
                         </div>
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Deskripsi</label>
+                          <textarea
+                            value={editDeskripsi}
+                            onChange={(e) => setEditDeskripsi(e.target.value)}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                          />
+                        </div>
                       </div>
                       <div className="flex gap-2 pt-1">
                         <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-3 py-2 text-sm text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors inline-flex items-center gap-1">
@@ -256,13 +261,17 @@ export default function AdminKelasPage() {
                   ) : (
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-gray-900">{k.nama}</h3>
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                            #{k.urutan}
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-bold text-gray-900 text-lg">{k.nama}</h3>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700">
+                            Urutan: {k.urutan}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500">ID: {k.kelas_id}</p>
+                        {k.deskripsi && (
+                          <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                            {k.deskripsi}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center gap-1.5">
                         <button
@@ -307,6 +316,6 @@ export default function AdminKelasPage() {
         }}
         onConfirm={handleDelete}
       />
-    </DashboardShell>
+    </>
   );
 }
