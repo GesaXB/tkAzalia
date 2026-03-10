@@ -4,7 +4,6 @@ import { Rocket } from "lucide-react";
 export default function MissionCard() {
   return (
     <div className="group h-full bg-[#01793B] rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 relative overflow-hidden text-white">
-      {/* Background Decoration */}
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-tr-[100px] pointer-events-none"></div>
       <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-bl-[50px] pointer-events-none"></div>
 

@@ -19,7 +19,7 @@ export default function PendaftaranSteps() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-          {/* Garis penghubung (hanya di desktop) */}
+          
           <div className="hidden md:block absolute top-12 left-0 w-full h-1 bg-gray-100 -z-0"></div>
 
           {steps.map((step, idx) => {
@@ -41,7 +41,6 @@ export default function PendaftaranSteps() {
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed px-4">{step.desc}</p>
                 
-                {/* Number Badge */}
                 <div className="absolute top-0 right-8 md:right-16 bg-yellow-400 text-[#01793B] w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md">
                   {step.id}
                 </div>

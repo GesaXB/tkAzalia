@@ -5,10 +5,7 @@ import { motion } from "framer-motion";
 export default function AboutVisionMission() {
   return (
     <section className="max-w-6xl mx-auto px-6">
-      {/* ANIMASI: 
-         Menggunakan motion.div untuk pembungkus utama.
-         Efek: Muncul dari bawah ke atas (y: 50 -> y: 0) dan transparan ke jelas (opacity: 0 -> 1).
-      */}
+
       <motion.div 
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -31,20 +28,21 @@ export default function AboutVisionMission() {
             </p>
           </div>
 
-          {/* Kolom Kanan: MISI */}
+
           <div className="flex flex-col justify-start md:pl-10 pt-10 md:pt-0">
             <h3 className="text-3xl font-bold mb-6 text-black text-center">
               Misi TK Azalia
             </h3>
             <div className="text-lg text-black">
               <p className="mb-2 font-medium">Memberikan pendidikan terbaik melalui:</p>
-              {/* List Bullet standard agar sama persis dengan desain awal */}
+
               <ul className="list-disc list-outside ml-5 space-y-2 marker:text-black">
                 <li>Lingkungan belajar yang aman dan nyaman</li>
                 <li>Kurikulum holistik berbasis permainan</li>
                 <li>Pendampingan oleh guru yang berkompeten</li>
                 <li>Kerjasama erat dengan orang tua</li>
               </ul>
+
             </div>
           </div>
 

@@ -4,7 +4,7 @@ import { Target } from "lucide-react";
 export default function VisionCard() {
   return (
     <div className="group h-full bg-white rounded-2xl p-8 border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
-      {/* Background Decoration */}
+
       <div className="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-[100px] -z-0 transition-transform duration-500 group-hover:scale-110"></div>
       
       <div className="relative z-10">

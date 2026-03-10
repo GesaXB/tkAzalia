@@ -11,7 +11,6 @@ export default function ProcessingMascot() {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Document Background */}
         <motion.rect
           x="60"
           y="50"
@@ -22,12 +21,10 @@ export default function ProcessingMascot() {
           stroke="#CBD5E1"
           strokeWidth="2"
         />
-        {/* Lines on Doc */}
         <line x1="75" y1="70" x2="125" y2="70" stroke="#E2E8F0" strokeWidth="4" strokeLinecap="round" />
         <line x1="75" y1="90" x2="125" y2="90" stroke="#E2E8F0" strokeWidth="4" strokeLinecap="round" />
         <line x1="75" y1="110" x2="105" y2="110" stroke="#E2E8F0" strokeWidth="4" strokeLinecap="round" />
 
-        {/* Magnifying Glass (The Detective) */}
         <motion.g
           animate={{
             x: [0, 20, 0, -20, 0],
@@ -40,17 +37,13 @@ export default function ProcessingMascot() {
             ease: "easeInOut"
           }}
         >
-          {/* Glass Handle */}
           <line x1="80" y1="120" x2="60" y2="140" stroke="#3B82F6" strokeWidth="8" strokeLinecap="round" />
 
-          {/* Glass Rim */}
           <circle cx="95" cy="105" r="30" stroke="#3B82F6" strokeWidth="6" fill="#BFDBFE" fillOpacity="0.3" />
 
-          {/* Glass Reflection */}
           <path d="M85 95 Q105 95 105 115" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.6" />
         </motion.g>
 
-        {/* Loading Dots */}
         <motion.circle cx="160" cy="100" r="4" fill="#3B82F6" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} />
         <motion.circle cx="175" cy="100" r="4" fill="#3B82F6" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} />
         <motion.circle cx="190" cy="100" r="4" fill="#3B82F6" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} />

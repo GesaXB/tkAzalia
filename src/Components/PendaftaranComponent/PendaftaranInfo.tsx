@@ -1,19 +1,17 @@
 "use client";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Phone } from "lucide-react";
 
 export default function PendaftaranInfo() {
   return (
-    <section className="py-10 px-6 max-w-7xl mx-auto">
-      {/* Tambahkan 'items-stretch' untuk menyamakan tinggi otomatis */}
+    <section className="pt-10 pb-24 md:pb-32 px-6 max-w-7xl mx-auto">
       <div className="grid md:grid-cols-2 gap-8 items-stretch">
         
-        {/* KIRI: Syarat Pendaftaran */}
         <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] flex flex-col h-full">
           <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <span className="w-1.5 h-8 bg-[#01793B] rounded-full"></span>
             Syarat Dokumen
           </h3>
-          <ul className="space-y-4 flex-grow"> {/* Tambahkan flex-grow agar daftar memenuhi ruang */}
+          <ul className="space-y-4 flex-grow">
             {[
               "Mengisi Formulir Pendaftaran Online/Offline",
               "Fotocopy Akta Kelahiran (2 Lembar)",
@@ -37,41 +35,43 @@ export default function PendaftaranInfo() {
           </div>
         </div>
 
-        {/* KANAN: Estimasi Biaya */}
-        <div className="bg-[#01793B] text-white p-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col h-full">
-          {/* Hiasan */}
-          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-bl-full pointer-events-none"></div>
+        <div className="bg-green-700 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col h-full">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-bl-full pointer-events-none"></div>
 
-          <h3 className="text-2xl font-bold mb-2">Rincian Biaya</h3>
-          <p className="text-green-100 text-sm mb-8">Transparansi biaya pendidikan TA 2026/2027</p>
+          <h3 className="text-3xl font-bold mb-2 z-10 relative">Jadwal SPMB</h3>
+          <p className="text-green-50 mb-8 z-10 relative text-[15px]">Catat tanggal penting penerimaan siswa baru</p>
 
-          <div className="space-y-4 mb-8 flex-grow"> {/* Tambahkan flex-grow di sini juga */}
-            <div className="flex justify-between items-center border-b border-white/20 pb-2">
-              <span>Uang Pendaftaran</span>
-              <span className="font-bold">Rp 150.000</span>
+          <div className="space-y-5 flex-grow z-10 relative">
+            <div className="flex justify-between items-center border-b border-white/30 pb-3">
+              <span className="text-[17px]">Gelombang 1</span>
+              <span className="font-bold text-[17px]">Jan - Mar 2026</span>
             </div>
-            <div className="flex justify-between items-center border-b border-white/20 pb-2">
-              <span>Uang Pangkal (Gedung)</span>
-              <span className="font-bold">Rp 1.500.000</span>
+            <div className="flex justify-between items-center border-b border-white/30 pb-3">
+              <span className="text-[17px]">Gelombang 2</span>
+              <span className="font-bold text-[17px]">April - Juni 2026</span>
             </div>
-            <div className="flex justify-between items-center border-b border-white/20 pb-2">
-              <span>Seragam (4 Stel)</span>
-              <span className="font-bold">Rp 850.000</span>
+            <div className="flex justify-between items-center border-b border-white/30 pb-3">
+              <span className="text-[17px]">Seragam (2 Stel)</span>
+              <span className="font-bold text-[17px]">Menyesuaikan</span>
             </div>
-            <div className="flex justify-between items-center border-b border-white/20 pb-2">
-              <span>SPP Bulan Juli</span>
-              <span className="font-bold">Rp 150.000</span>
+            <div className="flex justify-between items-center border-b border-white/30 pb-3">
+              <span className="text-[17px]">SPP/Bulan</span>
+              <span className="font-bold text-[17px]">H+3 Observasi</span>
             </div>
           </div>
 
-          <div className="bg-white/10 p-4 rounded-xl flex justify-between items-center">
-            <span className="font-medium">Total Estimasi</span>
-            <span className="text-2xl font-extrabold text-yellow-300">Rp 2.650.000</span>
+          <div className="bg-white/10 py-3 px-4 md:px-5 rounded-xl flex justify-between items-center mt-8 z-10 relative border border-white/10">
+            <span className="font-bold text-yellow-400 text-base md:text-lg">Info Rincian Biaya?</span>
+            
+            <a 
+              href="https://wa.me/6281234567890" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-[#FFE600] hover:bg-yellow-400 text-green-900 font-bold py-2 px-4 rounded-lg text-sm flex items-center gap-1.5 transition-transform hover:scale-105 active:scale-95 shadow-md"
+            >
+              <Phone className="w-4 h-4" /> WA Admin
+            </a>
           </div>
-          
-          <p className="text-xs text-green-200 mt-4 text-center">
-            *Biaya dapat diangsur sesuai ketentuan sekolah.
-          </p>
         </div>
 
       </div>

@@ -76,26 +76,23 @@ export default function TestimonialSection() {
 
   return (
     <section className="py-24 bg-[#F8F9FA] relative overflow-hidden">
-      {/* Pattern Background */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[radial-gradient(#01793B_1px,transparent_1px)] [background-size:20px_20px]"></div>
 
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         
-        {/* Header Section */}
         <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Kata Mereka</h2>
             <div className="w-20 h-1.5 bg-[#01793B] rounded-full mx-auto mb-6"></div>
             <p className="text-gray-600 text-lg">Apa kata orang tua murid tentang TK Azalia?</p>
         </div>
 
-        {/* Container Carousel */}
         <div 
           ref={carouselRef}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onTouchStart={() => setIsHovered(true)}
           onTouchEnd={() => setIsHovered(false)}
-          onScroll={handleScroll} // <--- Event listener dipasang di sini
+          onScroll={handleScroll} 
           className="flex overflow-x-auto gap-6 pb-12 pt-4 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -136,7 +133,6 @@ export default function TestimonialSection() {
           ))}
         </div>
 
-        {/* INDIKATOR GESER DINAMIS (PERBAIKAN) */}
         <div className="flex justify-center mt-2">
             <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden relative">
                 <div 

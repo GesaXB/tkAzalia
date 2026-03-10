@@ -28,7 +28,6 @@ export default function WhyChooseSection() {
   return (
     <section className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center py-20 px-6">
       
-      {/* Kolom Kiri: Teks */}
       <motion.div 
         initial={{ opacity: 0, x: -30 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -72,7 +71,7 @@ export default function WhyChooseSection() {
         </div>
       </motion.div>
 
-      {/* Kolom Kanan: Gambar */}
+
       <motion.div 
          initial={{ opacity: 0, scale: 0.9 }}
          whileInView={{ opacity: 1, scale: 1 }}
@@ -80,10 +79,10 @@ export default function WhyChooseSection() {
          transition={{ duration: 0.8 }}
          className="relative h-[400px] md:h-[500px] w-full hidden md:block"
       >
-        {/* Background Blob */}
+
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-green-100 to-yellow-50 rounded-full blur-3xl -z-10 opacity-60"></div>
 
-        {/* Frame Gambar */}
+
         <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white transform rotate-3 hover:rotate-0 transition-transform duration-700 ease-out">
             <Image
               src="/7.jpeg"
@@ -92,7 +91,7 @@ export default function WhyChooseSection() {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            {/* Overlay Gradient */}
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
                 <div className="absolute bottom-6 left-6 text-white">
                     <p className="font-bold text-lg">Belajar yang Seru!</p>
@@ -101,7 +100,6 @@ export default function WhyChooseSection() {
             </div>
         </div>
 
-        {/* Floating Badge */}
         <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3 animate-bounce-slow">
             <div className="bg-green-100 p-2 rounded-full">
                 <CheckCircle2 className="text-[#01793B] w-6 h-6" />

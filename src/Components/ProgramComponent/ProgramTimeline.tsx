@@ -86,17 +86,14 @@ export default function ProgramTimeline() {
                   }}
                   className={`ml-12 md:ml-0 md:w-1/2 ${isEven ? 'md:pr-10' : 'md:pl-10'} cursor-pointer`}
                 >
-                  {/* Card Padding dan Rounded diperkecil */}
                   <div className="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100 transition-all flex items-center gap-4 group">
                     
-                    {/* Ukuran kotak Ikon diperkecil (w-11 h-11) */}
                     <div className={`w-11 h-11 ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 flex-shrink-0`}>
                         <Icon className="w-5 h-5" />
                     </div>
                     
                     <div>
                         <div className="text-xs font-extrabold text-[#108043] mb-0.5 tracking-wide">{item.time}</div>
-                        {/* Ukuran teks judul kegiatan diperkecil menjadi text-base */}
                         <h4 className="text-base font-bold text-gray-900 group-hover:text-[#108043] transition-colors">{item.activity}</h4>
                     </div>
 

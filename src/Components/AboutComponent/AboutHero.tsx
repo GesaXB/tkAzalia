@@ -12,12 +12,11 @@ export default function AboutHero() {
   }, []);
 
   return (
-    <section className="relative bg-[#108043] pt-32 pb-48 px-4 text-center text-white overflow-hidden">
-      {/* Background Pattern (Hiasan Halus) */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl translate-x-1/2 translate-y-1/2"></div>
-      </div>
+    <section className="relative bg-gradient-to-br from-[#01793B] to-[#015c2e] pt-32 pb-60 md:pb-72 px-4 text-center text-white overflow-hidden">
+
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:24px_24px]"></div>
+      <div className="absolute top-20 right-10 w-64 h-64 bg-yellow-400 rounded-full blur-[100px] opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-10 left-10 w-48 h-48 bg-blue-400 rounded-full blur-[80px] opacity-20"></div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* JUDUL */}
@@ -62,7 +61,6 @@ export default function AboutHero() {
         </motion.div>
       </div>
 
-      {/* LENGKUNGAN BAWAH */}
       <div className="absolute -bottom-1 left-0 w-full h-16 md:h-28 bg-white rounded-t-[50%] scale-x-125 md:scale-x-110"></div>
     </section>
   );
