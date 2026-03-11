@@ -3,18 +3,18 @@
 import { useDashboard } from "@/context/DashboardContext";
 import { listInformasiSekolah, listKelasAdmin, listPpdbSiswa } from "@/lib/client/admin";
 import { fetchProfile } from "@/lib/client/auth";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { ArrowRight, BookOpen, CheckCircle2, Clock, FileText, TrendingUp, User, Users, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
 };

@@ -12,14 +12,14 @@ export interface AuthenticatedRequest extends NextRequest {
 }
 export type ApiHandler<T = unknown> = (
   req: AuthenticatedRequest,
-  ...args: unknown[]
+  ...args: any[]
 ) => Promise<NextResponse<T>> | NextResponse<T>;
 
 export function authMiddleware<T = unknown>(
   handler: ApiHandler<T>,
   allowedRoles: string[] = []
 ) {
-  return async (req: NextRequest, ...args: unknown[]) => {
+  return async (req: NextRequest, ...args: any[]) => {
     try {
       const authHeader = req.headers.get('authorization');
 
@@ -65,14 +65,14 @@ export function authMiddleware<T = unknown>(
 
 export type FlexibleApiHandler = (
   req: NextRequest | AuthenticatedRequest,
-  ...args: unknown[]
+  ...args: any[]
 ) => Promise<NextResponse> | NextResponse;
 
 export function authMiddleware2<T = Record<string, unknown>>(
   handler: ApiHandler<T>,
   allowedRoles: string[] = []
 ) {
-  return async (req: NextRequest, ...args: unknown[]) => {
+  return async (req: NextRequest, ...args: any[]) => {
     try {
       const authHeader = req.headers.get('authorization');
 
