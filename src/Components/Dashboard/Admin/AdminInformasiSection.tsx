@@ -1,8 +1,9 @@
 "use client";
 
+import ConfirmModal from "@/Components/Dashboard/ConfirmModal";
 import { InformasiSekolahItem, uploadBlogImage } from "@/lib/client/admin";
 import { Edit2, FileText, Image as ImageIcon, Search, Trash2, Upload, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface InfoFormState {
   judul: string;
@@ -63,6 +64,21 @@ export default function AdminInformasiSection({
   const [filterStatus, setFilterStatus] = useState("");
   const [uploadingCreate, setUploadingCreate] = useState(false);
   const [uploadingEdit, setUploadingEdit] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<InformasiSekolahItem | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filteredList = useMemo(() => {
     let list = infoList;
@@ -77,6 +93,14 @@ export default function AdminInformasiSection({
     if (filterStatus) list = list.filter((info) => info.status === filterStatus);
     return list;
   }, [infoList, search, filterTipe, filterStatus]);
+
+  const suggestions = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return [];
+    return infoList
+      .filter((info) => info.judul.toLowerCase().includes(q))
+      .slice(0, 6);
+  }, [infoList, search]);
 
   const handleCreateImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,47 +122,25 @@ export default function AdminInformasiSection({
     e.target.value = "";
   };
 
+  const openDeleteModal = (info: InformasiSekolahItem) => {
+    setDeleteTarget(info);
+    setDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || !onDeleteInfo) return;
+    setDeleting(true);
+    await onDeleteInfo(deleteTarget.info_id);
+    setDeleting(false);
+    setDeleteModal(false);
+    setDeleteTarget(null);
+  };
+
   const isEditOpen = editingId != null && String(editingId) === infoUpdate.info_id;
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="flex flex-wrap items-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-        <div className="relative flex-1 min-w-[240px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari artikel..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-          />
-        </div>
-        <div className="flex gap-2">
-          <select
-            value={filterTipe}
-            onChange={(e) => setFilterTipe(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
-          >
-            <option value="">Semua Tipe</option>
-            {TIPE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
-          >
-            <option value="">Status</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-        </div>
-      </div>
-
+      {/* Article Form — Full Width */}
       <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
           <div className="flex items-center gap-3">
@@ -150,20 +152,10 @@ export default function AdminInformasiSection({
               <p className="text-xs text-gray-500">Buat dan edit berita atau artikel sekolah</p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
-          >
-            <Upload size={16} />
-            Buat Baru
-          </button>
         </div>
 
         <div className="p-6 bg-slate-50 border-b border-gray-100">
-          <form onSubmit={onCreate} className="space-y-4 max-w-4xl mx-auto bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <form onSubmit={onCreate} className="space-y-4 w-full bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <h3 className="font-bold text-gray-900 border-l-4 border-emerald-500 pl-3">Form Artikel Baru</h3>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -208,6 +200,7 @@ export default function AdminInformasiSection({
               </div>
 
               <div className="sm:col-span-2 space-y-1">
+                <label className="text-xs font-bold text-gray-700">Ringkasan</label>
                 <textarea
                   value={infoForm.ringkasan}
                   onChange={(e) => onChangeInfoForm({ ...infoForm, ringkasan: e.target.value })}
@@ -218,11 +211,12 @@ export default function AdminInformasiSection({
               </div>
 
               <div className="sm:col-span-2 space-y-1">
+                <label className="text-xs font-bold text-gray-700">Konten Lengkap</label>
                 <textarea
                   value={infoForm.konten}
                   onChange={(e) => onChangeInfoForm({ ...infoForm, konten: e.target.value })}
                   placeholder="Tulis artikel lengkap di sini..."
-                  rows={6}
+                  rows={8}
                   className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
                   required
                 />
@@ -276,14 +270,102 @@ export default function AdminInformasiSection({
           </form>
         </div>
 
+        {/* Search and Filters — Below Form */}
+        <div className="px-6 py-4 border-b border-gray-100 bg-white space-y-3">
+          <div ref={searchRef} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              placeholder="Cari artikel berdasarkan judul atau slug..."
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all bg-gray-50/50"
+            />
+            {search && (
+              <button
+                onClick={() => { setSearch(""); setShowSuggestions(false); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500"
+              >
+                <X size={16} />
+              </button>
+            )}
+
+            {/* Search Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-gray-100 shadow-xl overflow-hidden z-30">
+                <div className="px-3 py-2 border-b border-gray-50 bg-gray-50/50">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hasil Pencarian</span>
+                </div>
+                {suggestions.map((s) => (
+                  <button
+                    key={s.info_id}
+                    onClick={() => {
+                      setSearch(s.judul);
+                      setShowSuggestions(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/50 transition-colors text-left border-b border-gray-50 last:border-b-0"
+                  >
+                    <Search size={13} className="text-gray-300 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-700 truncate">{s.judul}</p>
+                    </div>
+                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${s.status === 'published' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
+                      {s.status}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={filterTipe}
+              onChange={(e) => setFilterTipe(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            >
+              <option value="">Semua Tipe</option>
+              {TIPE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            >
+              <option value="">Status</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+            {(filterTipe || filterStatus || search) && (
+              <button
+                onClick={() => { setSearch(""); setFilterTipe(""); setFilterStatus(""); }}
+                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors"
+              >
+                Reset Filter
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Article List */}
         <div className="p-6">
           <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             Daftar Artikel
+            <span className="text-xs font-normal text-gray-400 ml-1">({filteredList.length} artikel)</span>
           </h3>
 
           {filteredList.length === 0 ? (
             <div className="py-12 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+              <Search size={32} className="mx-auto text-gray-200 mb-3" />
               <p className="text-gray-400 text-sm font-medium">Belum ada artikel ditemukan.</p>
             </div>
           ) : (
@@ -327,10 +409,11 @@ export default function AdminInformasiSection({
                       </button>
                       {onDeleteInfo && (
                         <button
-                          onClick={() => onDeleteInfo(info.info_id)}
-                          className="p-1.5 text-gray-300 hover:text-red-500 transition-colors"
+                          onClick={() => openDeleteModal(info)}
+                          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-red-500 transition-colors"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} />
+                          Hapus
                         </button>
                       )}
                     </div>
@@ -342,7 +425,23 @@ export default function AdminInformasiSection({
         </div>
       </div>
 
-      {/* Edit Modal Refactored */}
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        open={deleteModal}
+        title="Hapus Artikel?"
+        description={deleteTarget ? `Yakin ingin menghapus artikel "${deleteTarget.judul}"? Tindakan ini tidak dapat dibatalkan.` : ""}
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        isDanger={true}
+        isLoading={deleting}
+        onClose={() => {
+          setDeleteModal(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={handleConfirmDelete}
+      />
+
+      {/* Edit Modal */}
       {isEditOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseEditModal}>
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
@@ -393,6 +492,7 @@ export default function AdminInformasiSection({
                 </div>
 
                 <div className="sm:col-span-2 space-y-1">
+                  <label className="text-xs font-bold text-gray-700">Ringkasan</label>
                   <textarea
                     value={infoUpdate.ringkasan}
                     onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, ringkasan: e.target.value })}
@@ -402,10 +502,11 @@ export default function AdminInformasiSection({
                   />
                 </div>
                 <div className="sm:col-span-2 space-y-1">
+                  <label className="text-xs font-bold text-gray-700">Konten Lengkap</label>
                   <textarea
                     value={infoUpdate.konten}
                     onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, konten: e.target.value })}
-                    rows={6}
+                    rows={8}
                     placeholder="Isi konten..."
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
                     required

@@ -149,8 +149,8 @@ export default function DashboardShell({
                       <button
                         onClick={() => toggleMenu(item.label)}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                            ? "bg-emerald-500/10 text-emerald-700"
-                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          ? "bg-emerald-500/10 text-emerald-700"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                           }`}
                       >
                         <span className="truncate flex-1 text-left">{item.label}</span>
@@ -181,8 +181,8 @@ export default function DashboardShell({
                                 prefetch
                                 onClick={closeSidebarOnMobile}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isSubitemActive
-                                    ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
-                                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                  ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
+                                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                                   }`}
                               >
                                 <span className="truncate">{subitem.label}</span>
@@ -202,8 +202,8 @@ export default function DashboardShell({
                     prefetch
                     onClick={closeSidebarOnMobile}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                        ? "bg-emerald-500/10 text-emerald-700"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      ? "bg-emerald-500/10 text-emerald-700"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                   >
                     <span className="truncate">{item.label}</span>
@@ -215,8 +215,8 @@ export default function DashboardShell({
         </div>
       </motion.aside>
 
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4">
+      <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
+        <header className="sticky top-0 z-30 shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white/95 backdrop-blur-md flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
@@ -244,7 +244,7 @@ export default function DashboardShell({
           className="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-auto"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }} // Light custom ease
+          transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }}
           key={pathname}
         >
           {children}

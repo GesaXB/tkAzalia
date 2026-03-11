@@ -57,7 +57,7 @@ export default function BlogSection() {
           </div>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white border border-slate-200 text-[#01793B] font-semibold hover:bg-slate-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white border border-gray-200 text-[#01793B] font-medium hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
           >
             Lihat Semua
             <ArrowRight size={18} />
@@ -91,40 +91,41 @@ export default function BlogSection() {
                 <Link
                   key={post.info_id}
                   href={`/blog/${post.slug}`}
-                  className="group flex-shrink-0 w-[280px] md:w-[320px] snap-start bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col"
+                  className="group flex-shrink-0 w-[280px] md:w-[320px] snap-start bg-white rounded-3xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
                 >
-                  <div className="aspect-video bg-slate-50 relative overflow-hidden">
+                  <div className="aspect-16/10 bg-gray-100 relative overflow-hidden">
                     {post.gambar ? (
                       <img
                         src={post.gambar}
                         alt={post.judul}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-200">
+                      <div className="w-full h-full flex items-center justify-center text-gray-300">
                         <ImageIcon size={32} />
                       </div>
                     )}
-                    <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-white/95 text-slate-800 shadow-sm">
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-white text-gray-800 shadow-sm">
                         {KATEGORI_LABEL[post.tipe] || post.tipe}
                       </span>
                     </div>
                   </div>
 
-                  <div className="p-5 flex flex-col flex-1">
-                    <time className="text-[10px] font-semibold text-slate-400 uppercase mb-2">
+                  <div className="p-6 flex flex-col flex-1 relative bg-white">
+                    <time className="text-[11px] font-medium text-gray-400 uppercase mb-3">
                       {formatDate(post.created_at)}
                     </time>
-                    <h3 className="text-lg font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-[#01793B] transition-colors mb-3">
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-[#01793B] transition-colors mb-3">
                       {post.judul}
                     </h3>
-                    <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-4">
+                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-1">
                       {post.ringkasan || post.konten}
                     </p>
-                    <div className="mt-auto flex items-center text-sm font-bold text-[#01793B] gap-1 group-hover:gap-2 transition-all">
+                    <div className="pt-4 border-t border-gray-100 mt-auto flex items-center text-sm font-bold text-[#01793B] gap-1.5 group-hover:gap-2.5 transition-all">
                       Baca Selengkapnya
-                      <ArrowRight size={16} />
+                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
                 </Link>

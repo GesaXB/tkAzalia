@@ -39,3 +39,14 @@ export async function getArtikelBySlug(slug: string) {
   });
 }
 
+export interface KelasPublicItem {
+  kelas_id: number;
+  nama: string;
+  deskripsi?: string | null;
+  urutan: number;
+}
+
+export async function listKelasPublik() {
+  return apiRequest<KelasPublicItem[]>('/api/kelas', { method: 'GET' });
+}
+

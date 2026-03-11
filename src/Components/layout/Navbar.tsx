@@ -2,7 +2,7 @@
 
 import { clearToken, getToken } from "@/lib/client/session";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, LogOut, Menu, X } from "lucide-react";
+import { AlertCircle, BookOpen, FileText, Home, Info, LayoutDashboard, LogOut, Mail, Menu, UserPlus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,6 +19,16 @@ export default function Navbar() {
     setHasToken(!!getToken());
   }, [pathname]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
+
   const handleLogout = () => {
     clearToken();
     setHasToken(false);
@@ -28,12 +38,12 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: "/", label: "Beranda" },
-    { href: "/about", label: "Tentang" },
-    { href: "/blog", label: "Blog" },
-    { href: "/program", label: "Program" },
-    { href: "/pendaftaran", label: "Pendaftaran" },
-    { href: "/contact", label: "Kontak" },
+    { href: "/", label: "Beranda", icon: Home },
+    { href: "/about", label: "Tentang", icon: Info },
+    { href: "/blog", label: "Blog", icon: FileText },
+    { href: "/program", label: "Program", icon: BookOpen },
+    { href: "/pendaftaran", label: "Pendaftaran", icon: UserPlus },
+    { href: "/contact", label: "Kontak", icon: Mail },
   ];
 
   return (
@@ -130,91 +140,129 @@ export default function Navbar() {
             {/* TOMBOL MOBILE MENU */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors relative z-[60]"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-
-        {/* MENU MOBILE */}
-        <div
-          className={`md:hidden bg-white border-t border-gray-100 transition-all duration-500 ease-in-out ${isMenuOpen
-            ? "max-h-96 opacity-100 visible"
-            : "max-h-0 opacity-0 invisible"
-            } overflow-hidden`}
-        >
-          <div className="px-4 py-3 space-y-1">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${isActive
-                    ? "bg-emerald-50 text-[#01793B]"
-                    : "text-gray-600 hover:bg-emerald-50"
-                    }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-
-            <div className="pt-4 pb-2 space-y-3">
-              {hasToken ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${pathname.startsWith("/dashboard")
-                      ? "bg-emerald-50 text-[#01793B] border-[#01793B]"
-                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
-                      }`}
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setShowLogoutModal(true);
-                    }}
-                    className="block w-full px-4 py-3 text-center rounded-lg font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    <LogOut size={18} />
-                    Keluar
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/auth/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-4 py-3 text-center rounded-lg font-medium border transition-all duration-300 active:scale-95 ${pathname === "/auth/login"
-                      ? "bg-emerald-50 text-[#01793B] border-[#01793B]"
-                      : "bg-transparent text-[#01793B] border-[#01793B] hover:bg-emerald-50"
-                      }`}
-                  >
-                    Masuk
-                  </Link>
-                  <Link
-                    href="/auth/register"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-4 py-3 text-center rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 ${pathname === "/auth/register"
-                      ? "bg-emerald-800 text-white border-emerald-800"
-                      : "bg-[#01793B] text-white border-[#01793B] hover:bg-emerald-700"
-                      }`}
-                  >
-                    Daftar
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
       </nav>
+
+      {/* MOBILE MENU - Full Screen Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[51] md:hidden"
+            />
+
+            {/* Side Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white z-[52] md:hidden shadow-2xl flex flex-col"
+            >
+              {/* Mobile Header */}
+              <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+                <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2">
+                  <div className="relative w-9 h-9">
+                    <Image src="/logotk.png" alt="Logo" fill className="object-contain" />
+                  </div>
+                  <span className="text-lg font-bold text-[#01793B]">TK AZALIA</span>
+                </Link>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+
+              {/* Nav Links */}
+              <div className="flex-1 overflow-y-auto px-4 py-4">
+                <div className="space-y-1">
+                  {navLinks.map((link, idx) => {
+                    const isActive = pathname === link.href;
+                    const IconComp = link.icon;
+                    return (
+                      <motion.div
+                        key={link.href}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                      >
+                        <Link
+                          href={link.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-medium transition-all ${isActive
+                            ? "bg-emerald-50 text-[#01793B]"
+                            : "text-gray-600 hover:bg-gray-50 active:bg-gray-100"
+                            }`}
+                        >
+                          <IconComp size={20} className={isActive ? "text-[#01793B]" : "text-gray-400"} />
+                          {link.label}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="px-4 py-5 border-t border-gray-100 bg-gray-50/50 space-y-2.5">
+                {hasToken ? (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold border-2 border-[#01793B] text-[#01793B] hover:bg-emerald-50 transition-all active:scale-[0.98]"
+                    >
+                      <LayoutDashboard size={18} />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setShowLogoutModal(true);
+                      }}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-100 transition-all active:scale-[0.98]"
+                    >
+                      <LogOut size={18} />
+                      Keluar
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center w-full px-4 py-3 rounded-xl font-semibold border-2 border-[#01793B] text-[#01793B] hover:bg-emerald-50 transition-all active:scale-[0.98]"
+                    >
+                      Masuk
+                    </Link>
+                    <Link
+                      href="/auth/register"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center w-full px-4 py-3 rounded-xl font-semibold bg-[#01793B] text-white hover:bg-emerald-700 shadow-md shadow-emerald-500/20 transition-all active:scale-[0.98]"
+                    >
+                      Daftar Sekarang
+                    </Link>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* MODAL KONFIRMASI LOGOUT */}
       <AnimatePresence>
