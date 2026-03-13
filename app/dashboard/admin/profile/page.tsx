@@ -1,11 +1,13 @@
 "use client";
 
-import SectionCard from "@/Components/Dashboard/SectionCard";
-import { useDashboard } from "@/context/DashboardContext";
-import { AuthUser, fetchProfile, updateProfile } from "@/lib/client/auth";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import SectionCard from "@/Components/Dashboard/SectionCard";
+import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
+import { useDashboard } from "@/context/DashboardContext";
 
 export default function AdminProfilePage() {
+  const router = useRouter();
   const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -15,25 +17,31 @@ export default function AdminProfilePage() {
 
   useEffect(() => {
     setDashboardInfo("Profil Admin", "Detail akun administrator");
-  }, []);
+  }, [setDashboardInfo]);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
       const profile = await fetchProfile();
-      if (profile.success && profile.data) {
-        setUser(profile.data);
-        setForm({
-          nama_lengkap: profile.data.nama_lengkap,
-          email: profile.data.email,
-          no_telp: profile.data.no_telp,
-        });
+      if (!profile.success || !profile.data) {
+        router.push("/auth/login");
+        return;
       }
+      if (profile.data.role !== "admin") {
+        router.push("/dashboard/siswa");
+        return;
+      }
+      setUser(profile.data);
+      setForm({
+        nama_lengkap: profile.data.nama_lengkap,
+        email: profile.data.email,
+        no_telp: profile.data.no_telp,
+      });
       setLoading(false);
     };
     load();
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,23 +62,23 @@ export default function AdminProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-500 font-outfit">
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
         Memuat profil...
       </div>
     );
   }
 
   return (
-    <>
+    <div className="space-y-6">
       {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2 mb-4" >
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
           {error}
         </div>
       ) : null}
 
       <SectionCard title="Informasi Akun" description="Data dasar akun admin. Ubah lalu simpan.">
         {user ? (
-          <form onSubmit={handleSubmit} className="space-y-4 font-outfit">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Username</label>
               <input
@@ -96,7 +104,7 @@ export default function AdminProfilePage() {
                 type="text"
                 value={form.nama_lengkap}
                 onChange={(e) => setForm((f) => ({ ...f, nama_lengkap: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 required
               />
             </div>
@@ -106,7 +114,7 @@ export default function AdminProfilePage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 required
               />
             </div>
@@ -116,14 +124,14 @@ export default function AdminProfilePage() {
                 type="text"
                 value={form.no_telp}
                 onChange={(e) => setForm((f) => ({ ...f, no_telp: e.target.value }))}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors"
+              className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
             >
               {saving ? "Menyimpan…" : "Simpan perubahan"}
             </button>
@@ -132,6 +140,6 @@ export default function AdminProfilePage() {
           <p className="text-sm text-gray-500">Data profil tidak tersedia.</p>
         )}
       </SectionCard>
-    </>
+    </div>
   );
 }

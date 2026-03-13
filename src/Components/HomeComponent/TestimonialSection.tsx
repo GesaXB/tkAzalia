@@ -48,7 +48,7 @@ export default function TestimonialSection() {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
       const totalScroll = scrollWidth - clientWidth;
-      
+
       if (totalScroll > 0) {
         const progress = (scrollLeft / totalScroll) * 100;
         setScrollProgress(progress);
@@ -62,43 +62,46 @@ export default function TestimonialSection() {
     const interval = setInterval(() => {
       if (carouselRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-        
+
         if (scrollLeft + clientWidth >= scrollWidth - 10) {
           carouselRef.current.scrollTo({ left: 0, behavior: "smooth" });
         } else {
           carouselRef.current.scrollBy({ left: 350, behavior: "smooth" });
         }
       }
-    }, 3500); 
+    }, 3500);
 
     return () => clearInterval(interval);
   }, [isHovered]);
 
   return (
     <section className="py-24 bg-[#F8F9FA] relative overflow-hidden">
+      {/* Pattern Background */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[radial-gradient(#01793B_1px,transparent_1px)] [background-size:20px_20px]"></div>
 
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
-        
+
+        {/* Header Section */}
         <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Kata Mereka</h2>
             <div className="w-20 h-1.5 bg-[#01793B] rounded-full mx-auto mb-6"></div>
             <p className="text-gray-600 text-lg">Apa kata orang tua murid tentang TK Azalia?</p>
         </div>
 
-        <div 
+        {/* Container Carousel */}
+        <div
           ref={carouselRef}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onTouchStart={() => setIsHovered(true)}
           onTouchEnd={() => setIsHovered(false)}
-          onScroll={handleScroll} 
+          onScroll={handleScroll} // <--- Event listener dipasang di sini
           className="flex overflow-x-auto gap-6 pb-12 pt-4 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {testimonials.map((item, idx) => (
-            <motion.div 
-              key={item.id} 
+            <motion.div
+              key={item.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -133,13 +136,14 @@ export default function TestimonialSection() {
           ))}
         </div>
 
+        {/* INDIKATOR GESER DINAMIS (PERBAIKAN) */}
         <div className="flex justify-center mt-2">
             <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden relative">
-                <div 
+                <div
                   className="absolute top-0 bottom-0 bg-[#01793B] rounded-full w-1/2 transition-all duration-150 ease-out"
-                  style={{ 
-                    left: `${scrollProgress}%`, 
-                    transform: `translateX(-${scrollProgress}%)` 
+                  style={{
+                    left: `${scrollProgress}%`,
+                    transform: `translateX(-${scrollProgress}%)`
                   }}
                 ></div>
             </div>

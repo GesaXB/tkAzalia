@@ -986,7 +986,8 @@ export const KelasScalarFieldEnum = {
   kelas_id: 'kelas_id',
   nama: 'nama',
   deskripsi: 'deskripsi',
-  urutan: 'urutan'
+  urutan: 'urutan',
+  kuota: 'kuota'
 } as const
 
 export type KelasScalarFieldEnum = (typeof KelasScalarFieldEnum)[keyof typeof KelasScalarFieldEnum]

@@ -6,13 +6,13 @@ export async function listKelas() {
   });
 }
 
-export async function createKelas(nama: string, deskripsi: string | null, urutan: number) {
+export async function createKelas(nama: string, deskripsi: string | null, urutan: number, kuota: number = 0) {
   return prisma.kelas.create({
-    data: { nama: nama.trim(), deskripsi: deskripsi?.trim() || null, urutan },
+    data: { nama: nama.trim(), deskripsi: deskripsi?.trim() || null, urutan, kuota },
   });
 }
 
-export async function updateKelas(kelasId: number, data: { nama?: string; deskripsi?: string | null; urutan?: number }) {
+export async function updateKelas(kelasId: number, data: { nama?: string; deskripsi?: string | null; urutan?: number; kuota?: number }) {
   if (data.nama) data.nama = data.nama.trim();
   if (data.deskripsi !== undefined) data.deskripsi = data.deskripsi?.trim() || null;
   return prisma.kelas.update({

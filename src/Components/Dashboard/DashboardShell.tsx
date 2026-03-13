@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDown, Menu, PanelLeftClose } from "lucide-react";
+import { Menu, PanelLeftClose, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,35 +79,17 @@ export default function DashboardShell({
     return submenu.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
   };
 
-  const closeSidebarOnMobile = () => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      setSidebarOpenAndStore(false);
-    }
-  };
-
   return (
     <div className="min-h-screen w-full flex bg-white">
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={() => setSidebarOpenAndStore(false)}
-        />
-      )}
       <motion.aside
-        className={`shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden z-50 ${sidebarOpen ? "fixed inset-y-0 left-0 lg:relative" : "w-0"
-          }`}
+        className="shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden"
         initial={false}
         animate={{ width: sidebarOpen ? SIDEBAR_WIDTH : 0 }}
         transition={{ type: "spring", damping: 28, stiffness: 220 }}
       >
         <div className="w-[260px] min-h-full flex flex-col">
           <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-4 border-b border-slate-100">
-            <Link
-              href={items[0]?.href ?? "#"}
-              onClick={closeSidebarOnMobile}
-              className="flex items-center gap-3 shrink-0 min-w-0"
-            >
+            <Link href={items[0]?.href ?? "#"} className="flex items-center gap-3 shrink-0 min-w-0">
               <div className="relative h-10 w-10 shrink-0 rounded-xl overflow-hidden bg-emerald-50 ring-1 ring-slate-200/80">
                 <Image
                   src="/logotk.png"
@@ -130,7 +112,7 @@ export default function DashboardShell({
             </button>
           </div>
           <div className="px-3 py-4 flex-1 overflow-y-auto">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-3">
               {sidebarTitle}
             </div>
             <nav className="space-y-0.5" aria-label="Dashboard menu">
@@ -148,10 +130,11 @@ export default function DashboardShell({
                     <div key={item.label} className="space-y-0.5">
                       <button
                         onClick={() => toggleMenu(item.label)}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                          ? "bg-emerald-500/10 text-emerald-700"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                          }`}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? "bg-emerald-500/10 text-emerald-700"
+                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                        }`}
                       >
                         <span className="truncate flex-1 text-left">{item.label}</span>
                         <motion.div
@@ -179,11 +162,11 @@ export default function DashboardShell({
                                 key={subitem.href}
                                 href={subitem.href}
                                 prefetch
-                                onClick={closeSidebarOnMobile}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isSubitemActive
-                                  ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
-                                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                                  }`}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                                  isSubitemActive
+                                    ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                }`}
                               >
                                 <span className="truncate">{subitem.label}</span>
                               </Link>
@@ -200,11 +183,11 @@ export default function DashboardShell({
                     key={item.href}
                     href={item.href ?? "/"}
                     prefetch
-                    onClick={closeSidebarOnMobile}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                      ? "bg-emerald-500/10 text-emerald-700"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                      }`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? "bg-emerald-500/10 text-emerald-700"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
                   >
                     <span className="truncate">{item.label}</span>
                   </Link>
@@ -215,8 +198,8 @@ export default function DashboardShell({
         </div>
       </motion.aside>
 
-      <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
-        <header className="sticky top-0 z-30 shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white/95 backdrop-blur-md flex items-center justify-between gap-4">
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
@@ -234,7 +217,7 @@ export default function DashboardShell({
           <button
             type="button"
             onClick={handleLogoutClick}
-            className="shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+            className="shrink-0 px-6 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-wider active:scale-95 shadow-sm"
           >
             Keluar
           </button>
@@ -244,7 +227,7 @@ export default function DashboardShell({
           className="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-auto"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }}
+          transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }} // Light custom ease
           key={pathname}
         >
           {children}
@@ -259,3 +242,4 @@ export default function DashboardShell({
     </div>
   );
 }
+

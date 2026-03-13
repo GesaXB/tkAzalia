@@ -29,11 +29,13 @@ export type AggregateKelas = {
 export type KelasAvgAggregateOutputType = {
   kelas_id: number | null
   urutan: number | null
+  kuota: number | null
 }
 
 export type KelasSumAggregateOutputType = {
   kelas_id: number | null
   urutan: number | null
+  kuota: number | null
 }
 
 export type KelasMinAggregateOutputType = {
@@ -41,6 +43,7 @@ export type KelasMinAggregateOutputType = {
   nama: string | null
   deskripsi: string | null
   urutan: number | null
+  kuota: number | null
 }
 
 export type KelasMaxAggregateOutputType = {
@@ -48,6 +51,7 @@ export type KelasMaxAggregateOutputType = {
   nama: string | null
   deskripsi: string | null
   urutan: number | null
+  kuota: number | null
 }
 
 export type KelasCountAggregateOutputType = {
@@ -55,6 +59,7 @@ export type KelasCountAggregateOutputType = {
   nama: number
   deskripsi: number
   urutan: number
+  kuota: number
   _all: number
 }
 
@@ -62,11 +67,13 @@ export type KelasCountAggregateOutputType = {
 export type KelasAvgAggregateInputType = {
   kelas_id?: true
   urutan?: true
+  kuota?: true
 }
 
 export type KelasSumAggregateInputType = {
   kelas_id?: true
   urutan?: true
+  kuota?: true
 }
 
 export type KelasMinAggregateInputType = {
@@ -74,6 +81,7 @@ export type KelasMinAggregateInputType = {
   nama?: true
   deskripsi?: true
   urutan?: true
+  kuota?: true
 }
 
 export type KelasMaxAggregateInputType = {
@@ -81,6 +89,7 @@ export type KelasMaxAggregateInputType = {
   nama?: true
   deskripsi?: true
   urutan?: true
+  kuota?: true
 }
 
 export type KelasCountAggregateInputType = {
@@ -88,6 +97,7 @@ export type KelasCountAggregateInputType = {
   nama?: true
   deskripsi?: true
   urutan?: true
+  kuota?: true
   _all?: true
 }
 
@@ -182,6 +192,7 @@ export type KelasGroupByOutputType = {
   nama: string
   deskripsi: string | null
   urutan: number
+  kuota: number
   _count: KelasCountAggregateOutputType | null
   _avg: KelasAvgAggregateOutputType | null
   _sum: KelasSumAggregateOutputType | null
@@ -212,6 +223,7 @@ export type KelasWhereInput = {
   nama?: Prisma.StringFilter<"Kelas"> | string
   deskripsi?: Prisma.StringNullableFilter<"Kelas"> | string | null
   urutan?: Prisma.IntFilter<"Kelas"> | number
+  kuota?: Prisma.IntFilter<"Kelas"> | number
   siswa?: Prisma.SiswaListRelationFilter
 }
 
@@ -220,6 +232,7 @@ export type KelasOrderByWithRelationInput = {
   nama?: Prisma.SortOrder
   deskripsi?: Prisma.SortOrderInput | Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
   siswa?: Prisma.SiswaOrderByRelationAggregateInput
 }
 
@@ -231,6 +244,7 @@ export type KelasWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.KelasWhereInput | Prisma.KelasWhereInput[]
   deskripsi?: Prisma.StringNullableFilter<"Kelas"> | string | null
   urutan?: Prisma.IntFilter<"Kelas"> | number
+  kuota?: Prisma.IntFilter<"Kelas"> | number
   siswa?: Prisma.SiswaListRelationFilter
 }, "kelas_id" | "nama">
 
@@ -239,6 +253,7 @@ export type KelasOrderByWithAggregationInput = {
   nama?: Prisma.SortOrder
   deskripsi?: Prisma.SortOrderInput | Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
   _count?: Prisma.KelasCountOrderByAggregateInput
   _avg?: Prisma.KelasAvgOrderByAggregateInput
   _max?: Prisma.KelasMaxOrderByAggregateInput
@@ -254,12 +269,14 @@ export type KelasScalarWhereWithAggregatesInput = {
   nama?: Prisma.StringWithAggregatesFilter<"Kelas"> | string
   deskripsi?: Prisma.StringNullableWithAggregatesFilter<"Kelas"> | string | null
   urutan?: Prisma.IntWithAggregatesFilter<"Kelas"> | number
+  kuota?: Prisma.IntWithAggregatesFilter<"Kelas"> | number
 }
 
 export type KelasCreateInput = {
   nama: string
   deskripsi?: string | null
   urutan?: number
+  kuota?: number
   siswa?: Prisma.SiswaCreateNestedManyWithoutKelasInput
 }
 
@@ -268,6 +285,7 @@ export type KelasUncheckedCreateInput = {
   nama: string
   deskripsi?: string | null
   urutan?: number
+  kuota?: number
   siswa?: Prisma.SiswaUncheckedCreateNestedManyWithoutKelasInput
 }
 
@@ -275,6 +293,7 @@ export type KelasUpdateInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
   siswa?: Prisma.SiswaUpdateManyWithoutKelasNestedInput
 }
 
@@ -283,6 +302,7 @@ export type KelasUncheckedUpdateInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
   siswa?: Prisma.SiswaUncheckedUpdateManyWithoutKelasNestedInput
 }
 
@@ -291,12 +311,14 @@ export type KelasCreateManyInput = {
   nama: string
   deskripsi?: string | null
   urutan?: number
+  kuota?: number
 }
 
 export type KelasUpdateManyMutationInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type KelasUncheckedUpdateManyInput = {
@@ -304,6 +326,7 @@ export type KelasUncheckedUpdateManyInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type KelasCountOrderByAggregateInput = {
@@ -311,11 +334,13 @@ export type KelasCountOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   deskripsi?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
 }
 
 export type KelasAvgOrderByAggregateInput = {
   kelas_id?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
 }
 
 export type KelasMaxOrderByAggregateInput = {
@@ -323,6 +348,7 @@ export type KelasMaxOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   deskripsi?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
 }
 
 export type KelasMinOrderByAggregateInput = {
@@ -330,11 +356,13 @@ export type KelasMinOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   deskripsi?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
 }
 
 export type KelasSumOrderByAggregateInput = {
   kelas_id?: Prisma.SortOrder
   urutan?: Prisma.SortOrder
+  kuota?: Prisma.SortOrder
 }
 
 export type KelasNullableScalarRelationFilter = {
@@ -366,6 +394,7 @@ export type KelasCreateWithoutSiswaInput = {
   nama: string
   deskripsi?: string | null
   urutan?: number
+  kuota?: number
 }
 
 export type KelasUncheckedCreateWithoutSiswaInput = {
@@ -373,6 +402,7 @@ export type KelasUncheckedCreateWithoutSiswaInput = {
   nama: string
   deskripsi?: string | null
   urutan?: number
+  kuota?: number
 }
 
 export type KelasCreateOrConnectWithoutSiswaInput = {
@@ -395,6 +425,7 @@ export type KelasUpdateWithoutSiswaInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type KelasUncheckedUpdateWithoutSiswaInput = {
@@ -402,6 +433,7 @@ export type KelasUncheckedUpdateWithoutSiswaInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   deskripsi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  kuota?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -440,6 +472,7 @@ export type KelasSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   nama?: boolean
   deskripsi?: boolean
   urutan?: boolean
+  kuota?: boolean
   siswa?: boolean | Prisma.Kelas$siswaArgs<ExtArgs>
   _count?: boolean | Prisma.KelasCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["kelas"]>
@@ -449,6 +482,7 @@ export type KelasSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   nama?: boolean
   deskripsi?: boolean
   urutan?: boolean
+  kuota?: boolean
 }, ExtArgs["result"]["kelas"]>
 
 export type KelasSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -456,6 +490,7 @@ export type KelasSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   nama?: boolean
   deskripsi?: boolean
   urutan?: boolean
+  kuota?: boolean
 }, ExtArgs["result"]["kelas"]>
 
 export type KelasSelectScalar = {
@@ -463,9 +498,10 @@ export type KelasSelectScalar = {
   nama?: boolean
   deskripsi?: boolean
   urutan?: boolean
+  kuota?: boolean
 }
 
-export type KelasOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"kelas_id" | "nama" | "deskripsi" | "urutan", ExtArgs["result"]["kelas"]>
+export type KelasOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"kelas_id" | "nama" | "deskripsi" | "urutan" | "kuota", ExtArgs["result"]["kelas"]>
 export type KelasInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   siswa?: boolean | Prisma.Kelas$siswaArgs<ExtArgs>
   _count?: boolean | Prisma.KelasCountOutputTypeDefaultArgs<ExtArgs>
@@ -483,6 +519,7 @@ export type $KelasPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     nama: string
     deskripsi: string | null
     urutan: number
+    kuota: number
   }, ExtArgs["result"]["kelas"]>
   composites: {}
 }
@@ -911,6 +948,7 @@ export interface KelasFieldRefs {
   readonly nama: Prisma.FieldRef<"Kelas", 'String'>
   readonly deskripsi: Prisma.FieldRef<"Kelas", 'String'>
   readonly urutan: Prisma.FieldRef<"Kelas", 'Int'>
+  readonly kuota: Prisma.FieldRef<"Kelas", 'Int'>
 }
     
 

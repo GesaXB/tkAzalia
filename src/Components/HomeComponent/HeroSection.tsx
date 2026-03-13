@@ -71,7 +71,7 @@ export default function HeroSection() {
               <>
                 <Link
                   href="/dashboard"
-                  className="group relative inline-flex items-center gap-3 bg-[#01793B] text-white px-8 py-4 rounded-full text-base font-bold
+                  className="group relative flex sm:inline-flex justify-center items-center gap-3 w-full sm:w-auto bg-[#01793B] text-white px-8 py-4 rounded-full text-base font-bold
                             shadow-[0_10px_20px_rgba(1,121,59,0.25)] hover:shadow-[0_15px_30px_rgba(1,121,59,0.4)]
                             transition-all duration-300 ease-out
                             hover:-translate-y-1 hover:bg-[#01602e]
@@ -84,7 +84,7 @@ export default function HeroSection() {
                 </Link>
                 <button
                   onClick={() => setShowLogoutModal(true)}
-                  className="group relative inline-flex items-center gap-3 bg-white text-gray-700 border-2 border-gray-100 px-8 py-4 rounded-full text-base font-bold
+                  className="group relative flex sm:inline-flex justify-center items-center gap-3 w-full sm:w-auto bg-white text-gray-700 border-2 border-gray-100 px-8 py-4 rounded-full text-base font-bold
                             shadow-sm hover:shadow-md hover:border-red-100 hover:text-red-600
                             transition-all duration-300 ease-out
                             hover:-translate-y-1
@@ -99,7 +99,7 @@ export default function HeroSection() {
             ) : (
               <Link
                 href="/about"
-                className="group relative inline-flex items-center gap-3 bg-[#01793B] text-white px-8 py-4 rounded-full text-base font-bold
+                className="group relative flex sm:inline-flex justify-center items-center gap-3 w-full sm:w-auto bg-[#01793B] text-white px-8 py-4 rounded-full text-base font-bold
                           shadow-[0_10px_20px_rgba(1,121,59,0.25)] hover:shadow-[0_15px_30px_rgba(1,121,59,0.4)]
                           transition-all duration-300 ease-out
                           hover:-translate-y-1 hover:bg-[#01602e]

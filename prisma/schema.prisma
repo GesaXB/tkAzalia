@@ -36,6 +36,7 @@ model Kelas {
   nama       String  @unique
   deskripsi  String?
   urutan     Int     @default(0)
+  kuota      Int     @default(0)
   siswa      Siswa[]
 }
 

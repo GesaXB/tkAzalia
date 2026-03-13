@@ -24,7 +24,7 @@ export default function AboutHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight drop-shadow-sm"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 tracking-tight drop-shadow-sm px-2"
         >
           Kenali Kami Lebih Dekat
         </motion.h1>
@@ -34,7 +34,7 @@ export default function AboutHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="text-lg md:text-2xl font-medium mb-10 text-green-50 max-w-2xl mx-auto leading-relaxed"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium mb-8 md:mb-10 text-green-50 max-w-2xl mx-auto leading-relaxed px-4"
         >
           "Membentuk generasi ceria, kreatif, dan penuh rasa ingin tahu sejak dini"
         </motion.p>

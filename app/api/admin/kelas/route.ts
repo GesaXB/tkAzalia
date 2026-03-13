@@ -20,6 +20,7 @@ interface CreateBody {
   nama: string;
   deskripsi?: string;
   urutan?: number;
+  kuota?: number;
 }
 
 async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
@@ -32,7 +33,8 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
       );
     }
     const urutan = typeof body.urutan === 'number' ? body.urutan : 0;
-    const data = await createKelas(body.nama.trim(), body.deskripsi || null, urutan);
+    const kuota = typeof body.kuota === 'number' ? body.kuota : 0;
+    const data = await createKelas(body.nama.trim(), body.deskripsi || null, urutan, kuota);
     return NextResponse.json({ success: true, data, message: 'Kelas berhasil ditambah' }, { status: 201 });
   } catch (err) {
     console.error('POST /api/admin/kelas:', err);

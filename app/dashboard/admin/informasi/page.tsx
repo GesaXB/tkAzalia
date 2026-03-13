@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AdminInformasiSection from "@/Components/Dashboard/Admin/AdminInformasiSection";
-import { useDashboard } from "@/context/DashboardContext";
+import { clearToken } from "@/lib/client/session";
+import { fetchProfile } from "@/lib/client/auth";
 import {
   InformasiSekolahItem,
   createInformasiSekolah,
@@ -9,15 +12,12 @@ import {
   listInformasiSekolah,
   updateInformasiSekolah,
 } from "@/lib/client/admin";
-import { useEffect, useState } from "react";
+import { useDashboard } from "@/context/DashboardContext";
 
 export default function AdminInformasiPage() {
+  const router = useRouter();
   const { setDashboardInfo } = useDashboard();
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setDashboardInfo("Blog", "Kelola artikel blog untuk website");
-  }, []);
   const [error, setError] = useState<string | null>(null);
   const [infoList, setInfoList] = useState<InformasiSekolahItem[]>([]);
   const [infoForm, setInfoForm] = useState({
@@ -44,9 +44,22 @@ export default function AdminInformasiPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
+    setDashboardInfo("Blog", "Kelola artikel blog untuk website");
+  }, [setDashboardInfo]);
+
+  useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
+      const profile = await fetchProfile();
+      if (!profile.success || !profile.data) {
+        router.push("/auth/login");
+        return;
+      }
+      if (profile.data.role !== "admin") {
+        router.push("/dashboard/siswa");
+        return;
+      }
       const infoResponse = await listInformasiSekolah();
       if (!infoResponse.success) {
         setError(infoResponse.error || "Gagal memuat informasi sekolah");
@@ -55,8 +68,7 @@ export default function AdminInformasiPage() {
       setLoading(false);
     };
     load();
-  }, []);
-
+  }, [router]);
 
   const handleCreateInfo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -152,6 +164,7 @@ export default function AdminInformasiPage() {
   };
 
   const handleDeleteInfo = async (info_id: number) => {
+    if (!confirm("Yakin ingin menghapus informasi ini?")) return;
     setError(null);
     const response = await deleteInformasiSekolah(info_id);
     if (!response.success) {
@@ -187,9 +200,9 @@ export default function AdminInformasiPage() {
   }
 
   return (
-    <>
+    <div className="space-y-6">
       {error ? (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2 mb-4">
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
           {error}
         </div>
       ) : null}
@@ -207,7 +220,7 @@ export default function AdminInformasiPage() {
         editingId={editingId}
         onCloseEditModal={handleCloseEditModal}
       />
-    </>
+    </div>
   );
 }
 

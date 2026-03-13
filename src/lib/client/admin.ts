@@ -29,6 +29,7 @@ export interface KelasItem {
   nama: string;
   deskripsi?: string | null;
   urutan: number;
+  kuota: number;
 }
 
 export interface AdminPpdbSiswa {
@@ -58,6 +59,7 @@ export interface AdminPpdbSiswa {
     nama_lengkap: string;
     email: string;
     no_telp: string;
+    created_at: string;
   };
   kelas?: KelasItem | null;
   berkas: Array<{
@@ -85,14 +87,14 @@ export async function listKelasAdmin() {
   return apiRequest<KelasItem[]>('/api/admin/kelas', { method: 'GET' }, true);
 }
 
-export async function createKelasAdmin(payload: { nama: string; deskripsi?: string; urutan?: number }) {
+export async function createKelasAdmin(payload: { nama: string; deskripsi?: string; urutan?: number; kuota?: number }) {
   return apiRequest<KelasItem>('/api/admin/kelas', {
     method: 'POST',
     body: JSON.stringify(payload),
   }, true);
 }
 
-export async function updateKelasAdmin(kelasId: number, payload: { nama?: string; deskripsi?: string; urutan?: number }) {
+export async function updateKelasAdmin(kelasId: number, payload: { nama?: string; deskripsi?: string; urutan?: number; kuota?: number }) {
   return apiRequest<KelasItem>(`/api/admin/kelas/${kelasId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),

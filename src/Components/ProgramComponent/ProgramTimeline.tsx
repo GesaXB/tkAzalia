@@ -4,41 +4,41 @@ import { motion } from "framer-motion";
 import { Clock, Music, Heart, BookOpen, Smile, Utensils, LogOut } from "lucide-react";
 
 const schedule = [
-  { 
-    time: "07.30 - 08.00", 
-    activity: "Senam Ceria", 
-    icon: Music, 
-    color: "text-yellow-600 bg-yellow-100" 
+  {
+    time: "07.30 - 08.00",
+    activity: "Senam Ceria",
+    icon: Music,
+    color: "text-yellow-600 bg-yellow-100"
   },
-  { 
-    time: "08.00 - 08.30", 
-    activity: "Doa Pagi, Sholat Dhuha, Dzikir Pagi", 
-    icon: Heart, 
-    color: "text-blue-600 bg-blue-100" 
+  {
+    time: "08.00 - 08.30",
+    activity: "Doa Pagi, Sholat Dhuha, Dzikir Pagi",
+    icon: Heart,
+    color: "text-blue-600 bg-blue-100"
   },
-  { 
-    time: "08.30 - 09.30", 
-    activity: "Belajar", 
-    icon: BookOpen, 
-    color: "text-[#108043] bg-green-100" 
+  {
+    time: "08.30 - 09.30",
+    activity: "Belajar",
+    icon: BookOpen,
+    color: "text-[#108043] bg-green-100"
   },
-  { 
-    time: "09.30 - 10.00", 
-    activity: "Bermain di Luar", 
-    icon: Smile, 
-    color: "text-orange-600 bg-orange-100" 
+  {
+    time: "09.30 - 10.00",
+    activity: "Bermain di Luar",
+    icon: Smile,
+    color: "text-orange-600 bg-orange-100"
   },
-  { 
-    time: "10.00 - 10.15", 
-    activity: "Makan", 
-    icon: Utensils, 
-    color: "text-rose-600 bg-rose-100" 
+  {
+    time: "10.00 - 10.15",
+    activity: "Makan",
+    icon: Utensils,
+    color: "text-rose-600 bg-rose-100"
   },
-  { 
-    time: "10.15 - 10.30", 
-    activity: "Doa Pulang dan Penutupan", 
-    icon: LogOut, 
-    color: "text-purple-600 bg-purple-100" 
+  {
+    time: "10.15 - 10.30",
+    activity: "Doa Pulang dan Penutupan",
+    icon: LogOut,
+    color: "text-purple-600 bg-purple-100"
   },
 ];
 
@@ -62,7 +62,7 @@ export default function ProgramTimeline() {
           {schedule.map((item, idx) => {
             const Icon = item.icon;
             const isEven = idx % 2 === 0;
-            
+
             return (
               <motion.div
                 key={idx}
@@ -78,22 +78,25 @@ export default function ProgramTimeline() {
 
                 <div className="hidden md:block w-1/2"></div>
 
-                <motion.div 
-                  whileHover={{ 
+                <motion.div
+                  whileHover={{
                     y: -5,
                     scale: 1.01,
-                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" 
+                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
                   }}
                   className={`ml-12 md:ml-0 md:w-1/2 ${isEven ? 'md:pr-10' : 'md:pl-10'} cursor-pointer`}
                 >
+                  {/* Card Padding dan Rounded diperkecil */}
                   <div className="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100 transition-all flex items-center gap-4 group">
-                    
+
+                    {/* Ukuran kotak Ikon diperkecil (w-11 h-11) */}
                     <div className={`w-11 h-11 ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 flex-shrink-0`}>
                         <Icon className="w-5 h-5" />
                     </div>
-                    
+
                     <div>
                         <div className="text-xs font-extrabold text-[#108043] mb-0.5 tracking-wide">{item.time}</div>
+                        {/* Ukuran teks judul kegiatan diperkecil menjadi text-base */}
                         <h4 className="text-base font-bold text-gray-900 group-hover:text-[#108043] transition-colors">{item.activity}</h4>
                     </div>
 
@@ -104,7 +107,7 @@ export default function ProgramTimeline() {
           })}
         </div>
       </div>
-      
+
        <p className="text-center text-xs text-gray-500 mt-12 italic bg-gray-50 py-2.5 rounded-full inline-block px-6 mx-auto w-full md:w-auto border border-gray-100">
         *Jadwal bersifat fleksibel menyesuaikan kondisi anak dan kegiatan sekolah.
       </p>

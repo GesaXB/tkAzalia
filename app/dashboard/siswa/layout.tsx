@@ -12,8 +12,7 @@ const SISWA_SIDEBAR_ITEMS = [
   {
     label: "Data Pendaftaran",
     submenu: [
-      { label: "Data Siswa", href: "/dashboard/siswa/data-siswa" },
-      { label: "Data Orang Tua", href: "/dashboard/siswa/data-ortu" },
+      { label: "Data Pendaftaran", href: "/dashboard/siswa/data-ppdb" },
       { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
       { label: "Pilih Kelas", href: "/dashboard/siswa/kelas" }
     ]

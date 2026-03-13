@@ -13,11 +13,12 @@ async function putHandler(req: AuthenticatedRequest, context: any): Promise<Next
     return NextResponse.json({ success: false, error: 'ID tidak valid' }, { status: 400 });
   }
   try {
-    const body = (await (req as NextRequest).json()) as { nama?: string; deskripsi?: string; urutan?: number };
-    const data: { nama?: string; deskripsi?: string | null; urutan?: number } = {};
+    const body = (await (req as NextRequest).json()) as { nama?: string; deskripsi?: string; urutan?: number; kuota?: number };
+    const data: { nama?: string; deskripsi?: string | null; urutan?: number; kuota?: number } = {};
     if (typeof body.nama === 'string' && body.nama.trim()) data.nama = body.nama.trim();
     if (typeof body.deskripsi === 'string') data.deskripsi = body.deskripsi.trim() || null;
     if (typeof body.urutan === 'number') data.urutan = body.urutan;
+    if (typeof body.kuota === 'number') data.kuota = body.kuota;
     if (Object.keys(data).length === 0) {
       return NextResponse.json({ success: false, error: 'Tidak ada data yang diubah' }, { status: 400 });
     }

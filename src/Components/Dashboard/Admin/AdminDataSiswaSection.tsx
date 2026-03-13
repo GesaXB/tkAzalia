@@ -66,73 +66,79 @@ export default function AdminDataSiswaSection({
           </select>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-gray-100">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">
-              <tr>
-                <th className="px-4 py-3">Peserta</th>
-                <th className="px-4 py-3">TTL</th>
-                <th className="px-4 py-3">Gender</th>
-                <th className="px-4 py-3">Kelas</th>
-                <th className="px-4 py-3 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50 bg-white">
-              {filteredList.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-gray-500">
-                    Tidak ada data ditemukan.
-                  </td>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 border-none uppercase tracking-wider">Peserta</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 border-none uppercase tracking-wider">TTL</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 border-none uppercase tracking-wider">Gender</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 border-none uppercase tracking-wider">Kelas</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 border-none uppercase tracking-wider text-right">Aksi</th>
                 </tr>
-              ) : (
-                filteredList.map((item) => (
-                  <tr key={item.siswa_id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex flex-col">
-                        <span className="font-semibold text-gray-900 line-clamp-1">
-                          {item.nama_anak || item.user.nama_lengkap}
-                        </span>
-                        <span className="text-xs text-gray-500 line-clamp-1">
-                          Orang tua: {item.user.nama_lengkap}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600">
-                      <div className="flex flex-col">
-                        <span className="truncate">{item.tempat_lahir || "-"}</span>
-                        <span className="text-xs truncate">
-                          {item.tanggal_lahir ? new Date(item.tanggal_lahir).toLocaleDateString("id-ID") : "-"}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600">
-                      {item.jenis_kelamin || "-"}
-                    </td>
-                    <td className="px-4 py-3">
-                      {item.kelas ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                          {item.kelas.nama}
-                        </span>
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <Link
-                        href={`/dashboard/admin/ppdb/${item.siswa_id}`}
-                        className="inline-flex items-center gap-1 text-[#01793B] font-medium hover:underline"
-                      >
-                        Detail
-                        <ChevronRight size={14} />
-                      </Link>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredList.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400 italic font-medium">
+                      Tidak ada data ditemukan.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredList.map((item) => (
+                    <tr key={item.siswa_id} className="hover:bg-slate-50/50 transition-colors group">
+                      <td className="px-6 py-5">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                            {item.nama_anak || item.user.nama_lengkap}
+                          </span>
+                          <span className="text-[11px] font-medium text-slate-400 mt-0.5">
+                            {item.user.nama_lengkap}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 text-slate-600">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-xs">{item.tempat_lahir || "-"}</span>
+                          <span className="text-[11px] font-medium text-slate-400 mt-1">
+                            {item.tanggal_lahir ? new Date(item.tanggal_lahir).toLocaleDateString("id-ID") : "-"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5">
+                        <span className={`inline-flex items-center gap-2 text-xs font-bold uppercase tracking-tight ${item.jenis_kelamin === 'P' ? 'text-rose-600' : 'text-blue-600'}`}>
+                           <span className={`w-1.5 h-1.5 rounded-full ${item.jenis_kelamin === 'P' ? 'bg-rose-400' : 'bg-blue-400'}`}></span>
+                           {item.jenis_kelamin === 'P' ? 'Perempuan' : 'Laki-Laki'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5">
+                        {item.kelas ? (
+                          <span className="inline-flex px-2 py-0.5 rounded text-[9px] font-black bg-slate-100 text-slate-600 uppercase tracking-wider leading-none">
+                            {item.kelas.nama}
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-black text-slate-300 uppercase tracking-wider italic">-</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <Link
+                          href={`/dashboard/admin/ppdb/${item.siswa_id}`}
+                          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-900 text-white font-black text-[10px] uppercase tracking-wider hover:bg-emerald-600 transition-all duration-300 active:scale-95 shadow-sm"
+                        >
+                          Detail
+                          <ChevronRight size={12} />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </SectionCard>
   );
 }
+
