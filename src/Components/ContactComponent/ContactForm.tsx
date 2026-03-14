@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     q: "Apakah pendaftaran sudah termasuk seragam?",
-    a: "Betul. Calon siswa yang sudah resmi mendaftar akan mendapatkan kelengkapan berupa 4 stel seragam sekolah, tas punggung, serta modul belajar dan alat peraga edukatif."
+    a: "Betul. Calon siswa yang sudah resmi mendaftar akan mendapatkan kelengkapan berupa 2 stel seragam sekolah, modul belajar dan alat peraga edukatif."
   },
   {
     q: "Bagaimana dengan fasilitas makan anak di sekolah?",
-    a: "Kami memiliki program khusus 'Jumat Berkah' di mana sekolah menyediakan katering makan sehat bersama. Untuk hari Senin hingga Kamis, anak-anak dianjurkan membawa bekal sehat dari rumah untuk melatih kemandirian."
+    a: "Sekolah menyediakan fasilitas katering harian dengan menu sehat dan bergizi yang disesuaikan untuk kebutuhan tumbuh kembang anak."
   },
   {
     q: "Kegiatan apa saja yang dilakukan anak sehari-hari?",

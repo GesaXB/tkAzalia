@@ -25,7 +25,7 @@ export default function PendaftaranHero() {
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight drop-shadow-md">
             Penerimaan Peserta Didik Baru <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">
-              (PPDB) TK Azalia
+              (SPMB) TK Azalia
             </span>
           </h1>
 

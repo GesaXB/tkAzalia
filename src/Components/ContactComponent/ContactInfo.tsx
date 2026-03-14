@@ -42,7 +42,7 @@ export default function ContactInfo() {
             title="Email"
             content={
               <>
-                @tkazalia.sch.id<br />
+                @tkitazalia@gmail.com<br />
               </>
             }
           />

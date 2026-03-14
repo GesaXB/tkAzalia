@@ -19,7 +19,6 @@ export default function Navbar() {
     setHasToken(!!getToken());
   }, [pathname]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -52,7 +51,6 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
-            {/* LOGO */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-105">
                 <Image
@@ -73,7 +71,6 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* MENU DESKTOP */}
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -92,7 +89,6 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* TOMBOL ACTION (Masuk & Daftar) */}
             <div className="hidden md:flex items-center gap-3">
               {hasToken ? (
                 <>
@@ -137,7 +133,6 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* TOMBOL MOBILE MENU */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors relative z-[60]"
@@ -149,11 +144,9 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU - Full Screen Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -163,7 +156,6 @@ export default function Navbar() {
               className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[51] md:hidden"
             />
 
-            {/* Side Panel */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -171,7 +163,6 @@ export default function Navbar() {
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white z-[52] md:hidden shadow-2xl flex flex-col"
             >
-              {/* Mobile Header */}
               <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
                 <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2">
                   <div className="relative w-9 h-9">
@@ -187,7 +178,6 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {/* Nav Links */}
               <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="space-y-1">
                   {navLinks.map((link, idx) => {
@@ -217,7 +207,6 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* Bottom Actions */}
               <div className="px-4 py-5 border-t border-gray-100 bg-gray-50/50 space-y-2.5">
                 {hasToken ? (
                   <>
@@ -264,7 +253,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* MODAL KONFIRMASI LOGOUT */}
       <AnimatePresence>
         {showLogoutModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -277,14 +265,12 @@ export default function Navbar() {
               className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             />
 
-            {/* Modal Content */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl overflow-hidden"
             >
-              {/* Decorative Element */}
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-rose-500" />
 
               <div className="flex flex-col items-center text-center">

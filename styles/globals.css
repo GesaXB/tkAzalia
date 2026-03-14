@@ -30,7 +30,6 @@ body {
   animation-play-state: paused;
 }
 
-/* Horizontal scroll: scrollbar tipis dan konsisten */
 .scroll-horizontal {
   -webkit-overflow-scrolling: touch;
 }
