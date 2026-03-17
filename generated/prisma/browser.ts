@@ -48,6 +48,11 @@ export type JenisBerkas = Prisma.JenisBerkasModel
  */
 export type InformasiSekolah = Prisma.InformasiSekolahModel
 /**
+ * Model Komentar
+ * 
+ */
+export type Komentar = Prisma.KomentarModel
+/**
  * Model PpdbSetting
  * 
  */

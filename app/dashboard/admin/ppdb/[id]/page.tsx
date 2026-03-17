@@ -16,6 +16,7 @@ import {
   Clock,
   ExternalLink,
   FileText,
+  Home,
   Mail,
   Phone,
   User,
@@ -347,57 +348,75 @@ export default function AdminPpdbDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Detail Calon Siswa */}
-          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm space-y-5">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
-              Data Calon Siswa
-            </h2>
-            <div className="grid grid-cols-1 gap-4">
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm space-y-6">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+              <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
+                <User size={20} />
+              </div>
+              <h2 className="text-base font-bold text-gray-900">Data Calon Siswa</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-5">
               <DetailItem label="Nama Lengkap" value={siswa.nama_anak || siswa.user.nama_lengkap} />
-              <DetailItem label="Nama Panggilan" value={siswa.nama_panggilan} />
+              <div className="grid grid-cols-2 gap-4">
+                <DetailItem label="Nama Panggilan" value={siswa.nama_panggilan} />
+                <DetailItem label="Jenis Kelamin" value={siswa.jenis_kelamin === "Laki-laki" || siswa.jenis_kelamin === "L" ? "Laki-laki" : siswa.jenis_kelamin === "Perempuan" || siswa.jenis_kelamin === "P" ? "Perempuan" : "-"} />
+              </div>
               <DetailItem 
                 label="Tempat, Tanggal Lahir" 
                 value={`${siswa.tempat_lahir || "-"}${siswa.tanggal_lahir ? `, ${new Date(siswa.tanggal_lahir).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}` : ""}`} 
               />
-              <div className="grid grid-cols-2 gap-4">
-                <DetailItem label="Jenis Kelamin" value={siswa.jenis_kelamin === "L" ? "Laki-laki" : siswa.jenis_kelamin === "P" ? "Perempuan" : "-"} />
-                <DetailItem label="Anak Ke" value={siswa.anak_ke?.toString()} />
-              </div>
+              <DetailItem label="Anak Ke" value={siswa.anak_ke?.toString()} />
             </div>
           </div>
 
-          {/* Data Orang Tua */}
-          <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm space-y-5">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
-              Data Orang Tua / Wali
-            </h2>
-            <div className="grid grid-cols-1 gap-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Data Orang Tua & Kontak */}
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm space-y-6">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+              <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+                <Home size={20} />
+              </div>
+              <h2 className="text-base font-bold text-gray-900">Data Orang Tua & Kontak</h2>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <DetailItem label="Nama Ayah" value={siswa.nama_ayah} />
                 <DetailItem label="Pekerjaan Ayah" value={siswa.pekerjaan_ayah} />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <DetailItem label="Nama Ibu" value={siswa.nama_ibu} />
                 <DetailItem label="Pekerjaan Ibu" value={siswa.pekerjaan_ibu} />
               </div>
-              <DetailItem label="No. WhatsApp" value={siswa.no_whatsapp || siswa.user.no_telp} isCopyable />
-              <DetailItem label="Alamat Rumah" value={siswa.alamat_rumah} />
+              
+              <div className="pt-4 border-t border-gray-50">
+                <div className="bg-slate-50 rounded-xl p-4 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-white shadow-xs text-emerald-600">
+                      <Phone size={16} />
+                    </div>
+                    <DetailItem label="No. WhatsApp (Orang Tua)" value={siswa.no_whatsapp || siswa.user.no_telp} isCopyable />
+                  </div>
+                  <DetailItem label="Alamat Domisili" value={siswa.alamat_rumah} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Berkas: lihat file */}
-        <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              Berkas yang diunggah
-            </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Periksa file untuk memastikan dokumen benar, lalu beri keputusan validasi.
-            </p>
+        {/* Berkas Section */}
+        <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
+          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <div>
+              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                <FileText size={18} className="text-gray-400" />
+                Validasi Berkas
+              </h2>
+            </div>
           </div>
           <div className="divide-y divide-gray-50">
             {siswa.berkas.length === 0 ? (
-              <div className="px-5 py-8 text-center text-sm text-gray-500">
+              <div className="px-6 py-10 text-center text-sm text-gray-500">
                 Belum ada berkas diunggah.
               </div>
             ) : (
@@ -409,30 +428,32 @@ export default function AdminPpdbDetailPage() {
                 return (
                   <div
                     key={b.berkas_siswa_id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 hover:bg-gray-50/50"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 hover:bg-gray-50/30 transition-colors"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                        <FileText className="text-emerald-600" size={20} />
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 border border-gray-200">
+                        <FileText className="text-slate-600" size={24} />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-medium text-gray-900 truncate">{b.nama_file}</p>
-                        <p className="text-xs text-gray-500">
-                          {b.jenisBerkas?.nama_berkas ?? "-"} · {validasiBadge(b.status_validasi)}
+                        <p className="font-semibold text-gray-900 truncate">{b.nama_file}</p>
+                        <p className="text-xs text-gray-500 flex items-center gap-2 mt-1">
+                          <span className="font-medium text-slate-700">{b.jenisBerkas?.nama_berkas ?? "-"}</span>
+                          <span>•</span>
+                          {validasiBadge(b.status_validasi)}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 self-start sm:self-auto">
-                      <div className="flex items-center gap-1 mr-2">
+                    <div className="flex items-center gap-3 self-start sm:self-auto">
+                      <div className="flex items-center gap-2 mr-2">
                         {b.status_validasi !== 'valid' && (
                           <button
                             type="button"
                             disabled={isValidating}
                             onClick={() => handleValidasi(b.berkas_siswa_id, 'valid')}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 disabled:opacity-50 transition-colors"
+                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-100 disabled:opacity-50 transition-all active:scale-95"
                           >
-                            {isValidating ? '...' : 'Set Valid'}
+                            Set Valid
                           </button>
                         )}
                         {b.status_validasi !== 'tidak_valid' && (
@@ -440,9 +461,9 @@ export default function AdminPpdbDetailPage() {
                             type="button"
                             disabled={isValidating}
                             onClick={() => handleValidasi(b.berkas_siswa_id, 'tidak_valid')}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 disabled:opacity-50 transition-colors"
+                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-700 hover:bg-red-600 hover:text-white border border-red-100 disabled:opacity-50 transition-all active:scale-95"
                           >
-                            {isValidating ? '...' : 'Set Invalid'}
+                            Set Invalid
                           </button>
                         )}
                       </div>
@@ -452,19 +473,10 @@ export default function AdminPpdbDetailPage() {
                           <button
                             type="button"
                             onClick={() => setPreviewBerkas({ nama_file: b.nama_file, path_file: path, tipe_file: b.tipe_file || "" })}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all shadow-xs"
                           >
-                            Lihat
+                            Preview
                           </button>
-                          <a
-                            href={url.startsWith("http") ? url : `${typeof window !== "undefined" ? window.location.origin : ""}${url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-[#01793B] bg-[#01793B] px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                          >
-                            Buka
-                            <ExternalLink size={14} />
-                          </a>
                         </>
                       ) : (
                         <span className="text-xs text-gray-400">File tidak tersedia</span>
@@ -477,47 +489,52 @@ export default function AdminPpdbDetailPage() {
           </div>
         </div>
 
-        {/* Keputusan */}
-        <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-            Keputusan PPDB
-          </h2>
-          <div className="space-y-4 max-w-xl">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-              <select
-                value={statusPpdb}
-                onChange={(e) => setStatusPpdb(e.target.value as UpdatePpdbPayload["status_ppdb"])}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm bg-white focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B]"
+        {/* Keputusan PPDB */}
+        <div className="max-w-2xl">
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-6 flex items-center gap-2">
+              <CheckCircle size={18} className="text-[#01793B]" />
+              Keputusan PPDB
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="space-y-4 sm:col-span-1">
+                <label className="block text-xs font-bold text-gray-500 uppercase">Status Kelulusan</label>
+                <select
+                  value={statusPpdb}
+                  onChange={(e) => setStatusPpdb(e.target.value as UpdatePpdbPayload["status_ppdb"])}
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium bg-white focus:ring-4 focus:ring-[#01793B]/10 focus:border-[#01793B] outline-none transition-all"
+                >
+                  <option value="menunggu">Menunggu</option>
+                  <option value="lulus">Lulus (Diterima)</option>
+                  <option value="tidak_lulus">Tidak Lulus (Ditolak)</option>
+                </select>
+              </div>
+              <div className="space-y-4 sm:col-span-2">
+                <label className="block text-xs font-bold text-gray-500 uppercase">Catatan Tambahan</label>
+                <textarea
+                  value={catatanPpdb}
+                  onChange={(e) => setCatatanPpdb(e.target.value)}
+                  placeholder="Beri alasan kelulusan atau instruksi selanjutnya..."
+                  rows={3}
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm bg-white focus:ring-4 focus:ring-[#01793B]/10 focus:border-[#01793B] outline-none transition-all resize-none"
+                />
+              </div>
+            </div>
+            <div className="mt-6 pt-6 border-t border-gray-50">
+              <button
+                type="button"
+                onClick={handleSimpan}
+                disabled={saving}
+                className="w-full sm:w-auto rounded-xl bg-[#01793B] px-8 py-3 text-sm font-bold text-white hover:bg-emerald-700 shadow-md shadow-emerald-900/10 transition-all active:scale-95 disabled:opacity-50"
               >
-                <option value="menunggu">Menunggu</option>
-                <option value="lulus">Lulus</option>
-                <option value="tidak_lulus">Tidak Lulus</option>
-              </select>
+                {saving ? "Menyimpan..." : "Simpan Keputusan Final"}
+              </button>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Catatan (opsional)</label>
-              <textarea
-                value={catatanPpdb}
-                onChange={(e) => setCatatanPpdb(e.target.value)}
-                placeholder="Catatan untuk siswa atau internal..."
-                rows={3}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm bg-white focus:ring-2 focus:ring-[#01793B]/30 focus:border-[#01793B] resize-none"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={handleSimpan}
-              disabled={saving}
-              className="rounded-lg bg-[#01793B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
-            >
-              {saving ? "Menyimpan..." : "Simpan keputusan"}
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Modal preview berkas - gunakan full URL agar file bisa diload */}
+      {/* Modal preview berkas */}
       {previewBerkas && previewBerkas.path_file && (
         <BerkasPreviewModal
           namaFile={previewBerkas.nama_file}

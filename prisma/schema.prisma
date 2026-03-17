@@ -24,6 +24,7 @@ model User {
   created_at   DateTime  @default(now())
   deleted_at   DateTime?
   siswa        Siswa?
+  komentars    Komentar[]
 }
 
 enum Role {
@@ -120,6 +121,19 @@ model InformasiSekolah {
   created_at DateTime  @default(now())
   uptadet_at DateTime  @default(now())
   deleted_at DateTime?
+  komentar   Komentar[]
+}
+
+model Komentar {
+  komentar_id Int              @id @default(autoincrement())
+  info_id     Int
+  user_id     Int?
+  nama        String
+  isi         String
+  created_at  DateTime         @default(now())
+  
+  informasi   InformasiSekolah @relation(fields: [info_id], references: [info_id])
+  user        User?            @relation(fields: [user_id], references: [user_id])
 }
 
 enum Tipe {

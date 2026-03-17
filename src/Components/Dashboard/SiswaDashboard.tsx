@@ -366,7 +366,7 @@ export default function SiswaDashboard() {
               <button
                 onClick={() => {
                   setShowModal(false);
-                  router.push("/dashboard/siswa/data-ppdb");
+                  router.push("/dashboard/siswa/data-siswa");
                 }}
                 className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
               >

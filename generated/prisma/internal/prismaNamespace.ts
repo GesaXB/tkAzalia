@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 /**
@@ -390,6 +390,7 @@ export const ModelName = {
   BerkasSiswa: 'BerkasSiswa',
   JenisBerkas: 'JenisBerkas',
   InformasiSekolah: 'InformasiSekolah',
+  Komentar: 'Komentar',
   PpdbSetting: 'PpdbSetting'
 } as const
 
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "kelas" | "siswa" | "berkasSiswa" | "jenisBerkas" | "informasiSekolah" | "ppdbSetting"
+    modelProps: "user" | "kelas" | "siswa" | "berkasSiswa" | "jenisBerkas" | "informasiSekolah" | "komentar" | "ppdbSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -854,6 +855,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Komentar: {
+      payload: Prisma.$KomentarPayload<ExtArgs>
+      fields: Prisma.KomentarFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KomentarFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KomentarFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        findFirst: {
+          args: Prisma.KomentarFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KomentarFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        findMany: {
+          args: Prisma.KomentarFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>[]
+        }
+        create: {
+          args: Prisma.KomentarCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        createMany: {
+          args: Prisma.KomentarCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KomentarCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>[]
+        }
+        delete: {
+          args: Prisma.KomentarDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        update: {
+          args: Prisma.KomentarUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        deleteMany: {
+          args: Prisma.KomentarDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KomentarUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KomentarUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>[]
+        }
+        upsert: {
+          args: Prisma.KomentarUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KomentarPayload>
+        }
+        aggregate: {
+          args: Prisma.KomentarAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKomentar>
+        }
+        groupBy: {
+          args: Prisma.KomentarGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KomentarGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KomentarCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KomentarCountAggregateOutputType> | number
+        }
+      }
+    }
     PpdbSetting: {
       payload: Prisma.$PpdbSettingPayload<ExtArgs>
       fields: Prisma.PpdbSettingFieldRefs
@@ -1057,6 +1132,18 @@ export const InformasiSekolahScalarFieldEnum = {
 } as const
 
 export type InformasiSekolahScalarFieldEnum = (typeof InformasiSekolahScalarFieldEnum)[keyof typeof InformasiSekolahScalarFieldEnum]
+
+
+export const KomentarScalarFieldEnum = {
+  komentar_id: 'komentar_id',
+  info_id: 'info_id',
+  user_id: 'user_id',
+  nama: 'nama',
+  isi: 'isi',
+  created_at: 'created_at'
+} as const
+
+export type KomentarScalarFieldEnum = (typeof KomentarScalarFieldEnum)[keyof typeof KomentarScalarFieldEnum]
 
 
 export const PpdbSettingScalarFieldEnum = {
@@ -1326,6 +1413,7 @@ export type GlobalOmitConfig = {
   berkasSiswa?: Prisma.BerkasSiswaOmit
   jenisBerkas?: Prisma.JenisBerkasOmit
   informasiSekolah?: Prisma.InformasiSekolahOmit
+  komentar?: Prisma.KomentarOmit
   ppdbSetting?: Prisma.PpdbSettingOmit
 }
 

@@ -237,3 +237,16 @@ export async function updateJenisBerkas(id: number, payload: { nama_berkas: stri
 export async function deleteJenisBerkas(id: number) {
   return apiRequest(`/api/admin/jenis-berkas/${id}`, { method: 'DELETE' }, true);
 }
+
+export async function resetUserPassword(userId: number, passwordBaru: string) {
+  return apiRequest<{ message: string }>(`/api/admin/users/${userId}/password`, {
+    method: 'PUT',
+    body: JSON.stringify({ password_baru: passwordBaru }),
+  }, true);
+}
+
+export async function deleteKomentar(id: number) {
+  return apiRequest(`/api/admin/comments/${id}`, {
+    method: 'DELETE',
+  }, true);
+}

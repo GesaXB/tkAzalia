@@ -57,6 +57,7 @@ export const ModelName = {
   BerkasSiswa: 'BerkasSiswa',
   JenisBerkas: 'JenisBerkas',
   InformasiSekolah: 'InformasiSekolah',
+  Komentar: 'Komentar',
   PpdbSetting: 'PpdbSetting'
 } as const
 
@@ -166,6 +167,18 @@ export const InformasiSekolahScalarFieldEnum = {
 } as const
 
 export type InformasiSekolahScalarFieldEnum = (typeof InformasiSekolahScalarFieldEnum)[keyof typeof InformasiSekolahScalarFieldEnum]
+
+
+export const KomentarScalarFieldEnum = {
+  komentar_id: 'komentar_id',
+  info_id: 'info_id',
+  user_id: 'user_id',
+  nama: 'nama',
+  isi: 'isi',
+  created_at: 'created_at'
+} as const
+
+export type KomentarScalarFieldEnum = (typeof KomentarScalarFieldEnum)[keyof typeof KomentarScalarFieldEnum]
 
 
 export const PpdbSettingScalarFieldEnum = {

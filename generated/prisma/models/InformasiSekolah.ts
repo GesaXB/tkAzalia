@@ -276,6 +276,7 @@ export type InformasiSekolahWhereInput = {
   created_at?: Prisma.DateTimeFilter<"InformasiSekolah"> | Date | string
   uptadet_at?: Prisma.DateTimeFilter<"InformasiSekolah"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"InformasiSekolah"> | Date | string | null
+  komentar?: Prisma.KomentarListRelationFilter
 }
 
 export type InformasiSekolahOrderByWithRelationInput = {
@@ -291,6 +292,7 @@ export type InformasiSekolahOrderByWithRelationInput = {
   created_at?: Prisma.SortOrder
   uptadet_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  komentar?: Prisma.KomentarOrderByRelationAggregateInput
 }
 
 export type InformasiSekolahWhereUniqueInput = Prisma.AtLeast<{
@@ -309,6 +311,7 @@ export type InformasiSekolahWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"InformasiSekolah"> | Date | string
   uptadet_at?: Prisma.DateTimeFilter<"InformasiSekolah"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"InformasiSekolah"> | Date | string | null
+  komentar?: Prisma.KomentarListRelationFilter
 }, "info_id">
 
 export type InformasiSekolahOrderByWithAggregationInput = {
@@ -361,6 +364,7 @@ export type InformasiSekolahCreateInput = {
   created_at?: Date | string
   uptadet_at?: Date | string
   deleted_at?: Date | string | null
+  komentar?: Prisma.KomentarCreateNestedManyWithoutInformasiInput
 }
 
 export type InformasiSekolahUncheckedCreateInput = {
@@ -376,6 +380,7 @@ export type InformasiSekolahUncheckedCreateInput = {
   created_at?: Date | string
   uptadet_at?: Date | string
   deleted_at?: Date | string | null
+  komentar?: Prisma.KomentarUncheckedCreateNestedManyWithoutInformasiInput
 }
 
 export type InformasiSekolahUpdateInput = {
@@ -390,6 +395,7 @@ export type InformasiSekolahUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uptadet_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  komentar?: Prisma.KomentarUpdateManyWithoutInformasiNestedInput
 }
 
 export type InformasiSekolahUncheckedUpdateInput = {
@@ -405,6 +411,7 @@ export type InformasiSekolahUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uptadet_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  komentar?: Prisma.KomentarUncheckedUpdateManyWithoutInformasiNestedInput
 }
 
 export type InformasiSekolahCreateManyInput = {
@@ -506,6 +513,11 @@ export type InformasiSekolahSumOrderByAggregateInput = {
   urutan?: Prisma.SortOrder
 }
 
+export type InformasiSekolahScalarRelationFilter = {
+  is?: Prisma.InformasiSekolahWhereInput
+  isNot?: Prisma.InformasiSekolahWhereInput
+}
+
 export type EnumTipeFieldUpdateOperationsInput = {
   set?: $Enums.Tipe
 }
@@ -514,6 +526,123 @@ export type EnumStatusFieldUpdateOperationsInput = {
   set?: $Enums.Status
 }
 
+export type InformasiSekolahCreateNestedOneWithoutKomentarInput = {
+  create?: Prisma.XOR<Prisma.InformasiSekolahCreateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedCreateWithoutKomentarInput>
+  connectOrCreate?: Prisma.InformasiSekolahCreateOrConnectWithoutKomentarInput
+  connect?: Prisma.InformasiSekolahWhereUniqueInput
+}
+
+export type InformasiSekolahUpdateOneRequiredWithoutKomentarNestedInput = {
+  create?: Prisma.XOR<Prisma.InformasiSekolahCreateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedCreateWithoutKomentarInput>
+  connectOrCreate?: Prisma.InformasiSekolahCreateOrConnectWithoutKomentarInput
+  upsert?: Prisma.InformasiSekolahUpsertWithoutKomentarInput
+  connect?: Prisma.InformasiSekolahWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InformasiSekolahUpdateToOneWithWhereWithoutKomentarInput, Prisma.InformasiSekolahUpdateWithoutKomentarInput>, Prisma.InformasiSekolahUncheckedUpdateWithoutKomentarInput>
+}
+
+export type InformasiSekolahCreateWithoutKomentarInput = {
+  judul: string
+  slug: string
+  konten: string
+  ringkasan?: string | null
+  gambar?: string | null
+  tipe: $Enums.Tipe
+  status: $Enums.Status
+  urutan: number
+  created_at?: Date | string
+  uptadet_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type InformasiSekolahUncheckedCreateWithoutKomentarInput = {
+  info_id?: number
+  judul: string
+  slug: string
+  konten: string
+  ringkasan?: string | null
+  gambar?: string | null
+  tipe: $Enums.Tipe
+  status: $Enums.Status
+  urutan: number
+  created_at?: Date | string
+  uptadet_at?: Date | string
+  deleted_at?: Date | string | null
+}
+
+export type InformasiSekolahCreateOrConnectWithoutKomentarInput = {
+  where: Prisma.InformasiSekolahWhereUniqueInput
+  create: Prisma.XOR<Prisma.InformasiSekolahCreateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedCreateWithoutKomentarInput>
+}
+
+export type InformasiSekolahUpsertWithoutKomentarInput = {
+  update: Prisma.XOR<Prisma.InformasiSekolahUpdateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedUpdateWithoutKomentarInput>
+  create: Prisma.XOR<Prisma.InformasiSekolahCreateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedCreateWithoutKomentarInput>
+  where?: Prisma.InformasiSekolahWhereInput
+}
+
+export type InformasiSekolahUpdateToOneWithWhereWithoutKomentarInput = {
+  where?: Prisma.InformasiSekolahWhereInput
+  data: Prisma.XOR<Prisma.InformasiSekolahUpdateWithoutKomentarInput, Prisma.InformasiSekolahUncheckedUpdateWithoutKomentarInput>
+}
+
+export type InformasiSekolahUpdateWithoutKomentarInput = {
+  judul?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  uptadet_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type InformasiSekolahUncheckedUpdateWithoutKomentarInput = {
+  info_id?: Prisma.IntFieldUpdateOperationsInput | number
+  judul?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  konten?: Prisma.StringFieldUpdateOperationsInput | string
+  ringkasan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipe?: Prisma.EnumTipeFieldUpdateOperationsInput | $Enums.Tipe
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  urutan?: Prisma.IntFieldUpdateOperationsInput | number
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  uptadet_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+
+/**
+ * Count Type InformasiSekolahCountOutputType
+ */
+
+export type InformasiSekolahCountOutputType = {
+  komentar: number
+}
+
+export type InformasiSekolahCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  komentar?: boolean | InformasiSekolahCountOutputTypeCountKomentarArgs
+}
+
+/**
+ * InformasiSekolahCountOutputType without action
+ */
+export type InformasiSekolahCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InformasiSekolahCountOutputType
+   */
+  select?: Prisma.InformasiSekolahCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * InformasiSekolahCountOutputType without action
+ */
+export type InformasiSekolahCountOutputTypeCountKomentarArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KomentarWhereInput
+}
 
 
 export type InformasiSekolahSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -529,6 +658,8 @@ export type InformasiSekolahSelect<ExtArgs extends runtime.Types.Extensions.Inte
   created_at?: boolean
   uptadet_at?: boolean
   deleted_at?: boolean
+  komentar?: boolean | Prisma.InformasiSekolah$komentarArgs<ExtArgs>
+  _count?: boolean | Prisma.InformasiSekolahCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["informasiSekolah"]>
 
 export type InformasiSekolahSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -577,10 +708,18 @@ export type InformasiSekolahSelectScalar = {
 }
 
 export type InformasiSekolahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"info_id" | "judul" | "slug" | "konten" | "ringkasan" | "gambar" | "tipe" | "status" | "urutan" | "created_at" | "uptadet_at" | "deleted_at", ExtArgs["result"]["informasiSekolah"]>
+export type InformasiSekolahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  komentar?: boolean | Prisma.InformasiSekolah$komentarArgs<ExtArgs>
+  _count?: boolean | Prisma.InformasiSekolahCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type InformasiSekolahIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type InformasiSekolahIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $InformasiSekolahPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InformasiSekolah"
-  objects: {}
+  objects: {
+    komentar: Prisma.$KomentarPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     info_id: number
     judul: string
@@ -988,6 +1127,7 @@ readonly fields: InformasiSekolahFieldRefs;
  */
 export interface Prisma__InformasiSekolahClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  komentar<T extends Prisma.InformasiSekolah$komentarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InformasiSekolah$komentarArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KomentarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1046,6 +1186,10 @@ export type InformasiSekolahFindUniqueArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * Filter, which InformasiSekolah to fetch.
    */
   where: Prisma.InformasiSekolahWhereUniqueInput
@@ -1064,6 +1208,10 @@ export type InformasiSekolahFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * Filter, which InformasiSekolah to fetch.
    */
   where: Prisma.InformasiSekolahWhereUniqueInput
@@ -1081,6 +1229,10 @@ export type InformasiSekolahFindFirstArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the InformasiSekolah
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
   /**
    * Filter, which InformasiSekolah to fetch.
    */
@@ -1130,6 +1282,10 @@ export type InformasiSekolahFindFirstOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * Filter, which InformasiSekolah to fetch.
    */
   where?: Prisma.InformasiSekolahWhereInput
@@ -1178,6 +1334,10 @@ export type InformasiSekolahFindManyArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * Filter, which InformasiSekolahs to fetch.
    */
   where?: Prisma.InformasiSekolahWhereInput
@@ -1205,6 +1365,11 @@ export type InformasiSekolahFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` InformasiSekolahs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of InformasiSekolahs.
+   */
   distinct?: Prisma.InformasiSekolahScalarFieldEnum | Prisma.InformasiSekolahScalarFieldEnum[]
 }
 
@@ -1220,6 +1385,10 @@ export type InformasiSekolahCreateArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the InformasiSekolah
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
   /**
    * The data needed to create a InformasiSekolah.
    */
@@ -1268,6 +1437,10 @@ export type InformasiSekolahUpdateArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the InformasiSekolah
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
   /**
    * The data needed to update a InformasiSekolah.
    */
@@ -1335,6 +1508,10 @@ export type InformasiSekolahUpsertArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * The filter to search for the InformasiSekolah to update in case it exists.
    */
   where: Prisma.InformasiSekolahWhereUniqueInput
@@ -1361,6 +1538,10 @@ export type InformasiSekolahDeleteArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
+  /**
    * Filter which InformasiSekolah to delete.
    */
   where: Prisma.InformasiSekolahWhereUniqueInput
@@ -1381,6 +1562,30 @@ export type InformasiSekolahDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
+ * InformasiSekolah.komentar
+ */
+export type InformasiSekolah$komentarArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Komentar
+   */
+  select?: Prisma.KomentarSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Komentar
+   */
+  omit?: Prisma.KomentarOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KomentarInclude<ExtArgs> | null
+  where?: Prisma.KomentarWhereInput
+  orderBy?: Prisma.KomentarOrderByWithRelationInput | Prisma.KomentarOrderByWithRelationInput[]
+  cursor?: Prisma.KomentarWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KomentarScalarFieldEnum | Prisma.KomentarScalarFieldEnum[]
+}
+
+/**
  * InformasiSekolah without action
  */
 export type InformasiSekolahDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1392,4 +1597,8 @@ export type InformasiSekolahDefaultArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the InformasiSekolah
    */
   omit?: Prisma.InformasiSekolahOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InformasiSekolahInclude<ExtArgs> | null
 }

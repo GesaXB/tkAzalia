@@ -41,9 +41,21 @@ export interface UpdateProfilePayload {
   no_telp?: string;
 }
 
+export interface ChangePasswordPayload {
+  password_lama: string;
+  password_baru: string;
+}
+
 export async function updateProfile(payload: UpdateProfilePayload) {
   return apiRequest<AuthUser>('/api/auth/profile', {
     method: 'PUT',
+    body: JSON.stringify(payload),
+  }, true);
+}
+
+export async function changePassword(payload: ChangePasswordPayload) {
+  return apiRequest<{ message: string }>('/api/auth/change-password', {
+    method: 'POST',
     body: JSON.stringify(payload),
   }, true);
 }

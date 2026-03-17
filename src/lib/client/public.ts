@@ -50,3 +50,38 @@ export async function listKelasPublik() {
   return apiRequest<KelasPublicItem[]>('/api/kelas', { method: 'GET' });
 }
 
+
+export interface PublicKomentar {
+  komentar_id: number;
+  info_id: number;
+  user_id: number | null;
+  nama: string;
+  isi: string;
+  created_at: string;
+}
+
+export async function listKomentarByInfoId(infoId: number) {
+  return apiRequest<PublicKomentar[]>(`/api/public/blog/${infoId}/comments`, {
+    method: 'GET',
+  });
+}
+
+export async function addKomentar(infoId: number, data: { nama: string, isi: string }) {
+  return apiRequest<PublicKomentar>(`/api/public/blog/${infoId}/comments`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateKomentar(komentarId: number, isi: string) {
+  return apiRequest<PublicKomentar>(`/api/public/comments/${komentarId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isi }),
+  });
+}
+
+export async function publicDeleteKomentar(komentarId: number) {
+  return apiRequest<{ message: string }>(`/api/public/comments/${komentarId}`, {
+    method: 'DELETE',
+  });
+}

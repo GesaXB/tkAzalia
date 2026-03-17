@@ -8,5 +8,5 @@ export const adminMenuItems: SidebarItem[] = [
   { label: "PPDB (Data Pendaftar)", href: "/dashboard/admin/ppdb" },
   { label: "Blog", href: "/dashboard/admin/informasi" },
   { label: "Profil", href: "/dashboard/admin/profile" },
-  { label: "← Kembali ke Beranda", href: "/" },
+  { label: "Kembali ke Beranda", href: "/" },
 ];

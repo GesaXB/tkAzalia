@@ -161,22 +161,22 @@ export default function AdminInformasiSection({
   return (
     <div className="space-y-6">
       {/* Article Form — Full Width */}
-      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600">
-              <FileText size={20} />
+      <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100">
+              <FileText size={20} className="text-[#01793B]" />
             </div>
             <div>
               <h2 className="font-bold text-gray-900 text-lg">Kelola Artikel</h2>
-              <p className="text-xs text-gray-500">Buat dan edit berita atau artikel sekolah</p>
+              <p className="text-xs text-gray-500 mt-0.5">Buat dan edit berita atau artikel sekolah</p>
             </div>
           </div>
         </div>
-        <div className="p-6 md:p-8 border-b border-gray-100 bg-slate-50/30">
+        <div className="p-6 md:p-8 border-b border-gray-100 bg-slate-50/20">
           <form onSubmit={onCreate} className="space-y-8 w-full">
-            <h3 className="font-bold text-slate-900 flex items-center gap-3 text-lg mb-4">
-              <span className="w-1.5 h-6 rounded-full bg-emerald-500" />
+            <h3 className="font-black text-slate-900 flex items-center gap-3 text-xs uppercase tracking-[0.2em] mb-4">
+              <span className="w-1.5 h-4 rounded-full bg-emerald-500" />
               Tulis Sesuatu yang Baru
             </h3>
             <div className="grid gap-8 lg:grid-cols-1">

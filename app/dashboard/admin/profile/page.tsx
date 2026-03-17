@@ -6,6 +6,8 @@ import { useDashboard } from "@/context/DashboardContext";
 import SectionCard from "@/Components/Dashboard/SectionCard";
 import { clearToken } from "@/lib/client/session";
 import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
+import { KeyRound } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminProfilePage() {
   const router = useRouter();
@@ -134,13 +136,23 @@ export default function AdminProfilePage() {
                 required
               />
             </div>
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
-            >
-              {saving ? "Menyimpan…" : "Simpan perubahan"}
-            </button>
+            <div className="pt-2 border-t border-gray-100 flex flex-wrap gap-3 items-center justify-between">
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-lg bg-[#01793B] px-6 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-all shadow-sm active:scale-95"
+              >
+                {saving ? "Menyimpan…" : "Simpan Perubahan"}
+              </button>
+
+              <Link
+                href="/dashboard/admin/profile/password"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all active:scale-95"
+              >
+                <KeyRound size={16} />
+                Ganti Password Akun
+              </Link>
+            </div>
           </form>
         ) : (
           <p className="text-sm text-gray-500">Data profil tidak tersedia.</p>

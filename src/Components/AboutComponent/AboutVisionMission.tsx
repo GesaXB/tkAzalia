@@ -1,55 +1,84 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { Target, Rocket, CheckCircle2, Heart } from "lucide-react";
 
 export default function AboutVisionMission() {
+  const missions = [
+    "Lingkungan belajar yang aman dan penuh kasih",
+    "Kurikulum holistik berbasis permainan (Play-based)",
+    "Pendampingan oleh guru yang kompeten & sabar",
+    "Kolaborasi erat dengan orang tua siswa"
+  ];
+
   return (
-    <section className="max-w-6xl mx-auto px-6">
-      {/* ANIMASI:
-         Menggunakan motion.div untuk pembungkus utama.
-         Efek: Muncul dari bawah ke atas (y: 50 -> y: 0) dan transparan ke jelas (opacity: 0 -> 1).
-      */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-
-        className="bg-white rounded-lg shadow-md border-t-[8px] border-[#108043] px-8 py-12 md:px-12"
-      >
-
-        <div className="grid grid-cols-1 md:grid-cols-2">
-
-
-          <div className="flex flex-col items-center justify-start md:border-r md:border-gray-200 md:pr-10 pb-10 md:pb-0 border-b md:border-b-0 border-gray-200">
-            <h3 className="text-3xl font-bold mb-6 text-black text-center">
-              Visi TK Azalia
-            </h3>
-            <p className="text-center text-lg leading-relaxed text-black max-w-md font-medium">
-              "Menjadi taman kanak-kanak terdepan yang mencetak generasi unggul,
-              berkarakter, dan siap menghadapi masa depan"
-            </p>
+    <section className="max-w-7xl mx-auto px-6 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* VISI CARD */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative bg-emerald-600 rounded-[3rem] p-10 md:p-16 text-white overflow-hidden group shadow-2xl shadow-emerald-200"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+          
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center mb-8 shadow-xl">
+              <Target size={40} className="text-white" />
+            </div>
+            
+            <h3 className="text-sm font-black uppercase tracking-[0.3em] mb-4 opacity-80">Visi Kami</h3>
+            <h2 className="text-2xl md:text-4xl font-black leading-tight">
+              "Menjadi taman kanak-kanak terdepan yang mencetak generasi unggul, berkarakter, dan siap masa depan"
+            </h2>
           </div>
+        </motion.div>
 
-          {/* Kolom Kanan: MISI */}
-          <div className="flex flex-col justify-start md:pl-10 pt-10 md:pt-0">
-            <h3 className="text-3xl font-bold mb-6 text-black text-center">
-              Misi TK Azalia
-            </h3>
-            <div className="text-lg text-black">
-              <p className="mb-2 font-medium">Memberikan pendidikan terbaik melalui:</p>
-              {/* List Bullet standard agar sama persis dengan desain awal */}
-              <ul className="list-disc list-outside ml-5 space-y-2 marker:text-black">
-                <li>Lingkungan belajar yang aman dan nyaman</li>
-                <li>Kurikulum holistik berbasis permainan</li>
-                <li>Pendampingan oleh guru yang berkompeten</li>
-                <li>Kerjasama erat dengan orang tua</li>
-              </ul>
+        {/* MISI CARD */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative bg-white rounded-[3rem] p-10 md:p-16 border border-gray-100 shadow-2xl shadow-gray-200 overflow-hidden group"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-6 mb-10">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <Rocket size={32} />
+              </div>
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-[0.3em] text-gray-400">Misi Kami</h3>
+                <h2 className="text-2xl md:text-3xl font-black text-gray-900">Misi TK Azalia</h2>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {missions.map((m, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + (i * 0.1) }}
+                  className="flex items-start gap-4 p-4 rounded-2xl hover:bg-emerald-50 transition-colors group/item shadow-sm border border-transparent hover:border-emerald-100 bg-white md:bg-transparent"
+                >
+                  <div className="mt-1">
+                    <CheckCircle2 size={20} className="text-emerald-500 group-hover/item:scale-110 transition-transform" />
+                  </div>
+                  <p className="text-gray-700 font-bold text-sm md:text-base">{m}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
+        </motion.div>
 
-        </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

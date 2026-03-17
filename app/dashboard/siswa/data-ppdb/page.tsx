@@ -84,38 +84,36 @@ export default function SiswaDataPpdbPage() {
   };
 
   return (
-    <>
+    <div className="space-y-6">
       {/* Notifications */}
-      {error ? (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+      {error && (
+        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
           <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-red-900">{error}</p>
           </div>
         </div>
-      ) : null}
+      )}
 
-      {successMessage ? (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
+      {successMessage && (
+        <div className="flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
           <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-green-900">{successMessage}</p>
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Page Header */}
-      <div className="mb-8 bg-linear-to-r from-[#01793B]/5 to-[#01793B]/10 rounded-2xl p-6 border border-[#01793B]/10">
+      <div className="bg-linear-to-r from-[#01793B]/5 to-[#01793B]/10 rounded-2xl p-6 border border-[#01793B]/10">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#01793B]/15 flex items-center justify-center flex-shrink-0">
-            <svg className="w-6 h-6 text-[#01793B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+          <div className="w-12 h-12 rounded-xl bg-[#01793B]/15 flex items-center justify-center shrink-0">
+            <User className="w-6 h-6 text-[#01793B]" />
           </div>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-900">Data Pendaftaran PPDB</h1>
             <p className="text-gray-600 mt-2 leading-relaxed">
-              Lengkapi semua informasi data pribadi dan data orang tua/wali dengan benar dan sesuai dengan dokumen asli Anda. Informasi yang akurat sangat penting untuk proses verifikasi.
+              Lengkapi semua informasi data pribadi dan data orang tua/wali dengan benar dan sesuai dengan dokumen asli Anda.
             </p>
           </div>
         </div>
@@ -123,32 +121,24 @@ export default function SiswaDataPpdbPage() {
 
       {/* Main Form Card */}
       <div className="w-full rounded-2xl bg-white border border-gray-200 shadow-lg overflow-hidden">
-        {/* Form Header */}
         <div className="bg-linear-to-r from-[#01793B]/5 to-[#01793B]/10 px-6 py-5 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-900">Formulir Lengkap</h2>
-          <p className="text-sm text-gray-600 mt-1">Isilah semua kolom yang tersedia dengan data yang akurat</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
-          {/* BAGIAN A: DATA CALON SISWA */}
+          {/* DATA CALON SISWA */}
           <div className="space-y-5">
             <div className="flex items-center gap-4 pb-4 border-b-2 border-[#01793B]/10">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <User className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-gray-900">Bagian 1: Data Pribadi Calon Siswa</h3>
-                <p className="text-sm text-gray-600">Informasi lengkap peserta didik sesuai dokumen identitas asli</p>
-              </div>
+              <h3 className="text-lg font-bold text-gray-900">Bagian 1: Data Calon Siswa</h3>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-5 bg-gradient-to-br from-blue-50/40 to-blue-50/20 p-6 rounded-xl border border-blue-100/30">
+            <div className="grid md:grid-cols-2 gap-5 bg-linear-to-br from-blue-50/40 to-blue-50/20 p-6 rounded-xl border border-blue-100/30">
               <FormInput
                 label="Nama Lengkap Anak"
                 placeholder="Sesuai Akta Kelahiran"
                 value={ppdbForm.nama_anak}
                 onChange={(e) => setPpdbForm((f) => ({ ...f, nama_anak: e.target.value }))}
-                helpText="*Harus sesuai dengan identitas resmi"
+                helpText="Harus sesuai dengan identitas resmi"
               />
               <FormInput
                 label="Nama Panggilan"
@@ -205,22 +195,15 @@ export default function SiswaDataPpdbPage() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="h-1 bg-linear-to-r from-transparent via-gray-300 to-transparent rounded-full"></div>
+          <div className="h-0.5 bg-gray-100"></div>
 
-          {/* BAGIAN B: DATA ORANG TUA / WALI */}
+          {/* DATA ORANG TUA */}
           <div className="space-y-5">
             <div className="flex items-center gap-4 pb-4 border-b-2 border-[#01793B]/10">
-              <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                <Home className="w-6 h-6 text-emerald-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-gray-900">Bagian 2: Data Orang Tua / Wali</h3>
-                <p className="text-sm text-gray-600">Informasi kontak, pekerjaan, dan domisili orang tua/wali peserta</p>
-              </div>
+              <h3 className="text-lg font-bold text-gray-900">Bagian 2: Data Orang Tua / Wali</h3>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-5 bg-gradient-to-br from-emerald-50/40 to-emerald-50/20 p-6 rounded-xl border border-emerald-100/30">
+            <div className="grid md:grid-cols-2 gap-5 bg-linear-to-br from-emerald-50/40 to-emerald-50/20 p-6 rounded-xl border border-emerald-100/30">
               <FormInput
                 label="Nama Ayah"
                 placeholder="Nama Lengkap Ayah"
@@ -263,12 +246,11 @@ export default function SiswaDataPpdbPage() {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+          <div className="flex justify-end pt-6">
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#01793B] to-[#015f2f] px-8 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl hover:from-[#015f2f] hover:to-[#014825] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#01793B] px-8 py-3 text-sm font-semibold text-white shadow-lg hover:bg-emerald-700 disabled:opacity-50 transition-all"
             >
               <Save className="w-4 h-4" />
               {saving ? "Menyimpan..." : "Simpan Data"}
@@ -276,7 +258,7 @@ export default function SiswaDataPpdbPage() {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -298,8 +280,8 @@ function FormInput({
   helpText?: string;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+    <div className="space-y-2">
+      <label className="block text-sm font-semibold text-gray-700">{label}</label>
       <div className="relative">
         <input
           type={type}
@@ -310,11 +292,7 @@ function FormInput({
         />
         {icon && <div className="absolute right-4 top-1/2 -translate-y-1/2">{icon}</div>}
       </div>
-      {helpText && (
-        <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-          <span className="text-[#01793B] font-bold">ℹ</span> {helpText}
-        </p>
-      )}
+      {helpText && <p className="text-xs text-gray-500">{helpText}</p>}
     </div>
   );
 }
@@ -333,11 +311,11 @@ function FormRadio({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer px-4 py-3 rounded-lg border-2 transition-all"
-      style={{
-        borderColor: checked ? '#01793B' : '#e5e7eb',
-        backgroundColor: checked ? 'rgba(1, 121, 59, 0.05)' : 'transparent'
-      }}>
+    <label
+      className={`flex items-center gap-3 cursor-pointer px-4 py-3 rounded-lg border-2 transition-all ${
+        checked ? "border-[#01793B] bg-[#01793B]/5" : "border-gray-200 bg-transparent"
+      }`}
+    >
       <input
         type="radio"
         name={name}
@@ -350,4 +328,3 @@ function FormRadio({
     </label>
   );
 }
-

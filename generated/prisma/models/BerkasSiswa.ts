@@ -1553,6 +1553,11 @@ export type BerkasSiswaFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` BerkasSiswas.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of BerkasSiswas.
+   */
   distinct?: Prisma.BerkasSiswaScalarFieldEnum | Prisma.BerkasSiswaScalarFieldEnum[]
 }
 

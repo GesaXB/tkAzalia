@@ -12,7 +12,8 @@ const SISWA_SIDEBAR_ITEMS = [
   {
     label: "Data Pendaftaran",
     submenu: [
-      { label: "Data Pendaftaran", href: "/dashboard/siswa/data-ppdb" },
+      { label: "Data Calon Siswa", href: "/dashboard/siswa/data-siswa" },
+      { label: "Data Orang Tua", href: "/dashboard/siswa/data-ortu" },
       { label: "Upload Berkas", href: "/dashboard/siswa/berkas" },
       { label: "Pilih Kelas", href: "/dashboard/siswa/kelas" }
     ]
@@ -25,8 +26,10 @@ const SISWA_SIDEBAR_ITEMS = [
       { label: "Ubah Sandi", href: "/dashboard/siswa/profile?tab=sandi" },
     ]
   },
-  { label: "← Kembali ke Beranda", href: "/" },
+  { label: "Kembali ke Beranda", href: "/" },
 ];
+
+import { getJadwalPpdb } from "@/lib/client/public";
 
 export default function SiswaLayout({
   children,
@@ -36,10 +39,13 @@ export default function SiswaLayout({
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profileName, setProfileName] = useState("");
+  const [ppdbStatus, setPpdbStatus] = useState<{ open: boolean; message?: string }>({ open: true });
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
+      
+      // Fetch profile
       const profile = await fetchProfile();
       if (!profile.success || !profile.data) {
         router.push("/auth/login");
@@ -50,6 +56,16 @@ export default function SiswaLayout({
         return;
       }
       setProfileName(profile.data.nama_lengkap);
+
+      // Check PPDB Schedule
+      const res = await getJadwalPpdb() as any;
+      if (!res || !res.dibuka) {
+        setPpdbStatus({ 
+          open: false, 
+          message: !res ? "Jadwal PPDB belum diatur." : "Pendaftaran PPDB saat ini sedang ditutup." 
+        });
+      }
+
       setLoading(false);
     };
     load();
@@ -59,6 +75,14 @@ export default function SiswaLayout({
     clearToken();
     router.push("/");
   };
+
+  // Filter sidebar items if PPDB is closed
+  const filteredSidebarItems = SISWA_SIDEBAR_ITEMS.map(item => {
+    if (item.label === "Data Pendaftaran" && !ppdbStatus.open) {
+      return { ...item, disabled: true, tooltip: ppdbStatus.message };
+    }
+    return item;
+  });
 
   if (loading) {
     return (
@@ -73,9 +97,20 @@ export default function SiswaLayout({
       title="Dashboard Siswa"
       subtitle={`Halo, ${profileName}`}
       sidebarTitle="Siswa Menu"
-      items={SISWA_SIDEBAR_ITEMS}
+      items={filteredSidebarItems}
       onLogout={handleLogout}
     >
+      {!ppdbStatus.open && (
+        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3 text-amber-800 text-sm font-medium">
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <span className="text-xl">⚠️</span>
+          </div>
+          <div>
+            <p className="font-bold">Layanan Pendaftaran Terbatas</p>
+            <p className="opacity-80">{ppdbStatus.message} Anda tetap dapat melihat ringkasan dan mengelola akun.</p>
+          </div>
+        </div>
+      )}
       {children}
     </DashboardShell>
   );

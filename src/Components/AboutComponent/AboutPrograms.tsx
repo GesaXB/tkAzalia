@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { Pencil, Backpack, Stars, Sparkles, BookOpen, GraduationCap } from "lucide-react";
 
 interface KelasProps {
   kelas_id: number;
@@ -14,61 +15,111 @@ interface AboutProgramsProps {
 }
 
 export default function AboutPrograms({ classes }: AboutProgramsProps) {
-  const defaultPrograms = [
+  // Jika tidak ada kelas di database, sembunyikan section ini
+  if (!classes || classes.length === 0) {
+    return null;
+  }
+
+  const designTokens = [
     {
-      title: "Kelompok A",
-      age: "(Usia 5-6 Tahun)",
-      description: "Pada tahap ini, anak mulai dikenalkan dengan kegiatan belajar yang menyenangkan, seperti mengenal huruf, angka, warna, dan bentuk, serta melatih kemandirian dan kemampuan sosial."
+      icon: <Pencil size={32} />,
+      color: "from-blue-500 to-blue-600",
+      lightColor: "bg-blue-50",
     },
     {
-      title: "Kelompok B",
-      age: "(Usia 6-7 Tahun)",
-      description: "Di kelas ini, anak dibiasakan belajar membaca, menulis, dan berhitung dasar, serta dilatih mengikuti aturan dan bekerja sama, sehingga siap melanjutkan ke Sekolah Dasar."
+      icon: <Backpack size={32} />,
+      color: "from-emerald-500 to-emerald-600",
+      lightColor: "bg-emerald-50",
+    },
+    {
+      icon: <BookOpen size={32} />,
+      color: "from-purple-500 to-purple-600",
+      lightColor: "bg-purple-50",
+    },
+    {
+      icon: <GraduationCap size={32} />,
+      color: "from-amber-500 to-amber-600",
+      lightColor: "bg-amber-50",
     }
   ];
 
-  const displayPrograms = classes && classes.length > 0
-    ? classes.map((k) => ({
-        title: k.nama,
-        age: "", // DB model doesn't store age directly
-        description: k.deskripsi || ""
-      }))
-    : defaultPrograms;
+  const displayPrograms = classes.map((k, idx) => {
+    const token = designTokens[idx % designTokens.length];
+    return {
+      title: k.nama,
+      icon: token.icon,
+      color: token.color,
+      lightColor: token.lightColor,
+      description: k.deskripsi || "Deskripsi program belum tersedia."
+    };
+  });
 
   return (
-    <section className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-10 pb-12 md:pb-20">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-xl md:text-3xl lg:text-4xl font-bold text-center mb-6 md:mb-12 text-gray-900"
-      >
-        Program Kami
-      </motion.h2>
+    <section className="relative max-w-7xl mx-auto px-6 py-24 md:py-32 overflow-hidden">
+      {/* Background accents */}
+      <div className="absolute top-1/4 right-0 w-64 h-64 bg-yellow-50 rounded-full blur-3xl opacity-60 -z-10"></div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
+      <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] mb-6 border border-emerald-100/50"
+        >
+          <Stars size={14} className="text-emerald-500" />
+          Jenjang Pendidikan
+        </motion.div>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-5xl font-black text-gray-900 leading-tight"
+        >
+          Program Belajar yang <br />
+          <span className="text-emerald-600">Terstruktur & Menyenangkan</span>
+        </motion.h2>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {displayPrograms.map((program, index) => (
           <motion.div 
             key={index}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.2 }}
-            whileHover={{ y: -5 }} 
-            className="flex flex-col rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl md:shadow-lg md:hover:shadow-2xl transition-all duration-300 bg-white h-full border border-gray-100"
+            transition={{ delay: index * 0.2, duration: 0.8 }}
+            className="group relative flex flex-col bg-white rounded-[3rem] overflow-hidden border border-gray-100 shadow-2xl shadow-gray-200/50 hover:shadow-emerald-200/40 transition-all duration-500"
           >
-            {/* Header Hijau */}
-            <div className="bg-[#108043] py-5 md:py-8 px-4 text-center text-white relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 bg-white opacity-10 rounded-full -mr-8 -mt-8 md:-mr-10 md:-mt-10"></div>
-              <h3 className="text-lg md:text-3xl font-medium md:font-normal mb-1 md:mb-2 relative z-10">{program.title}</h3>
-              {program.age && <p className="text-[10px] md:text-sm font-medium tracking-wide relative z-10 opacity-90">{program.age}</p>}
+            {/* Header Section */}
+            <div className={`relative h-48 md:h-64 bg-gradient-to-br ${program.color} p-8 md:p-12 flex flex-col justify-end text-white overflow-hidden`}>
+               {/* Pattern overlay */}
+               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:20px:20px]"></div>
+               <div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+               
+               <div className="relative z-10 space-y-2">
+                 <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 shadow-xl border border-white/20">
+                    {program.icon}
+                 </div>
+                 <h3 className="text-2xl md:text-4xl font-black tracking-tight">{program.title}</h3>
+               </div>
             </div>
 
-            {/* Body */}
-            <div className="p-5 md:p-10 grow flex items-center bg-white">
-              <p className="text-gray-600 md:text-gray-700 text-xs md:text-lg leading-relaxed md:leading-relaxed text-justify">
+            {/* Content Section */}
+            <div className="p-8 md:p-12 flex flex-col grow relative">
+              <div className="absolute top-8 right-8 text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors">
+                <Sparkles size={80} strokeWidth={1} />
+              </div>
+              
+              <p className="text-gray-600 text-sm md:text-lg leading-relaxed md:leading-relaxed text-justify mb-8 relative z-10 font-medium">
                 {program.description}
               </p>
+              
+              <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Kurikulum Merdeka</span>
+                <div className={`w-8 h-8 ${program.lightColor} text-current rounded-full flex items-center justify-center`}>
+                  <div className={`w-2 h-2 rounded-full bg-current`}></div>
+                </div>
+              </div>
             </div>
           </motion.div>
         ))}
