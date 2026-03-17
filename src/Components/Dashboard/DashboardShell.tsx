@@ -79,10 +79,16 @@ export default function DashboardShell({
     return submenu.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
   };
 
+  const handleLinkClick = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen w-full flex bg-white">
+    <div className="min-h-screen w-full flex bg-white relative">
       <motion.aside
-        className="shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden"
+        className="fixed inset-y-0 left-0 z-50 shrink-0 h-screen border-r border-slate-200/80 bg-white flex flex-col overflow-hidden shadow-xl lg:shadow-none"
         initial={false}
         animate={{ width: sidebarOpen ? SIDEBAR_WIDTH : 0 }}
         transition={{ type: "spring", damping: 28, stiffness: 220 }}
@@ -112,7 +118,7 @@ export default function DashboardShell({
             </button>
           </div>
           <div className="px-3 py-4 flex-1 overflow-y-auto">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3">
               {sidebarTitle}
             </div>
             <nav className="space-y-0.5" aria-label="Dashboard menu">
@@ -162,6 +168,7 @@ export default function DashboardShell({
                                 key={subitem.href}
                                 href={subitem.href}
                                 prefetch
+                                onClick={handleLinkClick}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                                   isSubitemActive
                                     ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
@@ -183,6 +190,7 @@ export default function DashboardShell({
                     key={item.href}
                     href={item.href ?? "/"}
                     prefetch
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive
                         ? "bg-emerald-500/10 text-emerald-700"
@@ -198,8 +206,11 @@ export default function DashboardShell({
         </div>
       </motion.aside>
 
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4">
+      <div 
+        className="flex-1 min-w-0 flex flex-col transition-all duration-300"
+        style={{ marginLeft: (sidebarOpen && typeof window !== 'undefined' && window.innerWidth >= 1024) ? SIDEBAR_WIDTH : 0 }}
+      >
+        <header className="sticky top-0 z-10 shrink-0 px-4 sm:px-6 lg:px-8 py-4 border-b border-slate-200/80 bg-white/80 backdrop-blur-md flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
@@ -217,14 +228,14 @@ export default function DashboardShell({
           <button
             type="button"
             onClick={handleLogoutClick}
-            className="shrink-0 px-6 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all uppercase tracking-wider active:scale-95 shadow-sm"
+            className="shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors"
           >
             Keluar
           </button>
         </header>
 
         <motion.main
-          className="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-auto"
+          className="flex-1 px-4 sm:px-6 lg:px-8 py-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.2, 0.65, 0.3, 0.9] }} // Light custom ease
@@ -242,4 +253,3 @@ export default function DashboardShell({
     </div>
   );
 }
-

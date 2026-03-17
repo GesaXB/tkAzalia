@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDashboard } from "@/context/DashboardContext";
 import AdminJadwalSection from "@/Components/Dashboard/Admin/AdminJadwalSection";
+import { clearToken } from "@/lib/client/session";
 import { fetchProfile } from "@/lib/client/auth";
 import { getJadwalPpdbAdmin } from "@/lib/client/admin";
-import { useDashboard } from "@/context/DashboardContext";
 
 export default function AdminJadwalPpdbPage() {
   const router = useRouter();
@@ -39,11 +40,16 @@ export default function AdminJadwalPpdbPage() {
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, [router, setDashboardInfo]);
 
   const handleSaved = async () => {
     const res = await getJadwalPpdbAdmin();
     if (res.success && res.data) setJadwal(res.data);
+  };
+
+  const handleLogout = () => {
+    clearToken();
+    router.push("/");
   };
 
   if (loading) {
@@ -55,8 +61,6 @@ export default function AdminJadwalPpdbPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <AdminJadwalSection jadwal={jadwal} onSaved={handleSaved} />
-    </div>
+    <AdminJadwalSection jadwal={jadwal} onSaved={handleSaved} />
   );
 }

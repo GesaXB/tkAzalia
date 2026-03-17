@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDashboard } from "@/context/DashboardContext";
 import ConfirmModal from "@/Components/Dashboard/ConfirmModal";
 import { clearToken } from "@/lib/client/session";
 import { fetchProfile } from "@/lib/client/auth";
@@ -13,7 +14,6 @@ import {
   deleteKelasAdmin,
 } from "@/lib/client/admin";
 import { Plus, Pencil, Trash2, X, Check, BookOpen } from "lucide-react";
-import { useDashboard } from "@/context/DashboardContext";
 
 export default function AdminKelasPage() {
   const router = useRouter();
@@ -25,14 +25,12 @@ export default function AdminKelasPage() {
   const [editNama, setEditNama] = useState("");
   const [editDeskripsi, setEditDeskripsi] = useState("");
   const [editUrutan, setEditUrutan] = useState(0);
-  const [editKuota, setEditKuota] = useState(0);
-  
+  const [editKuota, setEditKuota] = useState(20);
   const [showForm, setShowForm] = useState(false);
   const [newNama, setNewNama] = useState("");
   const [newDeskripsi, setNewDeskripsi] = useState("");
   const [newUrutan, setNewUrutan] = useState(0);
-  const [newKuota, setNewKuota] = useState(0);
-  
+  const [newKuota, setNewKuota] = useState(20);
   const [saving, setSaving] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<KelasItem | null>(null);
@@ -60,7 +58,12 @@ export default function AdminKelasPage() {
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, [router, setDashboardInfo]);
+
+  const handleLogout = () => {
+    clearToken();
+    router.push("/");
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +72,7 @@ export default function AdminKelasPage() {
     setError(null);
     const res = await createKelasAdmin({ 
       nama: newNama.trim(), 
-      deskripsi: newDeskripsi.trim() || undefined,
+      deskripsi: newDeskripsi.trim(),
       urutan: newUrutan,
       kuota: newKuota
     });
@@ -81,8 +84,8 @@ export default function AdminKelasPage() {
     setList((prev) => [...prev, res.data!].sort((a, b) => a.urutan - b.urutan));
     setNewNama("");
     setNewDeskripsi("");
-    setNewUrutan(list.length + 1);
-    setNewKuota(0);
+    setNewUrutan(list.length);
+    setNewKuota(20);
     setShowForm(false);
   };
 
@@ -91,7 +94,7 @@ export default function AdminKelasPage() {
     setEditNama(k.nama);
     setEditDeskripsi(k.deskripsi || "");
     setEditUrutan(k.urutan);
-    setEditKuota(k.kuota || 0);
+    setEditKuota(k.kuota || 20);
   };
 
   const cancelEdit = () => {
@@ -99,7 +102,7 @@ export default function AdminKelasPage() {
     setEditNama("");
     setEditDeskripsi("");
     setEditUrutan(0);
-    setEditKuota(0);
+    setEditKuota(20);
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -109,7 +112,7 @@ export default function AdminKelasPage() {
     setError(null);
     const res = await updateKelasAdmin(editingId, { 
       nama: editNama.trim(), 
-      deskripsi: editDeskripsi.trim() || undefined,
+      deskripsi: editDeskripsi.trim(),
       urutan: editUrutan,
       kuota: editKuota
     });
@@ -152,7 +155,7 @@ export default function AdminKelasPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
       <div className="space-y-6">
         {error && (
           <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-2">
@@ -160,189 +163,177 @@ export default function AdminKelasPage() {
           </div>
         )}
 
-        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
-          <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between bg-white">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-50 text-slate-400">
-                <BookOpen size={20} />
+        <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
+          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100">
+                <BookOpen size={20} className="text-[#01793B]" />
               </div>
               <div>
-                <h2 className="font-bold text-slate-900 text-lg">Daftar Kelas</h2>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider mt-0.5">Total {list.length} Entri</p>
+                <h2 className="font-bold text-gray-900 text-lg">Daftar Kelas</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Total {list.length} kelas</p>
               </div>
             </div>
             {!showForm && (
               <button
                 type="button"
                 onClick={() => setShowForm(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-xs font-bold text-white hover:bg-emerald-600 transition-all uppercase tracking-wider active:scale-95 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
               >
-                <Plus size={16} />
+                <Plus size={18} />
                 Tambah Kelas
               </button>
             )}
           </div>
 
           {showForm && (
-            <form onSubmit={handleCreate} className="p-8 border-b border-slate-100 bg-slate-50/30 space-y-4">
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Nama Kelas</label>
-                    <input
-                      value={newNama}
-                      onChange={(e) => setNewNama(e.target.value)}
-                      placeholder="Contoh: Kelompok A"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold placeholder:text-slate-300"
-                      required
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Deskripsi (Opsional)</label>
-                    <textarea
-                      value={newDeskripsi}
-                      onChange={(e) => setNewDeskripsi(e.target.value)}
-                      placeholder="Contoh: Kelas untuk usia 4-5 tahun"
-                      rows={2}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium placeholder:text-slate-300 resize-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Kuota PPDB</label>
-                    <input
-                      type="number"
-                      value={newKuota}
-                      onChange={(e) => setNewKuota(Number(e.target.value) || 0)}
-                      placeholder="Contoh: 30"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold placeholder:text-slate-300"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Urutan Tampil</label>
-                    <input
-                      type="number"
-                      value={newUrutan}
-                      onChange={(e) => setNewUrutan(Number(e.target.value) || 0)}
-                      placeholder="Contoh: 1"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold placeholder:text-slate-300"
-                    />
-                  </div>
+            <form onSubmit={handleCreate} className="p-6 border-b border-gray-100 bg-emerald-50/40 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Nama Kelas</label>
+                  <input
+                    value={newNama}
+                    onChange={(e) => setNewNama(e.target.value)}
+                    placeholder="Contoh: Kelompok A"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    required
+                  />
                 </div>
-                <div className="flex gap-3 mt-6">
-                  <button type="submit" disabled={saving} className="rounded-xl bg-slate-900 px-8 py-2.5 text-xs font-bold text-white hover:bg-emerald-600 disabled:opacity-60 transition-all uppercase tracking-wider active:scale-95 shadow-sm">
-                    {saving ? "..." : "Simpan Kelas"}
-                  </button>
-                  <button type="button" onClick={() => setShowForm(false)} className="rounded-xl border border-slate-200 px-8 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all uppercase tracking-wider active:scale-95">
-                    Batal
-                  </button>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Deskripsi</label>
+                  <input
+                    value={newDeskripsi}
+                    onChange={(e) => setNewDeskripsi(e.target.value)}
+                    placeholder="Deskripsi kelas..."
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Urutan</label>
+                  <input
+                    type="number"
+                    value={newUrutan}
+                    onChange={(e) => setNewUrutan(Number(e.target.value) || 0)}
+                    placeholder="Contoh: 1"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Kuota</label>
+                  <input
+                    type="number"
+                    value={newKuota}
+                    onChange={(e) => setNewKuota(Number(e.target.value) || 0)}
+                    placeholder="Contoh: 20"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-5 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors">
+                  {saving ? "Menyimpan..." : "Simpan"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="rounded-lg border border-gray-200 px-5 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                  Batal
+                </button>
               </div>
             </form>
           )}
 
           <div className="divide-y divide-gray-100">
             {list.length === 0 ? (
-              <div className="px-6 py-16 text-center bg-slate-50/30">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200">
-                    <BookOpen size={32} />
-                  </div>
+              <div className="px-6 py-12 text-center">
+                <div className="flex justify-center mb-3">
+                  <BookOpen size={32} className="text-gray-300" />
                 </div>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Belum ada kelas</p>
-                <p className="text-xs text-slate-300 mt-2 italic">Klik &quot;Tambah Kelas&quot; untuk memulai</p>
+                <p className="text-sm text-gray-500">Belum ada kelas</p>
+                <p className="text-xs text-gray-400 mt-1">Klik &quot;Tambah Kelas&quot; untuk menambah kelas baru</p>
               </div>
             ) : (
               list.map((k) => (
-                <div key={k.kelas_id} className="px-6 py-5 hover:bg-slate-50/50 transition-all duration-300 group">
+                <div key={k.kelas_id} className="px-6 py-4 hover:bg-gray-50/50 transition-colors">
                   {editingId === k.kelas_id ? (
-                    <form onSubmit={handleUpdate} className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
-                      <div className="grid gap-6 sm:grid-cols-2">
-                        <div className="sm:col-span-2">
-                          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Nama Kelas</label>
+                    <form onSubmit={handleUpdate} className="space-y-3">
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Nama Kelas</label>
                           <input
                             value={editNama}
                             onChange={(e) => setEditNama(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold bg-white"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                             required
                           />
                         </div>
-                        <div className="sm:col-span-2">
-                          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Deskripsi (Opsional)</label>
-                          <textarea
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Deskripsi</label>
+                          <input
                             value={editDeskripsi}
                             onChange={(e) => setEditDeskripsi(e.target.value)}
-                            rows={2}
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium bg-white resize-none"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Kuota PPDB</label>
-                          <input
-                            type="number"
-                            value={editKuota}
-                            onChange={(e) => setEditKuota(Number(e.target.value) || 0)}
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold bg-white"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Urutan</label>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Urutan</label>
                           <input
                             type="number"
                             value={editUrutan}
                             onChange={(e) => setEditUrutan(Number(e.target.value) || 0)}
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold bg-white"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">Kuota</label>
+                          <input
+                            type="number"
+                            value={editKuota}
+                            onChange={(e) => setEditKuota(Number(e.target.value) || 0)}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                           />
                         </div>
                       </div>
-                      <div className="flex gap-3">
-                        <button type="submit" disabled={saving} className="rounded-xl bg-slate-900 px-6 py-2 text-xs font-bold text-white hover:bg-emerald-600 disabled:opacity-60 transition-all uppercase tracking-wider shadow-sm active:scale-95 inline-flex items-center gap-2">
-                          <Check size={14} /> Perbarui
+                      <div className="flex gap-2 pt-1">
+                        <button type="submit" disabled={saving} className="rounded-lg bg-[#01793B] px-3 py-2 text-sm text-white hover:bg-emerald-700 disabled:opacity-60 transition-colors inline-flex items-center gap-1">
+                          <Check size={16} /> Simpan
                         </button>
-                        <button type="button" onClick={cancelEdit} className="rounded-xl border border-slate-200 px-6 py-2 text-xs font-bold text-slate-600 hover:bg-white transition-all uppercase tracking-wider active:scale-95">
-                          Batal
+                        <button type="button" onClick={cancelEdit} className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors inline-flex items-center gap-1">
+                          <X size={16} /> Batal
                         </button>
                       </div>
                     </form>
                   ) : (
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all duration-300 self-start mt-1">
-                          <BookOpen size={20} />
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-gray-900">{k.nama}</h3>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                            #{k.urutan}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                            Kuota: {k.kuota || 0}
+                          </span>
                         </div>
-                        <div>
-                          <h4 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
-                            {k.nama}
-                          </h4>
-                          {k.deskripsi && (
-                            <p className="text-[11px] text-slate-500 mt-1 font-medium">{k.deskripsi}</p>
-                          )}
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider">
-                              Kuota: <span className="text-emerald-600">{k.kuota || 0} Siswa</span>
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-slate-200" />
-                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider">
-                              Urutan: {k.urutan}
-                            </span>
-                          </div>
-                        </div>
+                        {k.deskripsi && (
+                          <p className="text-sm text-gray-600 mb-1">{k.deskripsi}</p>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                      <div className="flex items-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => startEdit(k)}
-                          className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-amber-50 hover:text-amber-600 transition-all border border-slate-100 hover:border-amber-100 active:scale-95"
-                          title="Ubah"
+                          className="p-2.5 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors"
+                          aria-label="Ubah"
+                          title="Ubah kelas"
                         >
-                          <Pencil size={16} />
+                          <Pencil size={18} />
                         </button>
                         <button
                           type="button"
                           onClick={() => openDeleteModal(k)}
-                          className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all border border-slate-100 hover:border-rose-100 active:scale-95"
-                          title="Hapus"
+                          className="p-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                          aria-label="Hapus"
+                          title="Hapus kelas"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={18} />
                         </button>
                       </div>
                     </div>
@@ -368,7 +359,6 @@ export default function AdminKelasPage() {
         }}
         onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }
-

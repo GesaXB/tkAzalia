@@ -94,6 +94,26 @@ export default function AdminInformasiSection({
     return list;
   }, [infoList, search, filterTipe, filterStatus]);
 
+  useEffect(() => {
+    const slug = infoForm.judul
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    onChangeInfoForm({ ...infoForm, slug });
+  }, [infoForm.judul]);
+
+  useEffect(() => {
+    const slug = infoUpdate.judul
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    onChangeInfoUpdate({ ...infoUpdate, slug });
+  }, [infoUpdate.judul]);
+
   const suggestions = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return [];
@@ -154,23 +174,45 @@ export default function AdminInformasiSection({
           </div>
         </div>
         <div className="p-6 md:p-8 border-b border-gray-100 bg-slate-50/30">
-          <form onSubmit={onCreate} className="space-y-8 w-full max-w-5xl">
+          <form onSubmit={onCreate} className="space-y-8 w-full">
             <h3 className="font-bold text-slate-900 flex items-center gap-3 text-lg mb-4">
               <span className="w-1.5 h-6 rounded-full bg-emerald-500" />
               Tulis Sesuatu yang Baru
             </h3>
+            <div className="grid gap-8 lg:grid-cols-1">
+              {/* Main Content Area */}
+              <div className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Judul Artikel</label>
+                    <input
+                      value={infoForm.judul}
+                      onChange={(e) => onChangeInfoForm({ ...infoForm, judul: e.target.value })}
+                      placeholder="Ketik judul yang menarik di sini..."
+                      className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-base focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all placeholder:text-slate-300 font-bold"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Slug URL (Otomatis)</label>
+                    <input
+                      value={infoForm.slug}
+                      readOnly
+                      placeholder="link-artikel-anda"
+                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 text-sm focus:ring-0 outline-none font-mono text-slate-500 cursor-not-allowed"
+                      required
+                    />
+                  </div>
+                </div>
 
-            <div className="grid gap-8 lg:grid-cols-3">
-              {/* Kolom Kiri: Konten Utama */}
-              <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Judul Artikel</label>
-                  <input
-                    value={infoForm.judul}
-                    onChange={(e) => onChangeInfoForm({ ...infoForm, judul: e.target.value })}
-                    placeholder="Ketik judul yang menarik di sini..."
-                    className="w-full px-5 py-4 rounded-2xl bg-white border-none shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] text-base focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all placeholder:text-slate-300 font-bold"
-                    required
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Ringkasan (Opsional)</label>
+                  <textarea
+                    value={infoForm.ringkasan}
+                    onChange={(e) => onChangeInfoForm({ ...infoForm, ringkasan: e.target.value })}
+                    placeholder="Ringkasan singkat untuk pratinjau..."
+                    rows={2}
+                    className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-sm outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all leading-relaxed font-medium resize-none"
                   />
                 </div>
 
@@ -180,117 +222,85 @@ export default function AdminInformasiSection({
                     value={infoForm.konten}
                     onChange={(e) => onChangeInfoForm({ ...infoForm, konten: e.target.value })}
                     placeholder="Tulis narasi lengkap artikel Anda di sini..."
-                    rows={12}
-                    className="w-full px-5 py-4 rounded-2xl bg-white border-none shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all leading-relaxed font-medium resize-y"
+                    rows={10}
+                    className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-sm outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all leading-relaxed font-medium resize-y"
                     required
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Ringkasan (Opsional)</label>
-                    <textarea
-                      value={infoForm.ringkasan}
-                      onChange={(e) => onChangeInfoForm({ ...infoForm, ringkasan: e.target.value })}
-                      placeholder="Ringkasan singkat untuk pratinjau..."
-                      rows={3}
-                      className="w-full px-5 py-4 rounded-2xl bg-white border-none shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all leading-relaxed font-medium resize-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Slug URL</label>
-                    <input
-                      value={infoForm.slug}
-                      onChange={(e) => onChangeInfoForm({ ...infoForm, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                      placeholder="link-artikel-anda"
-                      className="w-full px-5 py-4 rounded-2xl bg-white border-none shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] text-sm focus:ring-2 focus:ring-emerald-500/20 outline-none font-mono transition-all placeholder:text-slate-300"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Kolom Kanan: Meta & Media */}
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Media / Sampul</label>
-                  <div className="bg-white p-4 rounded-2xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] space-y-4">
-                    {infoForm.gambar ? (
-                      <div className="relative w-full aspect-video rounded-xl overflow-hidden group">
-                        <img src={infoForm.gambar} className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" />
-                        <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/40 transition-colors" />
-                        <button type="button" onClick={() => onChangeInfoForm({ ...infoForm, gambar: "" })} className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-lg text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <X size={14} />
-                        </button>
+                <div className="grid lg:grid-cols-3 gap-6 items-start">
+                  {/* Media */}
+                  <div className="lg:col-span-2">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Media / Sampul</label>
+                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row gap-4">
+                      {infoForm.gambar ? (
+                        <div className="relative w-full sm:w-48 aspect-video rounded-xl overflow-hidden group shrink-0">
+                          <img src={infoForm.gambar} className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" />
+                          <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/40 transition-colors" />
+                          <button type="button" onClick={() => onChangeInfoForm({ ...infoForm, gambar: "" })} className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-lg text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="w-full sm:w-48 aspect-video rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 gap-2 shrink-0">
+                          <ImageIcon size={24} strokeWidth={1.5} />
+                        </div>
+                      )}
+                      <div className="flex-1 flex flex-col justify-center gap-3">
+                        <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 text-[11px] font-bold uppercase tracking-wider cursor-pointer transition-colors border border-slate-100">
+                          <Upload size={14} />
+                          {uploadingCreate ? "Mengunggah..." : "Unggah Gambar"}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleCreateImageChange} disabled={uploadingCreate} />
+                        </label>
+                        <input
+                          value={infoForm.gambar}
+                          onChange={(e) => onChangeInfoForm({ ...infoForm, gambar: e.target.value })}
+                          placeholder="Atau tempel URL gambar..."
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-300"
+                        />
                       </div>
-                    ) : (
-                      <div className="w-full aspect-video rounded-xl bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 gap-2">
-                        <ImageIcon size={24} strokeWidth={1.5} />
-                        <span className="text-[10px] uppercase font-bold tracking-wider">Belum ada sampul</span>
+                    </div>
+                  </div>
+
+                  {/* Settings */}
+                  <div className="space-y-4">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Pengaturan</label>
+                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm grid grid-cols-1 gap-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kategori</label>
+                          <select
+                            value={infoForm.tipe}
+                            onChange={(e) => onChangeInfoForm({ ...infoForm, tipe: e.target.value })}
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border-none text-xs outline-none focus:ring-2 focus:ring-emerald-500/20 font-bold text-slate-700"
+                          >
+                            {TIPE_OPTIONS.map((o) => (
+                              <option key={o.value} value={o.value}>{o.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</label>
+                          <select
+                            value={infoForm.status}
+                            onChange={(e) => onChangeInfoForm({ ...infoForm, status: e.target.value })}
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border-none text-xs outline-none focus:ring-2 focus:ring-emerald-500/20 font-bold text-slate-700"
+                          >
+                            <option value="draft">Draft</option>
+                            <option value="published">Tampil</option>
+                          </select>
+                        </div>
                       </div>
-                    )}
-                    <div className="flex flex-col gap-2">
-                      <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 text-[11px] font-bold uppercase tracking-wider cursor-pointer transition-colors border border-slate-100">
-                        <Upload size={14} />
-                        {uploadingCreate ? "Mengunggah..." : "Unggah Gambar"}
-                        <input type="file" accept="image/*" className="hidden" onChange={handleCreateImageChange} disabled={uploadingCreate} />
-                      </label>
-                      <input
-                        value={infoForm.gambar}
-                        onChange={(e) => onChangeInfoForm({ ...infoForm, gambar: e.target.value })}
-                        placeholder="Atau tempel URL gambar..."
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-300 items-center justify-center text-center"
-                      />
+                      <button
+                        type="submit"
+                        className="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-[11px] uppercase tracking-wider hover:bg-emerald-600 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2"
+                      >
+                        <FileText size={16} />
+                        Posting Sekarang
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Pengaturan</label>
-                  <div className="bg-white p-5 rounded-2xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] space-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Kategori</label>
-                      <select
-                        value={infoForm.tipe}
-                        onChange={(e) => onChangeInfoForm({ ...infoForm, tipe: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 font-bold text-slate-700"
-                      >
-                        {TIPE_OPTIONS.map((o) => (
-                          <option key={o.value} value={o.value}>{o.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</label>
-                      <select
-                        value={infoForm.status}
-                        onChange={(e) => onChangeInfoForm({ ...infoForm, status: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 font-bold text-slate-700"
-                      >
-                        <option value="draft">Draft (Sembunyikan)</option>
-                        <option value="published">Published (Tampil)</option>
-                      </select>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Urutan Tampil</label>
-                      <input
-                        type="number"
-                        value={infoForm.urutan}
-                        onChange={(e) => onChangeInfoForm({ ...infoForm, urutan: Number(e.target.value) || 1 })}
-                        min={1}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border-none text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 font-bold text-slate-700"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-xs uppercase tracking-wider hover:bg-emerald-600 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2"
-                >
-                  <FileText size={16} />
-                  Posting Sekarang
-                </button>
               </div>
             </div>
           </form>
@@ -435,7 +445,7 @@ export default function AdminInformasiSection({
                         className="text-xs font-bold text-slate-900 uppercase tracking-wider hover:text-emerald-600 transition-colors flex items-center gap-2"
                       >
                         <Edit2 size={12} />
-                        Sunting
+                        Edit
                       </button>
                       <div className="flex items-center gap-2">
                         {onDeleteInfo && (
@@ -486,94 +496,90 @@ export default function AdminInformasiSection({
                 <X size={20} />
               </button>
             </div>
-
-            <form onSubmit={onUpdate} className="overflow-y-auto p-6 space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Judul</label>
-                  <input
-                    value={infoUpdate.judul}
-                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, judul: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none"
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Slug</label>
-                  <input
-                    value={infoUpdate.slug}
-                    onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, slug: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
-                    required
-                  />
-                </div>
-
-                <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Media</label>
-                  <div className="flex gap-2">
-                    <label className="shrink-0 flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 text-xs font-bold cursor-pointer transition-colors">
-                      <Upload size={14} />
-                      {uploadingEdit ? "..." : "Pilih"}
-                      <input type="file" accept="image/*" className="hidden" onChange={handleEditImageChange} disabled={uploadingEdit} />
-                    </label>
+            <form onSubmit={onUpdate} className="overflow-y-auto p-6 space-y-6">
+              <div className="grid gap-6">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Judul Artikel</label>
                     <input
-                      value={infoUpdate.gambar}
-                      onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, gambar: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
-                      placeholder="URL Gambar"
+                      value={infoUpdate.judul}
+                      onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, judul: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white shadow-sm text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none font-bold"
+                      required
                     />
                   </div>
-                  {infoUpdate.gambar && <img src={infoUpdate.gambar} alt="Preview" className="h-16 rounded-lg mt-1 object-cover border border-gray-100" />}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Slug URL (Otomatis)</label>
+                    <input
+                      value={infoUpdate.slug}
+                      readOnly
+                      className="w-full px-4 py-3 rounded-xl border border-slate-100 bg-slate-50 text-sm focus:ring-0 outline-none font-mono text-slate-500 cursor-not-allowed"
+                      required
+                    />
+                  </div>
                 </div>
 
-                <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Ringkasan</label>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Ringkasan</label>
                   <textarea
                     value={infoUpdate.ringkasan}
                     onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, ringkasan: e.target.value })}
                     rows={2}
-                    placeholder="Ringkasan..."
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-100 shadow-sm text-sm outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all font-medium resize-none"
                   />
                 </div>
-                <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-bold text-gray-700">Konten Lengkap</label>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Konten Lengkap</label>
                   <textarea
                     value={infoUpdate.konten}
                     onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, konten: e.target.value })}
-                    rows={8}
-                    placeholder="Isi konten..."
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none"
+                    rows={6}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-100 shadow-sm text-sm outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all font-medium resize-y"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 sm:col-span-2 bg-slate-50 p-3 rounded-lg border border-gray-100">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">Tipe</label>
-                    <select value={infoUpdate.tipe} onChange={e => onChangeInfoUpdate({ ...infoUpdate, tipe: e.target.value })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none">
-                      {TIPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                    </select>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Media</label>
+                    <div className="flex gap-2">
+                      <label className="shrink-0 flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 text-[10px] font-bold uppercase tracking-wider cursor-pointer hover:bg-emerald-100 transition-colors">
+                        <Upload size={14} />
+                        {uploadingEdit ? "..." : "Pilih"}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleEditImageChange} disabled={uploadingEdit} />
+                      </label>
+                      <input
+                        value={infoUpdate.gambar}
+                        onChange={(e) => onChangeInfoUpdate({ ...infoUpdate, gambar: e.target.value })}
+                        className="flex-1 px-3 py-2 rounded-lg border border-slate-100 text-xs focus:ring-2 focus:ring-emerald-500/10 outline-none"
+                        placeholder="URL Gambar"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">Status</label>
-                    <select value={infoUpdate.status} onChange={e => onChangeInfoUpdate({ ...infoUpdate, status: e.target.value })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none">
-                      <option value="draft">Draft</option>
-                      <option value="published">Published</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase">Urutan</label>
-                    <input type="number" value={infoUpdate.urutan} onChange={e => onChangeInfoUpdate({ ...infoUpdate, urutan: Number(e.target.value) || 1 })} className="w-full bg-white border border-gray-200 rounded-md text-xs px-2 py-1.5 outline-none" />
+                  <div className="grid grid-cols-2 gap-3 items-end">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Kategori</label>
+                      <select value={infoUpdate.tipe} onChange={e => onChangeInfoUpdate({ ...infoUpdate, tipe: e.target.value })} className="w-full bg-slate-50 border-none rounded-xl text-xs px-3 py-2 font-bold outline-none ring-1 ring-slate-100">
+                        {TIPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Status</label>
+                      <select value={infoUpdate.status} onChange={e => onChangeInfoUpdate({ ...infoUpdate, status: e.target.value })} className="w-full bg-slate-50 border-none rounded-xl text-xs px-3 py-2 font-bold outline-none ring-1 ring-slate-100">
+                        <option value="draft">Draft</option>
+                        <option value="published">Tampil</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-3">
-                <button type="submit" className="flex-1 bg-[#01793B] text-white py-2.5 rounded-lg font-bold text-sm shadow-md hover:bg-emerald-700">
+              <div className="flex gap-3 pt-4">
+                <button type="submit" className="flex-1 bg-slate-900 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-600 transition-all active:scale-95">
                   Simpan Perubahan
                 </button>
-                <button type="button" onClick={onCloseEditModal} className="px-6 py-2.5 rounded-lg border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50">
+                <button type="button" onClick={onCloseEditModal} className="px-8 py-3 rounded-2xl border border-slate-200 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
                   Batal
                 </button>
               </div>

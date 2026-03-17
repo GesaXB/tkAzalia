@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDashboard } from "@/context/DashboardContext";
 import AdminInformasiSection from "@/Components/Dashboard/Admin/AdminInformasiSection";
 import { clearToken } from "@/lib/client/session";
 import { fetchProfile } from "@/lib/client/auth";
@@ -12,7 +13,6 @@ import {
   listInformasiSekolah,
   updateInformasiSekolah,
 } from "@/lib/client/admin";
-import { useDashboard } from "@/context/DashboardContext";
 
 export default function AdminInformasiPage() {
   const router = useRouter();
@@ -68,7 +68,12 @@ export default function AdminInformasiPage() {
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, [router, setDashboardInfo]);
+
+  const handleLogout = () => {
+    clearToken();
+    router.push("/");
+  };
 
   const handleCreateInfo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -200,7 +205,7 @@ export default function AdminInformasiPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
       {error ? (
         <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
           {error}
@@ -220,7 +225,7 @@ export default function AdminInformasiPage() {
         editingId={editingId}
         onCloseEditModal={handleCloseEditModal}
       />
-    </div>
+    </>
   );
 }
 

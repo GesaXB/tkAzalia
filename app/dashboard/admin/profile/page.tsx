@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SectionCard from "@/Components/Dashboard/SectionCard";
-import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
 import { useDashboard } from "@/context/DashboardContext";
+import SectionCard from "@/Components/Dashboard/SectionCard";
+import { clearToken } from "@/lib/client/session";
+import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
 
 export default function AdminProfilePage() {
   const router = useRouter();
@@ -41,7 +42,12 @@ export default function AdminProfilePage() {
       setLoading(false);
     };
     load();
-  }, [router]);
+  }, [router, setDashboardInfo]);
+
+  const handleLogout = () => {
+    clearToken();
+    router.push("/");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +75,7 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
       {error ? (
         <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
           {error}
@@ -111,7 +117,7 @@ export default function AdminProfilePage() {
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
               <input
-                type="email"
+                type="text"
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -140,6 +146,6 @@ export default function AdminProfilePage() {
           <p className="text-sm text-gray-500">Data profil tidak tersedia.</p>
         )}
       </SectionCard>
-    </div>
+    </>
   );
 }

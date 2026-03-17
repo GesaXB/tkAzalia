@@ -1,5 +1,5 @@
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import ContactInfoItem from "./ContactInfoItem";
-import { MapPin, Phone, Mail, Clock } from "lucide-react"; 
 
 export default function ContactInfo() {
   return (
@@ -11,7 +11,7 @@ export default function ContactInfo() {
         <h3 className="text-2xl font-bold text-gray-900 mb-8 border-l-4 border-[#01793B] pl-4">
           Informasi Kontak
         </h3>
-        
+
         <div className="space-y-6">
           <ContactInfoItem
             icon={<MapPin className="w-5 h-5" />}
@@ -21,7 +21,7 @@ export default function ContactInfo() {
                 Jl. Raya Gn. Tugel, Windusara, Karangklesem,<br />
                 Kec. Purwokerto Sel., Kabupaten Banyumas,<br />
                 Jawa Tengah 53144
-                 
+
               </>
             }
           />
@@ -42,7 +42,7 @@ export default function ContactInfo() {
             title="Email"
             content={
               <>
-                @tkazalia.sch.id<br />
+                @tkitazalia@gmail.com<br />
               </>
             }
           />
