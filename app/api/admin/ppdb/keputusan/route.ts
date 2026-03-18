@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse, StatusPpdb } from '@/types';
 import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware/auth';
-import { listPpdbSiswa, updatePpdbStatus } from '@/lib/admin/ppdb';
+import { listPpdbSiswa, updatePpdbStatus } from '@/lib/admin/spmb';
 
 interface UpdatePpdbBody {
   siswa_id: number;

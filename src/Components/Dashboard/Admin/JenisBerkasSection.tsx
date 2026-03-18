@@ -196,7 +196,7 @@ export default function JenisBerkasSection() {
                         {item.nama_berkas}
                       </h4>
                       <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider mt-1">
-                        Persyaratan PPDB
+                        Persyaratan SPMB
                       </p>
                     </div>
                   </div>

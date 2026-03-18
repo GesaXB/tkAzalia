@@ -7,9 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 export default function LoginForm() {
   const router = useRouter();
+  const { error: toastError, success: toastSuccess } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,9 @@ export default function LoginForm() {
     setLoading(false);
 
     if (!response.success || !response.data) {
-      setError(response.error || "Login gagal");
+      const msg = response.error || "Login gagal";
+      setError(msg);
+      toastError(msg);
       return;
     }
 

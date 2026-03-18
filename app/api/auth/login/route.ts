@@ -7,6 +7,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
   try {
     const body = (await req.json()) as LoginData;
 
+    // Diagnostic logging (Server side only)
+    if (!process.env.JWT_SECRET) {
+      console.error('SYSTEM ERROR: JWT_SECRET is not defined in environment variables');
+    }
+
     if (!body.username || !body.password) {
       return NextResponse.json(
         {
@@ -73,10 +78,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       { status: 200 }
     );
   } catch (error) {
+    console.error('Login error detail:', error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Terjadi kesalahan pada server',
+        error: 'Terjadi kesalahan pada server. Silakan hubungi admin.',
       },
       { status: 500 }
     );

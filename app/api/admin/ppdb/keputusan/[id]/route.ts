@@ -1,4 +1,4 @@
-import { getPpdbSiswaById } from '@/lib/admin/ppdb';
+import { getPpdbSiswaById } from '@/lib/admin/spmb';
 import { AuthenticatedRequest, authMiddleware } from '@/lib/middleware/auth';
 import { ApiResponse } from '@/types';
 import { NextResponse } from 'next/server';

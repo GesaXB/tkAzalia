@@ -1,43 +1,77 @@
 "use client";
 import { motion } from "framer-motion";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { fetchProfile } from "@/lib/client/auth";
 
 export default function PendaftaranHero() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetchProfile().then((res) => {
+      setIsLoggedIn(res.success && !!res.data);
+    });
+  }, []);
+
   return (
-    <section className="relative w-full pt-32 pb-20 md:pt-40 md:pb-32 px-6 bg-gradient-to-br from-[#01793B] to-[#015c2e] overflow-hidden text-white">
+    <section className="relative w-full pt-32 pb-20 md:pt-40 md:pb-28 px-6 overflow-hidden bg-white">
+      {/* Subtle background accent */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(1,121,59,0.08),transparent)]" />
 
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:24px_24px]"></div>
-
-      <div className="absolute top-20 right-10 w-64 h-64 bg-yellow-400 rounded-full blur-[100px] opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-10 left-10 w-48 h-48 bg-blue-400 rounded-full blur-[80px] opacity-20"></div>
-
-      <div className="relative z-10 max-w-5xl mx-auto text-center">
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-yellow-300 font-bold text-sm mb-6 tracking-wide shadow-lg">
-            <CalendarDays className="w-4 h-4" />
+          {/* Badge */}
+          <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-emerald-50 border border-emerald-100 text-[#01793B] font-bold text-xs mb-8 tracking-widest uppercase">
+            <CalendarDays className="w-3.5 h-3.5" />
             Tahun Ajaran 2026/2027
           </span>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight drop-shadow-md">
-            Penerimaan Peserta Didik Baru <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">
-              (PPDB) TK Azalia
-            </span>
+          {/* Heading */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tight">
+            Penerimaan Murid Baru<br />
+            <span className="text-[#01793B]">TK Azalia</span>
           </h1>
 
-          <p className="text-green-50 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed mb-10">
-            Bergabunglah bersama kami untuk mencetak generasi cerdas, ceria, dan berakhlak mulia.
+          {/* Subtitle */}
+          <p className="text-base md:text-lg text-gray-500 max-w-xl mx-auto leading-relaxed mb-10">
+            Panduan lengkap pendaftaran, persyaratan dokumen, dan jadwal pelaksanaan SPMB TK Azalia.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/auth/register" className="px-8 py-4 bg-yellow-400 text-green-900 font-bold rounded-xl shadow-[0_10px_20px_-5px_rgba(250,204,21,0.4)] hover:bg-yellow-300 hover:scale-105 transition-all w-full sm:w-auto inline-block">
-              Daftar Sekarang
-            </Link>
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {/* Only show "Daftar Sekarang" when not logged in (or still loading) */}
+            {!isLoggedIn && (
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#01793B] text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-all shadow-md shadow-emerald-100 active:scale-95 uppercase tracking-wider"
+              >
+                Daftar Sekarang
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+
+            {/* If logged in, show go-to-dashboard button instead */}
+            {isLoggedIn && (
+              <Link
+                href="/dashboard/siswa"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#01793B] text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-all shadow-md shadow-emerald-100 active:scale-95 uppercase tracking-wider"
+              >
+                Ke Dashboard Saya
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+
+            <a
+              href="#alur"
+              className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-200 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-50 transition-all active:scale-95 uppercase tracking-wider"
+            >
+              Lihat Alur
+            </a>
           </div>
         </motion.div>
       </div>

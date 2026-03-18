@@ -1,5 +1,6 @@
 import { useToast } from "@/context/ToastContext";
-import { getListKelas, getSiswaMe, updateSiswaKelas, type KelasItem } from "@/lib/client/ppdb";
+import { getListKelas, updateSiswaKelas, getSiswaMe, type KelasItem } from "@/lib/client/spmb";
+import { getJadwalPpdb } from "@/lib/client/public";
 import { motion } from "framer-motion";
 import { AlertCircle, Check, Lock, School, Users } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ export default function ClassSelection() {
   const [existingSelection, setExistingSelection] = useState<number | null>(null); // To track if database already has a value
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [ppdbOpened, setPpdbOpened] = useState(true);
   const [confirmModal, setConfirmModal] = useState<{ open: boolean; kelasId: number | null }>({
     open: false,
     kelasId: null,
@@ -20,7 +22,11 @@ export default function ClassSelection() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [kelasRes, siswaRes] = await Promise.all([getListKelas(), getSiswaMe()]);
+        const [kelasRes, siswaRes, jadwalRes] = await Promise.all([
+          getListKelas(), 
+          getSiswaMe(),
+          getJadwalPpdb()
+        ]);
 
         if (kelasRes.success && kelasRes.data) {
           setKelasList(kelasRes.data);
@@ -29,6 +35,10 @@ export default function ClassSelection() {
         if (siswaRes.success && siswaRes.data) {
           setSelectedKelasId(siswaRes.data.kelas_id);
           setExistingSelection(siswaRes.data.kelas_id);
+        }
+
+        if (jadwalRes.success) {
+          setPpdbOpened(jadwalRes.data?.dibuka === true);
         }
       } catch (error) {
         console.error("Failed to load data", error);
@@ -42,6 +52,7 @@ export default function ClassSelection() {
   }, [toast]);
 
   const initiateSelect = (kelasId: number) => {
+    if (!ppdbOpened) return;
     if (existingSelection) return;
 
     setConfirmModal({ open: true, kelasId });
@@ -49,7 +60,7 @@ export default function ClassSelection() {
 
   const handleConfirmSelect = async () => {
     const kelasId = confirmModal.kelasId;
-    if (!kelasId) return;
+    if (!kelasId || !ppdbOpened) return;
 
     setSaving(true);
     const res = await updateSiswaKelas(kelasId);
@@ -125,7 +136,23 @@ export default function ClassSelection() {
         )}
       </div>
 
-      {!selectedKelasId && !existingSelection && (
+      {!ppdbOpened && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 mb-4"
+        >
+          <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-amber-900">Pendaftaran Ditutup</p>
+            <p className="text-sm text-amber-800 mt-1">
+              Periode pendaftaran SPMB telah berakhir. Anda tidak dapat mengubah pilihan kelas.
+            </p>
+          </div>
+        </motion.div>
+      )}
+
+      {ppdbOpened && !selectedKelasId && !existingSelection && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -152,8 +179,8 @@ export default function ClassSelection() {
       >
         {kelasList.map((kelas) => {
           const isSelected = selectedKelasId === kelas.kelas_id;
-          const isLocked = !!existingSelection;
-          const isOtherSelected = isLocked && !isSelected;
+          const isLocked = !!existingSelection || !ppdbOpened;
+          const isOtherSelected = !!existingSelection && !isSelected;
 
           return (
             <motion.div
@@ -170,7 +197,7 @@ export default function ClassSelection() {
                 relative overflow-hidden rounded-2xl border-2 p-6 transition-colors
                 ${isSelected
                   ? "border-[#01793B] bg-[#01793B]/5"
-                  : isOtherSelected
+                  : isOtherSelected || (!ppdbOpened && !isSelected)
                     ? "border-slate-100 bg-slate-50 opacity-60 grayscale cursor-not-allowed"
                     : "border-gray-100 bg-white cursor-pointer"
                 }
@@ -207,15 +234,17 @@ export default function ClassSelection() {
                     mt-auto w-full py-2.5 rounded-xl text-sm font-semibold transition-all
                     ${isSelected
                       ? "bg-emerald-100 text-emerald-800 cursor-default"
-                      : isOtherSelected
+                      : isOtherSelected || !ppdbOpened
                         ? "bg-slate-200 text-slate-500 cursor-not-allowed"
                         : "bg-gray-50 text-gray-600 hover:bg-gray-100 group-hover:bg-[#01793B] group-hover:text-white"
                     }
                   `}
                 >
-                  {isLocked
+                  {existingSelection
                     ? (isSelected ? "Kelas Terpilih" : "Tidak Dipilih")
-                    : "Pilih Kelas Ini"}
+                    : !ppdbOpened
+                      ? "Pendaftaran Ditutup"
+                      : "Pilih Kelas Ini"}
                 </button>
               </div>
             </motion.div>

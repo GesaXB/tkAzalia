@@ -68,8 +68,8 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
 
   return (
     <SectionCard
-      title="Jadwal PPDB"
-      description="Atur periode pendaftaran. Jika tanggal sudah lewat, sistem PPDB tidak akan menerima pendaftaran baru."
+      title="Pengaturan Jadwal SPMB"
+      description="Atur periode pendaftaran murid baru. Jika tanggal sudah lewat, sistem SPMB tidak akan menerima pendaftaran baru."
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
@@ -102,9 +102,9 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
         {jadwal && (
           <p className="text-xs text-gray-500">
             Status: {jadwal.dibuka ? (
-              <span className="text-emerald-600 font-medium">PPDB dibuka</span>
+              <span className="text-emerald-600 font-medium">SPMB dibuka</span>
             ) : (
-              <span className="text-amber-600 font-medium">PPDB ditutup</span>
+              <span className="text-amber-600 font-medium">SPMB ditutup</span>
             )}
           </p>
         )}
@@ -131,8 +131,8 @@ export default function AdminJadwalSection({ jadwal, onSaved }: AdminJadwalSecti
 
       <ConfirmModal
         open={showResetModal}
-        title="Reset Jadwal PPDB?"
-        description="Yakin ingin mereset jadwal PPDB? Semua pengaturan tanggal akan dihapus dan sistem PPDB tidak akan beroperasi sampai jadwal baru ditetapkan."
+        title="Reset Jadwal SPMB?"
+        description="Yakin ingin mereset jadwal SPMB? Semua pengaturan tanggal akan dihapus dan sistem SPMB tidak akan beroperasi sampai jadwal baru ditetapkan."
         confirmLabel="Reset"
         cancelLabel="Batal"
         isDanger={true}

@@ -185,12 +185,13 @@ export default function AdminDataPendaftarSection({
           </div>
 
           {/* Content Section */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse min-w-[800px] lg:min-w-0">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-200">
                   <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Pendaftar</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest hidden sm:table-cell">Kontak</th>
+                  <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Kontak</th>
                   <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Kelas</th>
                   <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Status</th>
                   <th className="px-6 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center min-w-[120px]">Aksi</th>
@@ -215,13 +216,10 @@ export default function AdminDataPendaftarSection({
                               <p className="font-bold text-slate-800 truncate group-hover:text-[#01793B] transition-colors">
                                 {item.nama_anak || item.user.nama_lengkap}
                               </p>
-                              <p className="text-[11px] text-slate-400 truncate mt-0.5 tracking-wide">
-                                ID: #{item.siswa_id}
-                              </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-6 hidden sm:table-cell">
+                        <td className="px-6 py-6 font-medium">
                           <div className="space-y-1">
                             <p className="text-[11px] text-slate-700 font-bold uppercase tracking-tight">
                               {item.user.nama_lengkap}
@@ -237,7 +235,7 @@ export default function AdminDataPendaftarSection({
                               {item.kelas.nama}
                             </span>
                           ) : (
-                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest italic">
+                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest italic font-medium">
                               Belum diisi
                             </span>
                           )}
@@ -265,6 +263,65 @@ export default function AdminDataPendaftarSection({
                   )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="lg:hidden space-y-4">
+            {filteredList.length === 0 ? (
+               <div className="px-6 py-16 text-center text-slate-400 italic font-medium bg-white rounded-2xl border border-slate-200">
+                Tidak ada data ditemukan.
+              </div>
+            ) : (
+              filteredList.map((item) => (
+                <div key={item.siswa_id} className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm active:ring-2 active:ring-emerald-500/20 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center font-black text-xs ring-1 ring-slate-100">
+                        {(item.nama_anak || item.user.nama_lengkap || "?").charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-800 text-sm">
+                          {item.nama_anak || item.user.nama_lengkap}
+                        </p>
+                        <p className="text-[10px] text-slate-400 font-medium">
+                          {(item.status_ppdb || "menunggu").toUpperCase()}
+                        </p>
+                      </div>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider ${
+                      (item.status_ppdb || "menunggu") === 'lulus' ? 'bg-emerald-50 text-emerald-600' :
+                      (item.status_ppdb || "menunggu") === 'tidak_lulus' ? 'bg-rose-50 text-rose-600' :
+                      'bg-amber-50 text-amber-600'
+                    }`}>
+                      {item.status_ppdb || "menunggu"}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 py-3 border-y border-slate-50">
+                    <div>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kelas</p>
+                      <p className="text-xs font-bold text-slate-700">
+                        {item.kelas?.nama || "Belum dipilih"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Email</p>
+                      <p className="text-xs font-medium text-slate-600 truncate">
+                        {item.user.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/dashboard/admin/ppdb/${item.siswa_id}`}
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-xs uppercase tracking-widest hover:bg-[#01793B] transition-all"
+                  >
+                    Buka Profil Detail
+                    <ChevronRight size={14} />
+                  </Link>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

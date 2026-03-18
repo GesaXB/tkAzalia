@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { ApiResponse } from '@/types';
-import { getPpdbJadwal, isPpdbOpen } from '@/lib/ppdbSetting';
+import { getSpmbJadwal, isSpmbOpen } from '@/lib/spmbSetting';
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   try {
-    const jadwal = await getPpdbJadwal();
-    const open = jadwal ? isPpdbOpen(jadwal) : false;
+    const jadwal = await getSpmbJadwal();
+    const open = jadwal ? isSpmbOpen(jadwal) : false;
     return NextResponse.json(
       {
         success: true,
@@ -16,7 +16,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
   } catch (err) {
     console.error('GET /api/ppdb/jadwal:', err);
     return NextResponse.json(
-      { success: false, error: 'Gagal memuat jadwal PPDB' },
+      { success: false, error: 'Gagal memuat jadwal SPMB' },
       { status: 500 }
     );
   }

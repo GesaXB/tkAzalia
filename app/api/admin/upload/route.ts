@@ -25,24 +25,34 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
       );
     }
 
-    const dir = path.join(process.cwd(), 'public', 'uploads', 'blog');
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
+    const { supabase } = await import('@/lib/supabase');
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
     const ext = path.extname(file.name) || '.jpg';
     const base = path.basename(file.name, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
     const filename = `blog_${Date.now()}_${base}${ext}`;
-    const filepath = path.join(dir, filename);
-    const bytes = await file.arrayBuffer();
-    fs.writeFileSync(filepath, Buffer.from(bytes));
+    const filePath = `blog/${filename}`;
 
-    const publicPath = `/uploads/blog/${filename}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('tkazalia')
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('tkazalia')
+      .getPublicUrl(filePath);
 
     return NextResponse.json(
       {
         success: true,
-        data: { url: publicPath },
+        data: { url: publicUrl },
       },
       { status: 200 }
     );

@@ -16,54 +16,49 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
     if (statusKey === "belum") {
       return (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 border border-slate-300 p-6 shadow-sm"
+          className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-200 p-8 md:p-12 shadow-2xl shadow-slate-200/50"
         >
-          <div className="relative flex flex-col md:flex-row gap-6 items-center text-center md:text-left">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl -mr-20 -mt-20 opacity-60" />
+          
+          <div className="relative flex flex-col md:flex-row gap-10 items-center">
             <div className="shrink-0">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                <AlertCircle className="w-10 h-10 text-slate-600" />
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-slate-50 flex items-center justify-center shadow-inner border border-slate-100">
+                <AlertCircle className="w-12 h-12 md:w-16 md:h-16 text-slate-400" />
               </div>
             </div>
 
-            <div className="flex-1 space-y-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm text-slate-700 text-xs font-bold uppercase tracking-wide shadow-sm ring-1 ring-slate-200">
-                Belum Lengkap
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
+                Status: Belum Lengkap
               </div>
 
-              <div>
-                <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900">
-                  Data Pendaftaran Belum Lengkap
-                </h3>
-                <p className="mt-2 text-slate-700 font-medium leading-relaxed max-w-xl">
-                  Ayo segera selesaikan pengisian data pendaftaran dan upload berkas persyaratan.
-                  Semakin cepat data lengkap, semakin cepat kami bisa memverifikasi!
+              <div className="space-y-3">
+                <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+                  Lengkapi Data Anda
+                </h1>
+                <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
+                  Kami belum bisa memverifikasi pendaftaran Anda karena ada data yang masih kosong. Selesaikan pengisian formulir dan upload berkas sekarang!
                 </p>
               </div>
 
-              <div className="mt-4 space-y-2">
-                <p className="text-sm font-semibold text-slate-700">Yang perlu Anda lakukan:</p>
-                <ul className="space-y-1 text-sm text-slate-600">
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    Lengkapi semua data di form Data Pendaftaran
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    Pilih kelas yang Anda inginkan
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    Upload semua dokumen persyaratan
-                  </li>
-                </ul>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { label: "Data Calon Siswa", icon: "👤" },
+                  { label: "Data Orang Tua", icon: "👨‍👩‍👧" },
+                  { label: "Berkas Persyaratan", icon: "📄" },
+                ].map((step, i) => (
+                  <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3">
+                    <span className="text-2xl">{step.icon}</span>
+                    <span className="text-sm font-bold text-slate-700">{step.label}</span>
+                  </div>
+                ))}
               </div>
 
               {catatan && (
-                <div className="mt-4 p-4 bg-white/70 backdrop-blur-md rounded-2xl border border-slate-200 shadow-sm text-sm text-slate-700">
-                  <span className="font-bold mr-1">Catatan:</span> {catatan}
+                <div className="p-6 bg-red-50/50 rounded-2xl border border-red-100/50 text-slate-700 italic flex gap-3">
+                  <span className="font-bold text-red-600 NOT-ITALIC not-italic">Catatan:</span> {catatan}
                 </div>
               )}
             </div>
@@ -75,39 +70,43 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
     if (statusKey === "diterima" || statusKey === "lulus") {
       return (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100 border border-emerald-200 p-6 shadow-md"
+          className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-600 to-teal-700 p-8 md:p-16 text-white text-center shadow-2xl shadow-emerald-200"
         >
-          <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 rounded-full bg-emerald-300/20 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 rounded-full bg-teal-300/20 blur-3xl pointer-events-none" />
-
-          <div className="relative flex flex-col md:flex-row gap-6 items-center text-center md:text-left">
-            <div className="shrink-0 relative">
+          {/* Confetti-like decoration */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:24px_24px]" />
+          
+          <div className="relative flex flex-col items-center space-y-8">
+            <div className="bg-white/20 backdrop-blur-xl rounded-full p-4 ring-8 ring-white/10">
               <SuccessMascot />
             </div>
 
-            <div className="flex-1 space-y-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm text-emerald-800 text-xs font-bold uppercase tracking-wide shadow-sm ring-1 ring-emerald-100">
-                <CheckCircle className="w-3.5 h-3.5" />
-                Diterima / Lulus
+            <div className="space-y-4 max-w-2xl">
+              <div className="inline-block px-5 py-2 rounded-full bg-emerald-400/30 backdrop-blur-sm border border-emerald-400/50 text-[11px] font-black uppercase tracking-[0.3em]">
+                Selamat! Hasil Seleksi
               </div>
-              <div>
-                <h3 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-800 to-teal-700">
-                  Selamat! Kamu Lulus!
-                </h3>
-                <p className="mt-2 text-emerald-800/80 font-medium leading-relaxed max-w-xl">
-                  Yeay! Selamat bergabung menjadi keluarga besar TK Azalia.
-                  Siapkan senyum terbaikmu untuk hari pertama sekolah nanti ya!
-                </p>
-              </div>
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter">
+                Siswa Berhasil Diterima
+              </h1>
+              <p className="text-xl text-emerald-50/80 font-medium">
+                Kami sangat senang menyambut Anda sebagai bagian dari keluarga besar TK Azalia. Mari kita mulai perjalanan belajar yang menyenangkan bersama!
+              </p>
+            </div>
 
-              {catatan && (
-                <div className="mt-4 p-4 bg-white/70 backdrop-blur-md rounded-2xl border border-emerald-100 shadow-sm text-sm text-emerald-900">
-                  <span className="font-bold mr-1">Pesan dari Sekolah:</span> {catatan}
-                </div>
-              )}
+            {catatan && (
+              <div className="w-full max-w-xl p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-emerald-50 font-medium italic">
+                "{catatan}"
+              </div>
+            )}
+
+            <div className="flex flex-wrap justify-center gap-4 pt-4">
+              <div className="px-6 py-3 rounded-2xl bg-white text-emerald-700 font-bold shadow-xl">
+                Cetak Bukti Kelulusan
+              </div>
+              <div className="px-6 py-3 rounded-2xl bg-emerald-500 text-white font-bold border border-emerald-400 shadow-lg">
+                Panduan Daftar Ulang
+              </div>
             </div>
           </div>
         </motion.div>
@@ -119,33 +118,30 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-50 via-orange-50 to-rose-100 border border-rose-200 p-6 shadow-md"
+          className="relative overflow-hidden rounded-[2.5rem] bg-white border border-rose-100 p-8 md:p-12 shadow-2xl shadow-rose-100"
         >
-          <div className="relative flex flex-col md:flex-row gap-6 items-center text-center md:text-left">
-            <div className="shrink-0 relative">
+          <div className="relative flex flex-col md:flex-row gap-12 items-center">
+            <div className="shrink-0 grayscale">
               <RejectMascot />
             </div>
 
-            <div className="flex-1 space-y-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm text-rose-800 text-xs font-bold uppercase tracking-wide shadow-sm ring-1 ring-rose-100">
-                <XCircle className="w-3.5 h-3.5" />
-                Belum Diterima
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-[0.2em]">
+                Hasil Seleksi Diumumkan
               </div>
 
-              <div>
-                <h3 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-800 to-orange-700">
-                  Tetap Semangat Ya!
-                </h3>
-                <p className="mt-2 text-rose-800/80 font-medium leading-relaxed max-w-xl">
-                  Jangan berkecil hati. Kamu tetap hebat dan istimewa!
-                  Mungkin saat ini belum berjodoh, tapi masa depan cerah menantimu. Teruslah belajar dan bermain!
+              <div className="space-y-3">
+                <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+                  Tetap Semangat!
+                </h1>
+                <p className="text-lg text-slate-500 font-medium max-w-xl leading-relaxed">
+                  Kami sangat menghargai pendaftaran Anda. Mohon maaf, untuk saat ini pendaftaran Anda belum dapat diterima. Jangan berkecil hati, perjalanan masih panjang dan penuh harapan!
                 </p>
               </div>
 
               {catatan && (
-                <div className="mt-4 p-4 bg-white/70 backdrop-blur-md rounded-2xl border border-rose-100 shadow-sm text-sm text-rose-900">
-                  <span className="font-bold mr-1">📝 Catatan:</span> {catatan}
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-slate-600 italic">
+                  <span className="font-bold text-slate-900 not-italic NOT-ITALIC">Pesan dari Sekolah:</span> {catatan}
                 </div>
               )}
             </div>
@@ -154,64 +150,61 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
       );
     }
 
-    // Default: Menunggu / Diproses - Data sudah lengkap
+    // Default: Menunggu / Diproses
     return (
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        className="relative overflow-hidden rounded-3xl bg-white border border-slate-200 p-6 shadow-sm group hover:shadow-md transition-all duration-300"
+        className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-200 p-8 md:p-16 text-center shadow-2xl shadow-slate-200/50"
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none opacity-50" />
-
-        <div className="relative flex flex-col md:flex-row gap-6 items-center text-center md:text-left">
-          <div className="shrink-0 relative">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50/50 rounded-full blur-[100px] -mr-32 -mt-32" />
+        
+        <div className="relative flex flex-col items-center space-y-10">
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue-400 blur-3xl opacity-20 animate-pulse" />
             <ProcessingMascot />
           </div>
 
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-bold border border-amber-100 uppercase tracking-wider flex items-center gap-1.5">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="w-3 h-3 border-2 border-amber-600 border-t-transparent rounded-full"
-                />
-                Menunggu Hasil
-              </span>
-              <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                Verifikasi Admin
-              </span>
+          <div className="space-y-6 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] ring-1 ring-blue-100">
+              Data Sedang Diverifikasi
             </div>
+            
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter">
+              Sedang Dalam Proses
+            </h1>
+            
+            <p className="text-lg text-slate-500 font-medium leading-relaxed">
+              Terima kasih! Kami telah menerima dokumen Anda. Saat ini tim admin sedang melakukan verifikasi data secara menyeluruh. Pengumuman akan muncul di halaman ini segera setelah proses selesai.
+            </p>
 
-            <div>
-              <h3 className="text-xl md:text-2xl font-bold text-slate-800">
-                Data Anda Sedang Diverifikasi...
-              </h3>
-              <p className="mt-2 text-slate-500 font-medium leading-relaxed max-w-lg">
-                Terima kasih telah melengkapi semua data pendaftaran! Tim admin kami sedang memeriksa kelengkapan berkas dan data Anda.
-                Pengumuman hasil akan diumumkan sesuai jadwal yang telah ditentukan. 🔍
-              </p>
-            </div>
-
-            <div className="mt-4 p-4 bg-amber-50 rounded-2xl border border-amber-200">
-              <p className="text-xs font-semibold text-amber-900 mb-2">💡 Tips:</p>
-              <p className="text-sm text-amber-800">
-                Pastikan nomor WhatsApp Anda aktif untuk menerima notifikasi pengumuman hasil PPDB.
-              </p>
-            </div>
-
-            {catatan && (
-              <div className="mt-4 text-sm text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-start gap-3 text-left">
-                <AlertCircle className="w-5 h-5 text-slate-400 mt-0.5 shrink-0" />
-                <div>
-                  <span className="font-bold text-slate-700 block mb-1">Catatan:</span>
-                  {catatan}
+            <div className="flex items-center justify-center gap-8 py-6">
+              {[
+                { label: "Data Diterima", active: true },
+                { label: "Verifikasi", active: true, loading: true },
+                { label: "Hasil Akhir", active: false },
+              ].map((step, i) => (
+                <div key={i} className="flex flex-col items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+                    step.active 
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200" 
+                    : "bg-slate-100 text-slate-400"
+                  } ${step.loading ? "animate-pulse" : ""}`}>
+                    {i + 1}
+                  </div>
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${step.active ? "text-slate-900" : "text-slate-400"}`}>
+                    {step.label}
+                  </span>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
+
+          {catatan && (
+            <div className="w-full max-w-xl p-6 bg-slate-50/50 rounded-2xl border border-slate-200/50 text-slate-600 text-sm italic">
+               <span className="font-bold text-slate-900 not-italic">Catatan:</span> {catatan}
+            </div>
+          )}
         </div>
       </motion.div>
     );

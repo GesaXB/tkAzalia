@@ -1,7 +1,7 @@
 import { apiRequest } from './api';
 import { getToken } from './session';
 
-export interface PpdbStatus {
+export interface SpmbStatus {
   status_ppdb: string;
   catatan_ppdb: string | null;
 }
@@ -109,8 +109,8 @@ export async function ensureSiswa() {
   }, true);
 }
 
-export async function getPpdbStatus() {
-  return apiRequest<PpdbStatus>('/api/ppdb/status', {
+export async function getSpmbStatus() {
+  return apiRequest<SpmbStatus>('/api/ppdb/status', {
     method: 'GET',
   }, true);
 }

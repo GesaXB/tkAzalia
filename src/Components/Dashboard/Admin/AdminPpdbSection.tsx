@@ -79,8 +79,8 @@ export default function AdminPpdbSection({
 
   return (
     <SectionCard
-      title="Penerimaan PPDB"
-      description="Lihat berkas calon siswa dan beri keputusan lulus / tidak lulus. Klik peserta untuk melihat file dan memutuskan."
+      title="Data Pendaftar SPMB"
+      description="Daftar seluruh calon siswa yang mendaftar online."
     >
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4 relative">
@@ -155,7 +155,7 @@ export default function AdminPpdbSection({
           <div className="py-12 text-center rounded-xl border border-dashed border-gray-200 bg-gray-50">
             <p className="text-sm text-gray-500">
               {ppdbList.length === 0
-                ? "Belum ada data PPDB."
+                ? "Belum ada data SPMB."
                 : "Tidak ada peserta yang cocok dengan filter."}
             </p>
           </div>

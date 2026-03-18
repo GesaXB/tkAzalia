@@ -1,4 +1,4 @@
-import { updateBerkasValidasi } from '@/lib/admin/ppdb';
+import { updateBerkasValidasi } from '@/lib/admin/spmb';
 import { AuthenticatedRequest, authMiddleware } from '@/lib/middleware/auth';
 import { ApiResponse } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';

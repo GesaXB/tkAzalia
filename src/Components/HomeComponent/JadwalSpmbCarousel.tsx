@@ -77,7 +77,7 @@ export default function JadwalPpdbCarousel() {
   const items = jadwal
     ? [
       {
-        title: "Jadwal PPDB",
+        title: "Jadwal SPMB",
         content: `${formatDateId(jadwal.tanggal_mulai)} — ${formatDateId(jadwal.tanggal_selesai)}`,
         status: jadwal.dibuka ? "Dibuka" : "Ditutup",
         cta: jadwal.dibuka ? "Daftar" : null,
@@ -93,7 +93,7 @@ export default function JadwalPpdbCarousel() {
     ]
     : [
       {
-        title: "PPDB TK Azalia",
+        title: "SPMB TK Azalia",
         content: "Jadwal pendaftaran akan segera diumumkan",
         status: "Menunggu",
         cta: null,

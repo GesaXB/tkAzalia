@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { AuthService } from '@/lib/auth';
-import { checkPpdbOpen } from '@/lib/ppdbSetting';
+import { checkSpmbOpen } from '@/lib/spmbSetting';
 import { ApiResponse, RegisterData } from '@/types';
 
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {

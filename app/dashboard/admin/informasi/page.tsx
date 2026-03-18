@@ -169,7 +169,6 @@ export default function AdminInformasiPage() {
   };
 
   const handleDeleteInfo = async (info_id: number) => {
-    if (!confirm("Yakin ingin menghapus informasi ini?")) return;
     setError(null);
     const response = await deleteInformasiSekolah(info_id);
     if (!response.success) {

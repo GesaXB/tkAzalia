@@ -170,9 +170,9 @@ export default function AdminPpdbDetailPage() {
 
   useEffect(() => {
     if (siswa) {
-      setDashboardInfo("Penerimaan PPDB", `Detail peserta · ${siswa.user.nama_lengkap}`);
+      setDashboardInfo("Penerimaan SPMB", `Detail peserta · ${siswa.user.nama_lengkap}`);
     } else {
-      setDashboardInfo("Penerimaan PPDB", "Detail peserta");
+      setDashboardInfo("Penerimaan SPMB", "Detail peserta");
     }
   }, [siswa, setDashboardInfo]);
 
@@ -288,7 +288,7 @@ export default function AdminPpdbDetailPage() {
           className="inline-flex items-center gap-2 mt-4 text-[#01793B] font-medium hover:underline"
         >
           <ArrowLeft size={18} />
-          Kembali ke daftar PPDB
+          Kembali ke daftar SPMB
         </Link>
       </>
     );
@@ -304,7 +304,7 @@ export default function AdminPpdbDetailPage() {
           className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-[#01793B]"
         >
           <ArrowLeft size={18} />
-          Kembali ke daftar PPDB
+          Kembali ke daftar SPMB
         </Link>
 
         {error && (
@@ -494,7 +494,7 @@ export default function AdminPpdbDetailPage() {
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-6 flex items-center gap-2">
               <CheckCircle size={18} className="text-[#01793B]" />
-              Keputusan PPDB
+              Keputusan SPMB
             </h2>
             <div className="grid sm:grid-cols-2 gap-6">
               <div className="space-y-4 sm:col-span-1">

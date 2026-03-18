@@ -1,37 +1,13 @@
 "use client";
 
-import { ensureSiswa, getPpdbStatus, listBerkas, getSiswaMe, getListKelas } from "@/lib/client/ppdb";
+import { ensureSiswa, getSpmbStatus, listBerkas, getSiswaMe, getListKelas } from "@/lib/client/spmb";
 import { getJadwalPpdb } from "@/lib/client/public";
 import { motion } from "framer-motion";
-import { AlertCircle, FileCheck, Upload, BookOpen, CheckCircle2, Check, X } from "lucide-react";
+import { FileCheck, Upload, BookOpen, Check, X, ArrowRight, Clock, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import StatCard from "./StatCard";
-import StatusTeaserCard from "./StatusTeaserCard";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring" as const,
-      stiffness: 300,
-      damping: 24
-    }
-  }
-};
+import SpmbCountdown from "./Siswa/SpmbCountdown";
 
 interface SiswaData {
   siswa_id: number;
@@ -55,16 +31,22 @@ interface KelasData {
   nama: string;
 }
 
+const STATUS_MAP: Record<string, { label: string; color: string; bg: string; dot: string }> = {
+  menunggu: { label: "Menunggu", color: "text-amber-700", bg: "bg-amber-50 border-amber-100", dot: "bg-amber-400" },
+  lulus: { label: "Diterima", color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-100", dot: "bg-emerald-500" },
+  tidak_lulus: { label: "Tidak Diterima", color: "text-rose-700", bg: "bg-rose-50 border-rose-100", dot: "bg-rose-500" },
+};
+
 export default function SiswaDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [statusPpdb, setStatusPpdb] = useState<string>("—");
+  const [statusPpdb, setStatusPpdb] = useState<string>("menunggu");
   const [berkasCount, setBerkasCount] = useState(0);
-  const [ppdbDibuka, setPpdbDibuka] = useState(true);
+  const [spmbInfo, setSpmbInfo] = useState<{ opened: boolean; tanggalSelesai: string }>({ opened: true, tanggalSelesai: "" });
   const [siswaData, setSiswaData] = useState<SiswaData | null>(null);
-  const [selectedKelas, setSelectedKelas] = useState<KelasData | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showDataModal, setShowDataModal] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -72,7 +54,7 @@ export default function SiswaDashboard() {
       setError(null);
       await ensureSiswa();
       const [statusRes, berkasRes, jadwalRes, siswaRes, kelasRes] = await Promise.all([
-        getPpdbStatus(),
+        getSpmbStatus(),
         listBerkas(),
         getJadwalPpdb(),
         getSiswaMe(),
@@ -80,278 +62,216 @@ export default function SiswaDashboard() {
       ]);
       if (!statusRes.success) setError(statusRes.error || "Gagal memuat status");
       if (!berkasRes.success) setError(berkasRes.error || "Gagal memuat berkas");
-
-      setStatusPpdb(statusRes.data?.status_ppdb ?? "—");
+      setStatusPpdb(statusRes.data?.status_ppdb ?? "menunggu");
       setBerkasCount((berkasRes.data || []).length);
-      setPpdbDibuka(jadwalRes.success && jadwalRes.data?.dibuka === true);
-
+      setSpmbInfo({
+        opened: jadwalRes.success && jadwalRes.data?.dibuka === true,
+        tanggalSelesai: jadwalRes.success && jadwalRes.data ? (jadwalRes.data as any).tanggal_selesai : "",
+      });
       if (siswaRes.success && siswaRes.data) {
         setSiswaData(siswaRes.data);
-
-        if (siswaRes.data.kelas_id && kelasRes.success && kelasRes.data) {
-          const selected = kelasRes.data.find(k => k.kelas_id === siswaRes.data?.kelas_id);
-          if (selected) {
-            setSelectedKelas(selected);
-          }
-        }
       }
       setLoading(false);
     };
     load();
   }, []);
 
-  const isDecisionMade = (status: string) => {
-    const s = status.toLowerCase();
-    return s === "lulus" || s === "tidak_lulus" || s === "diterima" || s === "ditolak" || s === "tidak diterima";
-  };
+  const requirements = [
+    { field: "nama_anak", label: "Nama Anak", section: "Data Calon Siswa" },
+    { field: "tempat_lahir", label: "Tempat Lahir", section: "Data Calon Siswa" },
+    { field: "tanggal_lahir", label: "Tanggal Lahir", section: "Data Calon Siswa" },
+    { field: "jenis_kelamin", label: "Jenis Kelamin", section: "Data Calon Siswa" },
+    { field: "anak_ke", label: "Anak Ke", section: "Data Calon Siswa" },
+    { field: "nama_ayah", label: "Nama Ayah", section: "Data Orang Tua" },
+    { field: "pekerjaan_ayah", label: "Pekerjaan Ayah", section: "Data Orang Tua" },
+    { field: "nama_ibu", label: "Nama Ibu", section: "Data Orang Tua" },
+    { field: "pekerjaan_ibu", label: "Pekerjaan Ibu", section: "Data Orang Tua" },
+    { field: "no_whatsapp", label: "No. WhatsApp", section: "Kontak" },
+    { field: "alamat_rumah", label: "Alamat Rumah", section: "Kontak" },
+    { field: "kelas_id", label: "Pilih Kelas", section: "Kelas" },
+  ];
 
-  const formatStatus = (status: string) => {
-    const statusMap: Record<string, { label: string; color: string; bgColor: string }> = {
-      belum: { label: "Belum Lengkap", color: "text-slate-600", bgColor: "bg-slate-100" },
-      menunggu: { label: "Menunggu Keputusan", color: "text-amber-600", bgColor: "bg-amber-100" },
-      lulus: { label: "Diterima", color: "text-emerald-600", bgColor: "bg-emerald-100" },
-      tidak_lulus: { label: "Ditolak", color: "text-red-600", bgColor: "bg-red-100" },
-    };
-    return statusMap[status.toLowerCase()] || { label: status, color: "text-gray-600", bgColor: "bg-gray-100" };
-  };
+  const getRequirementStatus = () => requirements.map(req => ({
+    ...req,
+    completed: req.field === "kelas_id"
+      ? siswaData?.kelas_id !== null && siswaData?.kelas_id !== undefined
+      : !!(siswaData?.[req.field as keyof SiswaData]),
+  }));
 
-  const getRequirementStatus = () => {
-    if (!siswaData) return [];
+  const completionPct = siswaData
+    ? Math.round(getRequirementStatus().filter(r => r.completed).length / requirements.length * 100)
+    : 0;
 
-    const requirements = [
-      { field: "nama_anak", label: "Nama Anak", section: "Data Calon Siswa" },
-      { field: "tempat_lahir", label: "Tempat Lahir", section: "Data Calon Siswa" },
-      { field: "tanggal_lahir", label: "Tanggal Lahir", section: "Data Calon Siswa" },
-      { field: "jenis_kelamin", label: "Jenis Kelamin", section: "Data Calon Siswa" },
-      { field: "anak_ke", label: "Anak Ke", section: "Data Calon Siswa" },
-      { field: "nama_ayah", label: "Nama Ayah", section: "Data Orang Tua" },
-      { field: "pekerjaan_ayah", label: "Pekerjaan Ayah", section: "Data Orang Tua" },
-      { field: "nama_ibu", label: "Nama Ibu", section: "Data Orang Tua" },
-      { field: "pekerjaan_ibu", label: "Pekerjaan Ibu", section: "Data Orang Tua" },
-      { field: "no_whatsapp", label: "No. WhatsApp", section: "Kontak" },
-      { field: "alamat_rumah", label: "Alamat Rumah", section: "Kontak" },
-      { field: "kelas_id", label: "Pilih Kelas", section: "Kelas" },
-    ];
-
-    return requirements.map(req => ({
-      ...req,
-      completed: req.field === "kelas_id"
-        ? siswaData.kelas_id !== null && siswaData.kelas_id !== undefined
-        : siswaData[req.field as keyof SiswaData] !== null && siswaData[req.field as keyof SiswaData] !== undefined && siswaData[req.field as keyof SiswaData] !== ""
-    }));
-  };
-
-  const getCompletionPercentage = () => {
-    const requirements = getRequirementStatus();
-    const completed = requirements.filter(r => r.completed).length;
-    return Math.round((completed / requirements.length) * 100);
-  };
+  const isDecisionMade = ["lulus", "tidak_lulus", "diterima", "ditolak"].includes(statusPpdb?.toLowerCase());
+  const statusInfo = STATUS_MAP[statusPpdb] ?? STATUS_MAP["menunggu"];
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-slate-500">
-        Memuat dashboard...
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-slate-400">
+          <div className="w-8 h-8 border-4 border-[#01793B]/20 border-t-[#01793B] rounded-full animate-spin" />
+          <span className="text-sm font-medium">Memuat dashboard...</span>
+        </div>
       </div>
     );
   }
 
-  const statusInfo = formatStatus(statusPpdb);
-
   return (
-    <>
+    <div className="space-y-6">
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-2 mb-6">
+        <div className="flex items-center gap-3 text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-2xl px-5 py-3">
+          <AlertCircle size={16} className="shrink-0" />
           {error}
         </div>
       )}
 
-      {!ppdbDibuka && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800">
-          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold">Periode pendaftaran PPDB telah berakhir</p>
-            <p className="text-sm mt-0.5 opacity-90">
-              Upload berkas dan perubahan data PPDB tidak tersedia. Anda hanya dapat melihat status dan berkas yang sudah diunggah.
-            </p>
-          </div>
-        </div>
-      )}
+      {/* SPMB Countdown */}
+      <SpmbCountdown tanggalSelesai={spmbInfo.tanggalSelesai} isOpened={spmbInfo.opened} />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        className="mb-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-      >
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <h2 className="text-sm font-semibold text-slate-900">Kelengkapan Data</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Lengkapi semua data pendaftaran</p>
+      {/* Status + Progress row */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Status SPMB */}
+        <Link
+          href="/dashboard/siswa/status"
+          className={`group rounded-2xl border p-6 flex items-center gap-4 hover:-translate-y-0.5 transition-all shadow-sm ${statusInfo.bg}`}
+        >
+          <div className="relative shrink-0">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-white`}>
+              <FileCheck size={22} className={statusInfo.color} />
+            </div>
+            <span className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${statusInfo.dot} ${isDecisionMade ? "" : "animate-pulse"}`} />
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-24 bg-slate-200 rounded-full h-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Status SPMB</p>
+            <p className={`text-lg font-black mt-0.5 ${statusInfo.color}`}>{statusInfo.label}</p>
+          </div>
+          <ArrowRight size={16} className="text-gray-300 group-hover:text-current transition-colors shrink-0" />
+        </Link>
+
+        {/* Kelengkapan Data */}
+        <button
+          onClick={() => setShowModal(true)}
+          className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all text-left w-full"
+        >
+          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+            <span className="text-xl font-black">{completionPct}%</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Kelengkapan Data</p>
+            <div className="mt-2 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
               <div
-                className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${getCompletionPercentage()}%` }}
+                className={`h-full rounded-full transition-all duration-700 ${completionPct === 100 ? "bg-emerald-500" : "bg-blue-400"}`}
+                style={{ width: `${completionPct}%` }}
               />
             </div>
-            <span className="text-sm font-bold text-slate-900 whitespace-nowrap">{getCompletionPercentage()}%</span>
           </div>
-        </div>
+          <ArrowRight size={16} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
+        </button>
+      </div>
 
-        {getCompletionPercentage() < 100 && (
-          <div className="text-xs text-slate-600 space-y-1 pt-2 border-t border-slate-100">
-            <p className="font-medium mb-2">Data yang belum diisi:</p>
-            <div className="flex flex-wrap gap-2">
-              {getRequirementStatus()
-                .filter(r => !r.completed)
-                .map((req) => (
-                  <span key={req.field} className="px-2 py-1 rounded bg-red-50 text-red-700 text-xs">
-                    {req.label}
-                  </span>
-                ))}
+      {/* Quick action cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Berkas */}
+        <Link
+          href="/dashboard/siswa/berkas"
+          className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all"
+        >
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-[#01793B]">
+            <Upload size={20} />
+          </div>
+          <div className="flex-1">
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Berkas Diunggah</p>
+            <p className="text-3xl font-black text-gray-900 mt-0.5">{berkasCount}</p>
+          </div>
+          <ArrowRight size={16} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
+        </Link>
+
+        {/* Isi Data */}
+        {spmbInfo.opened ? (
+          <button
+            onClick={() => setShowDataModal(true)}
+            className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all text-left w-full"
+          >
+            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
+              <BookOpen size={20} />
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-gray-900 text-sm">Data Pendaftaran</p>
+              <p className="text-xs text-gray-400 mt-0.5">Isi formulir &amp; upload berkas</p>
+            </div>
+            <ArrowRight size={16} className="text-gray-300 group-hover:text-blue-400 transition-colors" />
+          </button>
+        ) : (
+          <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 flex items-center gap-4 opacity-60">
+            <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400">
+              <BookOpen size={20} />
+            </div>
+            <div>
+              <p className="font-bold text-slate-600 text-sm">Data Pendaftaran</p>
+              <p className="text-xs text-slate-400 mt-0.5">SPMB telah berakhir</p>
             </div>
           </div>
         )}
-      </motion.div>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        <motion.div variants={itemVariants}>
-          {isDecisionMade(statusPpdb) ? (
-            <StatusTeaserCard href="/dashboard/siswa/status" />
-          ) : (
-            <StatCard
-              title="Status PPDB"
-              value={statusPpdb}
-              href="/dashboard/siswa/status"
-              icon={<FileCheck className="h-5 w-5" />}
-              description="Status pendaftaran Anda"
-            />
-          )}
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          <StatCard
-            title="Berkas Diunggah"
-            value={berkasCount}
-            href="/dashboard/siswa/berkas"
-            icon={<Upload className="h-5 w-5" />}
-            description="Dokumen PPDB"
-          />
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          {ppdbDibuka ? (
-            <button
-              onClick={() => setShowModal(true)}
-              className="block w-full h-full"
-            >
-              <motion.div
-                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm flex items-center gap-4 text-left hover:border-blue-300 hover:shadow-md transition-all"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
-                  <BookOpen className="h-6 w-6" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Data Pendaftaran</p>
-                  <p className="text-sm text-slate-500">Lengkapi formulir</p>
-                </div>
-              </motion.div>
-            </button>
-          ) : (
-            <div className="rounded-2xl border border-slate-200/80 bg-slate-50 p-6 flex items-center gap-4 opacity-80 h-full">
-              <div className="w-12 h-12 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
-                <BookOpen className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-600">Data Pendaftaran</p>
-                <p className="text-sm text-slate-500">Tidak tersedia — PPDB telah berakhir</p>
-              </div>
-            </div>
-          )}
-        </motion.div>
-        <motion.div variants={itemVariants}>
-          {ppdbDibuka ? (
-            <Link
-              href="/dashboard/siswa/berkas"
-              className="block h-full"
-            >
-              <motion.div
-                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm flex items-center gap-4"
-                whileHover={{ scale: 1.02, y: -2, boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
-                  <Upload className="h-6 w-6" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Upload Berkas</p>
-                  <p className="text-sm text-slate-500">Lengkapi dokumen PPDB</p>
-                </div>
-              </motion.div>
-            </Link>
-          ) : (
-            <div className="rounded-2xl border border-slate-200/80 bg-slate-50 p-6 flex items-center gap-4 opacity-80 h-full">
-              <div className="w-12 h-12 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
-                <Upload className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-600">Upload Berkas</p>
-                <p className="text-sm text-slate-500">Tidak tersedia — PPDB telah berakhir</p>
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
+        {/* Status */}
+        <Link
+          href="/dashboard/siswa/status"
+          className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all"
+        >
+          <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
+            <Clock size={20} />
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-gray-900 text-sm">Status Pendaftaran</p>
+            <p className="text-xs text-gray-400 mt-0.5">Lihat hasil &amp; keputusan</p>
+          </div>
+          <ArrowRight size={16} className="text-gray-300 group-hover:text-amber-400 transition-colors" />
+        </Link>
+      </div>
 
+      {/* Checklist Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 24 }}
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4">
-              <h2 className="text-lg font-bold text-slate-900">Kelengkapan Data Pendaftaran</h2>
-              <p className="text-sm text-slate-500 mt-1">Pastikan semua data sudah diisi sebelum melanjutkan</p>
+              <h2 className="text-lg font-bold text-gray-900">Kelengkapan Data</h2>
+              <p className="text-sm text-gray-400 mt-0.5">{completionPct}% sudah diisi</p>
             </div>
 
-            <div className="p-6 space-y-6">
-              <div className="space-y-3">
-                {Object.entries(Object.groupBy(getRequirementStatus(), (item) => item.section) || {}).map(([section, items]) => (
-                  <div key={section}>
-                    <h3 className="text-xs font-semibold text-slate-600 uppercase mb-2">{section}</h3>
-                    <div className="space-y-2">
-                      {items?.map((req: any) => (
-                        <div key={req.field} className="flex items-center gap-2 text-sm">
-                          {req.completed ? (
-                            <Check className="h-4 w-4 text-emerald-600 shrink-0" />
-                          ) : (
-                            <X className="h-4 w-4 text-red-400 shrink-0" />
-                          )}
-                          <span className={req.completed ? "text-slate-700" : "text-slate-400"}>
-                            {req.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+            <div className="p-6 space-y-5">
+              {Object.entries(
+                getRequirementStatus().reduce((acc: Record<string, ReturnType<typeof getRequirementStatus>>, item) => {
+                  if (!acc[item.section]) acc[item.section] = [];
+                  acc[item.section].push(item);
+                  return acc;
+                }, {})
+              ).map(([section, items]) => (
+                <div key={section}>
+                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{section}</h3>
+                  <div className="space-y-1.5">
+                    {items.map((req) => (
+                      <div key={req.field} className="flex items-center gap-2.5 text-sm">
+                        {req.completed ? (
+                          <Check className="h-4 w-4 text-emerald-500 shrink-0" />
+                        ) : (
+                          <X className="h-4 w-4 text-red-400 shrink-0" />
+                        )}
+                        <span className={req.completed ? "text-gray-700" : "text-gray-400"}>
+                          {req.label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
 
-              {getCompletionPercentage() < 100 && (
-                <div className="rounded-xl bg-amber-50 border border-amber-100 p-3">
-                  <p className="text-sm text-amber-800">
-                    <strong>Catatan:</strong> {12 - getRequirementStatus().filter(r => r.completed).length} data masih perlu dilengkapi.
-                  </p>
+              {completionPct < 100 && (
+                <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-700">
+                  {getRequirementStatus().filter(r => !r.completed).length} data masih perlu dilengkapi.
                 </div>
               )}
             </div>
@@ -359,22 +279,92 @@ export default function SiswaDashboard() {
             <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-2 rounded-lg border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
               >
                 Kembali
               </button>
               <button
-                onClick={() => {
-                  setShowModal(false);
-                  router.push("/dashboard/siswa/data-siswa");
-                }}
-                className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+                onClick={() => { setShowModal(false); router.push("/dashboard/siswa/data-spmb"); }}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-[#01793B] text-white text-sm font-bold hover:bg-emerald-700 transition-colors"
               >
-                Lanjut ke Form
+                Isi Formulir
               </button>
             </div>
           </motion.div>
         </div>
-      )}    </>
+      )}
+
+      {/* Data Pendaftaran Modal */}
+      {showDataModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-sm w-full"
+          >
+            <div className="px-6 py-5 border-b border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900">Data Pendaftaran</h2>
+              <p className="text-sm text-gray-400 mt-0.5">Pilih bagian yang ingin dilengkapi</p>
+            </div>
+
+            <div className="p-4 space-y-2">
+              <Link
+                href="/dashboard/siswa/data-siswa"
+                onClick={() => setShowDataModal(false)}
+                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-emerald-50 border border-gray-100 hover:border-emerald-100 transition-all"
+              >
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#01793B] shrink-0">
+                  <BookOpen size={18} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-sm text-gray-900">Data Calon Siswa</p>
+                  <p className="text-xs text-gray-400">Nama, lahir, jenis kelamin, dll.</p>
+                </div>
+                <ArrowRight size={15} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
+              </Link>
+
+              <Link
+                href="/dashboard/siswa/data-ortu"
+                onClick={() => setShowDataModal(false)}
+                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-blue-50 border border-gray-100 hover:border-blue-100 transition-all"
+              >
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                  <BookOpen size={18} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-sm text-gray-900">Data Orang Tua</p>
+                  <p className="text-xs text-gray-400">Nama ayah, ibu, pekerjaan, kontak.</p>
+                </div>
+                <ArrowRight size={15} className="text-gray-300 group-hover:text-blue-400 transition-colors" />
+              </Link>
+
+              <Link
+                href="/dashboard/siswa/berkas"
+                onClick={() => setShowDataModal(false)}
+                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-amber-50 border border-gray-100 hover:border-amber-100 transition-all"
+              >
+                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                  <Upload size={18} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-sm text-gray-900">Upload Berkas</p>
+                  <p className="text-xs text-gray-400">Akta, KK, KTP, pas foto, dll.</p>
+                </div>
+                <ArrowRight size={15} className="text-gray-300 group-hover:text-amber-400 transition-colors" />
+              </Link>
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-100">
+              <button
+                onClick={() => setShowDataModal(false)}
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
+              >
+                Tutup
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </div>
   );
 }

@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useToast } from "@/context/ToastContext";
 import FormInput from "./FormInput";
 import {
   IconEmail,
@@ -24,6 +25,7 @@ import {
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { error: toastError, success: toastSuccess } = useToast();
   const [formData, setFormData] = useState({
     namaLengkap: "",
     username: "",
@@ -55,6 +57,7 @@ export default function RegisterForm() {
     const validationError = validateRegisterForm(formData);
     if (validationError) {
       setError(validationError.message);
+      toastError(validationError.message);
       return;
     }
 
@@ -69,11 +72,14 @@ export default function RegisterForm() {
 
     if (!registerResponse.success) {
       setLoading(false);
-      setError(registerResponse.error || "Registrasi gagal");
+      const msg = registerResponse.error || "Registrasi gagal";
+      setError(msg);
+      toastError(msg);
       return;
     }
 
     setLoading(false);
+    toastSuccess("Registrasi berhasil! Silakan masuk.");
     router.push("/auth/login?registered=true");
   };
 
@@ -104,7 +110,7 @@ export default function RegisterForm() {
 
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Buat Akun Baru</h1>
-            <p className="text-slate-500 text-sm">Lengkapi data diri Anda untuk mendaftar PPDB</p>
+            <p className="text-slate-500 text-sm mt-2">Daftar sekarang untuk menjadi bagian dari TK Azalia</p>
           </div>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -180,7 +186,7 @@ export default function RegisterForm() {
                 </Link>{" "}
                 dan{" "}
                 <Link href="/privacy-policy" className="text-[#01793B] hover:underline">
-                  Kebijakan Privasi
+                  Penerimaan Murid Baru (SPMB)
                 </Link>
               </label>
             </div>
@@ -277,7 +283,7 @@ export default function RegisterForm() {
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">PPDB Online Mudah</span>
+                <span className="font-medium">SPMB Online Mudah</span>
               </div>
               <div className="flex items-center justify-center gap-3 text-emerald-50 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { User, Home, Phone, Save, CheckCircle2, AlertCircle } from "lucide-react";
-import { getSiswaMe, updateSiswaData } from "@/lib/client/ppdb";
+import { getSiswaMe, updateSiswaData } from "@/lib/client/spmb";
 
 export default function SiswaDataPpdbPage() {
   const [saving, setSaving] = useState(false);
@@ -72,10 +72,10 @@ export default function SiswaDataPpdbPage() {
 
       setSaving(false);
       if (!res.success) {
-        setError(res.error || "Gagal menyimpan data PPDB");
+        setError(res.error || "Gagal menyimpan data SPMB");
         return;
       }
-      setSuccessMessage("Data PPDB berhasil disimpan");
+      setSuccessMessage("Data SPMB berhasil disimpan");
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setSaving(false);
@@ -111,7 +111,7 @@ export default function SiswaDataPpdbPage() {
             <User className="w-6 h-6 text-[#01793B]" />
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">Data Pendaftaran PPDB</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Data Pendaftaran SPMB</h1>
             <p className="text-gray-600 mt-2 leading-relaxed">
               Lengkapi semua informasi data pribadi dan data orang tua/wali dengan benar dan sesuai dengan dokumen asli Anda.
             </p>

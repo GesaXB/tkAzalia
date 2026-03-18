@@ -26,7 +26,7 @@ export default function AdminDataPendaftarPage() {
       ]);
 
       if (!ppdbResponse.success) {
-        setError(ppdbResponse.error || "Gagal memuat data PPDB");
+        setError(ppdbResponse.error || "Gagal memuat data SPMB");
       } else {
         setPpdbList(ppdbResponse.data || []);
       }

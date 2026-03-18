@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "@/Components/layout/Navbar";
 import Footer from "@/Components/layout/Footer";
-import JadwalPpdbCarousel from "@/Components/HomeComponent/JadwalPpdbCarousel";
+import JadwalSpmbCarousel from "@/Components/HomeComponent/JadwalSpmbCarousel";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,7 +20,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
       {showJadwal && (
         <div className="fixed left-0 right-0 top-16 z-40">
-          <JadwalPpdbCarousel />
+          <JadwalSpmbCarousel />
         </div>
       )}
       <main

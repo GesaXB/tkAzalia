@@ -14,7 +14,7 @@ export default function SiswaPanduanPpdbPage() {
       setError(null);
       const infoRes = await listInformasiPublik();
       if (!infoRes.success) {
-        setError(infoRes.error || "Gagal memuat informasi PPDB");
+        setError(infoRes.error || "Gagal memuat informasi SPMB");
       } else {
         setInformasi(infoRes.data || []);
       }
@@ -43,13 +43,13 @@ export default function SiswaPanduanPpdbPage() {
     },
     {
       title: "4. Verifikasi Data oleh Admin",
-      desc: "Admin TK Azalia akan memeriksa kelengkapan data dan berkas Anda. Pantau status verifikasi secara berkala di menu 'Status PPDB'.",
+      desc: "Admin TK Azalia akan memeriksa kelengkapan data dan berkas Anda. Pantau status verifikasi secara berkala di menu 'Status SPMB'.",
       icon: <FileCheck className="w-6 h-6" />,
       color: "bg-amber-100 text-amber-600",
     },
     {
       title: "5. Pengumuman Hasil Seleksi",
-      desc: "Cek hasil akhir pendaftaran di menu 'Status PPDB'. Jika diterima, ikuti petunjuk daftar ulang dari sekolah TK Azalia.",
+      desc: "Cek hasil akhir pendaftaran di menu 'Status SPMB'. Jika diterima, ikuti petunjuk daftar ulang dari sekolah TK Azalia.",
       icon: <CheckCircle className="w-6 h-6" />,
       color: "bg-rose-100 text-rose-600",
     },

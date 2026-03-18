@@ -1,12 +1,12 @@
 import { prisma } from '@/lib/prisma';
 
-export interface PpdbJadwal {
+export interface SpmbJadwal {
   id: number;
   tanggal_mulai: string;
   tanggal_selesai: string;
 }
 
-export async function getPpdbJadwal() {
+export async function getSpmbJadwal() {
   const row = await prisma.ppdbSetting.findFirst({
     orderBy: { id: 'desc' },
   });
@@ -18,7 +18,7 @@ export async function getPpdbJadwal() {
   };
 }
 
-export function isPpdbOpen(jadwal: PpdbJadwal | null): boolean {
+export function isSpmbOpen(jadwal: SpmbJadwal | null): boolean {
   if (!jadwal) return false;
   const now = new Date();
   const mulai = new Date(jadwal.tanggal_mulai);
@@ -26,10 +26,10 @@ export function isPpdbOpen(jadwal: PpdbJadwal | null): boolean {
   return now >= mulai && now <= selesai;
 }
 
-export async function checkPpdbOpen(): Promise<{ open: boolean; message?: string }> {
-  const jadwal = await getPpdbJadwal();
+export async function checkSpmbOpen(): Promise<{ open: boolean; message?: string }> {
+  const jadwal = await getSpmbJadwal();
   if (!jadwal) {
-    return { open: false, message: 'Jadwal PPDB belum diatur. Hubungi admin.' };
+    return { open: false, message: 'Jadwal SPMB belum diatur. Hubungi admin.' };
   }
   const now = new Date();
   const mulai = new Date(jadwal.tanggal_mulai);
@@ -38,12 +38,12 @@ export async function checkPpdbOpen(): Promise<{ open: boolean; message?: string
     return { open: false, message: `Pendaftaran belum dibuka. Dibuka pada ${mulai.toLocaleDateString('id-ID')}.` };
   }
   if (now > selesai) {
-    return { open: false, message: 'Periode pendaftaran PPDB telah berakhir.' };
+    return { open: false, message: 'Periode pendaftaran SPMB telah berakhir.' };
   }
   return { open: true };
 }
 
-export async function upsertPpdbJadwal(tanggalMulai: Date, tanggalSelesai: Date) {
+export async function upsertSpmbJadwal(tanggalMulai: Date, tanggalSelesai: Date) {
   const existing = await prisma.ppdbSetting.findFirst({ orderBy: { id: 'desc' } });
   if (existing) {
     return prisma.ppdbSetting.update({
@@ -56,6 +56,6 @@ export async function upsertPpdbJadwal(tanggalMulai: Date, tanggalSelesai: Date)
   });
 }
 
-export async function resetPpdbJadwal() {
+export async function resetSpmbJadwal() {
   await prisma.ppdbSetting.deleteMany({});
 }

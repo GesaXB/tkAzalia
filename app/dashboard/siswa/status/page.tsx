@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SiswaStatusSection from "@/Components/Dashboard/Siswa/SiswaStatusSection";
-import { ensureSiswa, getPpdbStatus } from "@/lib/client/ppdb";
+import { ensureSiswa, getSpmbStatus } from "@/lib/client/spmb";
 
 export default function SiswaStatusPage() {
   const [error, setError] = useState<string | null>(null);
@@ -14,9 +14,9 @@ export default function SiswaStatusPage() {
     const load = async () => {
       setError(null);
       await ensureSiswa();
-      const statusResponse = await getPpdbStatus();
+      const statusResponse = await getSpmbStatus();
       if (!statusResponse.success) {
-        setError(statusResponse.error || "Gagal memuat status PPDB");
+        setError(statusResponse.error || "Gagal memuat status SPMB");
       }
       setStatus(statusResponse.data || null);
     };

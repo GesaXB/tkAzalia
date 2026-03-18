@@ -7,7 +7,7 @@ import {
   updateBerkasSiswa,
   deleteBerkasSiswa,
 } from '@/lib/ppdb';
-import { checkPpdbOpen } from '@/lib/ppdbSetting';
+import { checkSpmbOpen } from '@/lib/spmbSetting';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -18,10 +18,10 @@ async function patchHandler(
   context: RouteContext
 ): Promise<NextResponse<ApiResponse>> {
   if (req.user.role !== 'admin') {
-    const ppdb = await checkPpdbOpen();
-    if (!ppdb.open) {
+    const spmbStatus = await checkSpmbOpen();
+    if (!spmbStatus.open) {
       return NextResponse.json(
-        { success: false, error: ppdb.message || 'PPDB tidak dibuka' },
+        { success: false, error: spmbStatus.message || 'SPMB tidak dibuka' },
         { status: 403 }
       );
     }
@@ -72,10 +72,10 @@ async function deleteHandler(
   context: RouteContext
 ): Promise<NextResponse<ApiResponse>> {
   if (req.user.role !== 'admin') {
-    const ppdb = await checkPpdbOpen();
-    if (!ppdb.open) {
+    const spmbStatus = await checkSpmbOpen();
+    if (!spmbStatus.open) {
       return NextResponse.json(
-        { success: false, error: ppdb.message || 'PPDB tidak dibuka' },
+        { success: false, error: spmbStatus.message || 'SPMB tidak dibuka' },
         { status: 403 }
       );
     }

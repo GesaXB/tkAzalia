@@ -28,6 +28,7 @@ export async function apiRequest<T>(
     data = (text ? JSON.parse(text) : {}) as ApiResponse<T>;
   } catch {
     if (!response.ok) {
+      console.error(`API Error: ${response.status} ${response.statusText}`, text ? text.slice(0, 500) : 'Empty response');
       return {
         success: false,
         error: response.status === 500 ? 'Kesalahan server. Cek konsol backend.' : 'Request gagal',

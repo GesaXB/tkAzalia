@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const SISWA_SIDEBAR_ITEMS = [
   { label: "Ringkasan", href: "/dashboard/siswa" },
-  { label: "Panduan PPDB", href: "/dashboard/siswa/panduan" },
+  { label: "Panduan SPMB", href: "/dashboard/siswa/panduan" },
   {
     label: "Data Pendaftaran",
     submenu: [
@@ -18,7 +18,7 @@ const SISWA_SIDEBAR_ITEMS = [
       { label: "Pilih Kelas", href: "/dashboard/siswa/kelas" }
     ]
   },
-  { label: "Status PPDB", href: "/dashboard/siswa/status" },
+  { label: "Status SPMB", href: "/dashboard/siswa/status" },
   {
     label: "Akun",
     submenu: [
@@ -62,7 +62,7 @@ export default function SiswaLayout({
       if (!res || !res.dibuka) {
         setPpdbStatus({ 
           open: false, 
-          message: !res ? "Jadwal PPDB belum diatur." : "Pendaftaran PPDB saat ini sedang ditutup." 
+          message: !res ? "Jadwal SPMB belum diatur." : "Pendaftaran SPMB saat ini sedang ditutup." 
         });
       }
 
@@ -100,17 +100,6 @@ export default function SiswaLayout({
       items={filteredSidebarItems}
       onLogout={handleLogout}
     >
-      {!ppdbStatus.open && (
-        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3 text-amber-800 text-sm font-medium">
-          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-            <span className="text-xl">⚠️</span>
-          </div>
-          <div>
-            <p className="font-bold">Layanan Pendaftaran Terbatas</p>
-            <p className="opacity-80">{ppdbStatus.message} Anda tetap dapat melihat ringkasan dan mengelola akun.</p>
-          </div>
-        </div>
-      )}
       {children}
     </DashboardShell>
   );

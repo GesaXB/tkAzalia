@@ -21,7 +21,7 @@ export default function PpdbCountdown() {
       try {
         const res = await getJadwalPpdb();
         if (!res.success || !res.data) {
-          setError("Jadwal PPDB belum diatur");
+          setError("Jadwal SPMB belum diatur");
           return;
         }
         const jadwal = res.data;
@@ -90,7 +90,7 @@ export default function PpdbCountdown() {
     return (
       <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700">
         <Clock className="w-4 h-4" />
-        <span className="text-xs font-semibold">Periode PPDB Berakhir</span>
+        <span className="text-xs font-semibold">Periode SPMB Berakhir</span>
       </div>
     );
   }
