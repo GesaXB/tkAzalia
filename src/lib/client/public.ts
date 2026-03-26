@@ -55,9 +55,15 @@ export interface PublicKomentar {
   komentar_id: number;
   info_id: number;
   user_id: number | null;
+  parent_id?: number | null;
   nama: string;
   isi: string;
   created_at: string;
+  user?: {
+    user_id: number;
+    nama_lengkap: string;
+    role: string;
+  };
 }
 
 export async function listKomentarByInfoId(infoId: number) {
@@ -66,22 +72,22 @@ export async function listKomentarByInfoId(infoId: number) {
   });
 }
 
-export async function addKomentar(infoId: number, data: { nama: string, isi: string }) {
+export async function addKomentar(infoId: number, data: { nama: string, isi: string, parent_id?: number | null }) {
   return apiRequest<PublicKomentar>(`/api/public/blog/${infoId}/comments`, {
     method: 'POST',
     body: JSON.stringify(data),
-  });
+  }, true);
 }
 
-export async function updateKomentar(komentarId: number, isi: string) {
-  return apiRequest<PublicKomentar>(`/api/public/comments/${komentarId}`, {
+export async function updateKomentar(commentId: number, isi: string) {
+  return apiRequest<PublicKomentar>(`/api/public/comments/${commentId}`, {
     method: 'PATCH',
     body: JSON.stringify({ isi }),
-  });
+  }, true);
 }
 
-export async function publicDeleteKomentar(komentarId: number) {
-  return apiRequest<{ message: string }>(`/api/public/comments/${komentarId}`, {
+export async function publicDeleteKomentar(commentId: number) {
+  return apiRequest<{ message: string }>(`/api/public/comments/${commentId}`, {
     method: 'DELETE',
-  });
+  }, true);
 }

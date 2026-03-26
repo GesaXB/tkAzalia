@@ -7,6 +7,7 @@ export interface TokenPayload {
   userId: number;
   username: string;
   role: string;
+  nama_lengkap?: string;
 }
 
 export class AuthService {

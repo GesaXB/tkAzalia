@@ -44,7 +44,7 @@ export default function SiswaLayout({
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      
+
       // Fetch profile
       const profile = await fetchProfile();
       if (!profile.success || !profile.data) {
@@ -60,9 +60,9 @@ export default function SiswaLayout({
       // Check PPDB Schedule
       const res = await getJadwalPpdb() as any;
       if (!res || !res.dibuka) {
-        setPpdbStatus({ 
-          open: false, 
-          message: !res ? "Jadwal SPMB belum diatur." : "Pendaftaran SPMB saat ini sedang ditutup." 
+        setPpdbStatus({
+          open: false,
+          message: !res ? "Jadwal SPMB belum diatur." : "Pendaftaran SPMB saat ini sedang ditutup."
         });
       }
 

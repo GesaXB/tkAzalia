@@ -33,6 +33,7 @@ function AdminDashboardShellWrapper({ children }: { children: React.ReactNode })
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [profileName, setProfileName] = useState("");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,6 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         router.push("/dashboard/siswa");
         return;
       }
+      setProfileName(profile.data.nama_lengkap);
       setLoading(false);
     };
     checkAuth();

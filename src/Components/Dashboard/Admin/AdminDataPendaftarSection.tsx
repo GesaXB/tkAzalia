@@ -4,8 +4,11 @@ import { AdminPpdbSiswa, KelasItem } from "@/lib/client/admin";
 import {
   ChevronRight,
   Search,
-  Users
+  Users,
+  Download
 } from "lucide-react";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import Link from "next/link";
 import { useMemo, useState, useRef, useEffect } from "react";
 import SectionCard from "../SectionCard";
@@ -84,10 +87,85 @@ export default function AdminDataPendaftarSection({
     return list;
   }, [ppdbList, searchQuery, filterKelas, filterStatus, filterTahun]);
 
+  const handleExportExcel = async () => {
+    try {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Data Pendaftar');
+
+      // Define Columns
+      worksheet.columns = [
+        { header: 'NO', key: 'no', width: 5 },
+        { header: 'PENDAFTAR (ANAK)', key: 'pendaftar', width: 35 },
+        { header: 'KONTAK (ORANG TUA)', key: 'kontak', width: 35 },
+        { header: 'KELAS', key: 'kelas', width: 15 },
+        { header: 'STATUS', key: 'status', width: 15 },
+        { header: 'TANGGAL DAFTAR', key: 'tanggal', width: 25 },
+      ];
+
+      // Styling Header
+      const headerRow = worksheet.getRow(1);
+      headerRow.eachCell((cell) => {
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF01793B' } // Emerald green
+        };
+        cell.font = {
+          color: { argb: 'FFFFFFFF' }, // White
+          bold: true,
+          size: 11
+        };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+      });
+      headerRow.height = 30;
+
+      // Add Data
+      filteredList.forEach((item, index) => {
+        const row = worksheet.addRow({
+          no: index + 1,
+          pendaftar: `${item.nama_anak || item.user.nama_lengkap} (${item.nama_panggilan || "-"})`,
+          kontak: `${item.user.nama_lengkap} (${item.user.email})`,
+          kelas: item.kelas?.nama || "Belum dipilih",
+          status: (item.status_ppdb || "menunggu").toUpperCase(),
+          tanggal: new Date(item.user.created_at).toLocaleString('id-ID'),
+        });
+
+        // Cell Alignment & Border
+        row.eachCell((cell) => {
+          cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+          const colNum = Number(cell.col);
+          if (colNum === 1 || colNum === 4 || colNum === 5) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          }
+        });
+        row.height = 25;
+      });
+
+      // Write File
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `Data_Pendaftar_Azalia_${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (err) {
+      console.error('Export Excel error:', err);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-linear-to-r from-white to-emerald-50/30">
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100 text-[#01793B]">
               <Users size={20} />
@@ -97,6 +175,13 @@ export default function AdminDataPendaftarSection({
               <p className="text-xs text-gray-500 mt-0.5">Kelola data pendaftar dengan mudah dan cepat</p>
             </div>
           </div>
+          <button
+            onClick={handleExportExcel}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#01793B] hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-emerald-200"
+          >
+            <Download size={16} />
+            Export Excel
+          </button>
         </div>
 
         <div className="p-6 space-y-6">

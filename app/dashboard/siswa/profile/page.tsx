@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import SectionCard from "@/Components/Dashboard/SectionCard";
+import { motion, AnimatePresence } from "framer-motion";
 import { fetchProfile, updateProfile, AuthUser } from "@/lib/client/auth";
-import { Lock, User as UserIcon } from "lucide-react";
+import { Lock, User as UserIcon, Mail, Phone, Shield, CheckCircle2, Save, Key, UserCog } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 type TabType = "profil" | "sandi";
 
@@ -14,8 +13,6 @@ export default function SiswaProfilePage() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>("profil");
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [form, setForm] = useState({ nama_lengkap: "", email: "", no_telp: "" });
   const [passwordForm, setPasswordForm] = useState({
@@ -24,20 +21,14 @@ export default function SiswaProfilePage() {
     konfirmasi_sandi: "",
   });
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-
     const tab = searchParams?.get("tab") as TabType;
-    if (tab === "sandi") {
-      setActiveTab("sandi");
-    }
+    if (tab === "sandi") setActiveTab("sandi");
   }, [searchParams]);
 
   useEffect(() => {
     const load = async () => {
-      setError(null);
       const profile = await fetchProfile();
       if (profile.success && profile.data) {
         setUser(profile.data);
@@ -53,47 +44,23 @@ export default function SiswaProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
     setSaving(true);
-    const res = await updateProfile({
-      nama_lengkap: form.nama_lengkap,
-      email: form.email,
-      no_telp: form.no_telp,
-    });
+    const res = await updateProfile(form);
     setSaving(false);
-    if (!res.success) {
-      setError(res.error || "Gagal memperbarui profil");
-      return;
-    }
-    if (res.data) {
+    if (res.success && res.data) {
       setUser(res.data);
-      setSuccessMessage("Profil berhasil diperbarui");
-      setTimeout(() => setSuccessMessage(null), 3000);
+      toast.success("Profil berhasil diperbarui");
+    } else {
+      toast.error(res.error || "Gagal memperbarui profil");
     }
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPasswordError(null);
-    setPasswordSuccess(null);
-
-
-    if (!passwordForm.password_lama || !passwordForm.password_baru || !passwordForm.konfirmasi_sandi) {
-      setPasswordError("Semua field wajib diisi");
-      return;
-    }
-
     if (passwordForm.password_baru !== passwordForm.konfirmasi_sandi) {
-      setPasswordError("Password baru dan konfirmasi tidak cocok");
+      toast.error("Konfirmasi password tidak cocok");
       return;
     }
-
-    if (passwordForm.password_baru.length < 6) {
-      setPasswordError("Password baru minimal 6 karakter");
-      return;
-    }
-
     setPasswordLoading(true);
     try {
       const res = await fetch("/api/auth/change-password", {
@@ -104,210 +71,195 @@ export default function SiswaProfilePage() {
           password_baru: passwordForm.password_baru,
         }),
       });
-
       const data = await res.json();
-
       if (!res.ok || !data.success) {
-        setPasswordError(data.error || "Gagal mengubah password");
-        return;
+        toast.error(data.error || "Gagal mengubah password");
+      } else {
+        toast.success("Password berhasil diubah");
+        setPasswordForm({ password_lama: "", password_baru: "", konfirmasi_sandi: "" });
       }
-
-      setPasswordSuccess("Password berhasil diubah");
-      setPasswordForm({
-        password_lama: "",
-        password_baru: "",
-        konfirmasi_sandi: "",
-      });
-      setTimeout(() => setPasswordSuccess(null), 3000);
     } catch (err) {
-      setPasswordError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      toast.error("Terjadi kesalahan");
     } finally {
       setPasswordLoading(false);
     }
   };
 
-  const tabs = [
-    { id: "profil", label: "Edit Profil", icon: <UserIcon className="w-4 h-4" /> },
-    { id: "sandi", label: "Ubah Sandi", icon: <Lock className="w-4 h-4" /> },
-  ];
+  if (!user) {
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* Tab Navigation */}
-      <div className="mb-6 rounded-2xl border border-slate-200/80 bg-white p-1 shadow-sm">
-        <div className="flex gap-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as TabType)}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                activeTab === tab.id
-                  ? "bg-[#01793B] text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-              }`}
-            >
-              {tab.icon}
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          ))}
-        </div>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Tab Navigation - Clean Segmented Control */}
+      <div className="bg-slate-100/50 p-1.5 rounded-2xl flex max-w-md mx-auto sm:mx-0">
+        <button
+          onClick={() => setActiveTab("profil")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            activeTab === "profil" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          <UserCog size={14} /> Profil Saya
+        </button>
+        <button
+          onClick={() => setActiveTab("sandi")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            activeTab === "sandi" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          <Shield size={14} /> Keamanan
+        </button>
       </div>
 
-      {/* Tab Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Edit Profil */}
-        {activeTab === "profil" && (
-          <SectionCard 
-            title="Edit Profil" 
-            description="Perbarui informasi akun pribadi Anda"
-          >
-            {error ? (
-              <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
-                {error}
-              </div>
-            ) : null}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Profile Brief Sidebar */}
+        <aside className="space-y-6">
+          <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4">
+              <UserIcon size={32} strokeWidth={1.5} />
+            </div>
+            <h2 className="font-bold text-slate-900 leading-tight">{user.nama_lengkap}</h2>
+            <p className="text-xs text-slate-400 mt-1">{user.email}</p>
+            <div className="mt-6 pt-6 border-t border-slate-50 w-full flex items-center justify-center gap-2 text-[10px] font-bold text-emerald-600 uppercase tracking-widest">
+              <CheckCircle2 size={12} /> Akun Terverifikasi
+            </div>
+          </div>
 
-            {successMessage ? (
-              <div className="mb-4 text-sm text-green-600 bg-green-50 border border-green-100 rounded-lg px-4 py-2">
-                {successMessage}
-              </div>
-            ) : null}
+          <div className="bg-slate-900 rounded-3xl p-6 text-white overflow-hidden relative group hidden lg:block">
+            <Shield className="absolute -right-4 -bottom-4 opacity-10 rotate-12" size={80} />
+            <h4 className="text-[10px] font-black uppercase tracking-widest opacity-50 mb-3">Tips Keamanan</h4>
+            <p className="text-xs text-slate-300 leading-relaxed font-medium">
+              Gunakan kombinasi huruf kapital, angka, dan simbol untuk password yang lebih kuat.
+            </p>
+          </div>
+        </aside>
 
-            {user ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Username</label>
-                  <input
-                    type="text"
-                    value={user.username}
-                    disabled
-                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
-                  />
-                  <p className="text-xs text-gray-400 mt-0.5">Username tidak dapat diubah.</p>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Nama Lengkap</label>
-                  <input
-                    type="text"
-                    value={form.nama_lengkap}
-                    onChange={(e) => setForm((f) => ({ ...f, nama_lengkap: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Nomor Telepon</label>
-                  <input
-                    type="text"
-                    value={form.no_telp}
-                    onChange={(e) => setForm((f) => ({ ...f, no_telp: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-all"
-                >
-                  {saving ? "Menyimpan…" : "Simpan perubahan"}
-                </button>
-              </form>
-            ) : (
-              <p className="text-sm text-gray-500">Data profil tidak tersedia.</p>
-            )}
-          </SectionCard>
-        )}
-
-        {/* Ubah Sandi */}
-        {activeTab === "sandi" && (
-          <SectionCard 
-            title="Ubah Sandi" 
-            description="Ganti password akun Anda untuk keamanan lebih baik"
-          >
-            {passwordError ? (
-              <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
-                {passwordError}
-              </div>
-            ) : null}
-
-            {passwordSuccess ? (
-              <div className="mb-4 text-sm text-green-600 bg-green-50 border border-green-100 rounded-lg px-4 py-2">
-                {passwordSuccess}
-              </div>
-            ) : null}
-
-            <form onSubmit={handlePasswordSubmit} className="space-y-4 max-w-md">
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Password Lama</label>
-                <input
-                  type="password"
-                  value={passwordForm.password_lama}
-                  onChange={(e) => setPasswordForm((f) => ({ ...f, password_lama: e.target.value }))}
-                  placeholder="Masukkan password lama Anda"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Password Baru</label>
-                <input
-                  type="password"
-                  value={passwordForm.password_baru}
-                  onChange={(e) => setPasswordForm((f) => ({ ...f, password_baru: e.target.value }))}
-                  placeholder="Masukkan password baru (min 6 karakter)"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Konfirmasi Password Baru</label>
-                <input
-                  type="password"
-                  value={passwordForm.konfirmasi_sandi}
-                  onChange={(e) => setPasswordForm((f) => ({ ...f, konfirmasi_sandi: e.target.value }))}
-                  placeholder="Ulangi password baru"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#01793B] focus:ring-2 focus:ring-[#01793B]/30 outline-none transition-all"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={passwordLoading}
-                className="rounded-lg bg-[#01793B] px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60 transition-all"
-              >
-                {passwordLoading ? "Mengubah…" : "Ubah Password"}
-              </button>
-
-              <div className="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-200">
-                <p className="text-xs text-blue-900 font-medium">⚠️ Tips Keamanan:</p>
-                <ul className="text-xs text-blue-800 mt-2 space-y-1 list-disc list-inside">
-                  <li>Gunakan password yang kuat (kombinasi huruf, angka, simbol)</li>
-                  <li>Jangan bagikan password dengan orang lain</li>
-                  <li>Gunakan password yang berbeda untuk setiap akun</li>
-                  <li>Ganti password secara berkala untuk keamanan maksimal</li>
-                </ul>
-              </div>
-            </form>
-          </SectionCard>
-        )}
-      </motion.div>
-    </>
+        {/* Form Content Area */}
+        <main className="lg:col-span-2">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-3xl border border-slate-100 px-6 py-8 md:px-10 shadow-sm"
+            >
+              {activeTab === "profil" ? (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
+                      <input
+                        type="text"
+                        value={user.username}
+                        disabled
+                        className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-slate-500 font-bold text-sm cursor-not-allowed"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
+                      <input
+                        type="text"
+                        value={form.nama_lengkap}
+                        onChange={(e) => setForm({ ...form, nama_lengkap: e.target.value })}
+                        className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                        placeholder="Nama Lengkap"
+                        required
+                      />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                        <input
+                          type="email"
+                          value={form.email}
+                          onChange={(e) => setForm({ ...form, email: e.target.value })}
+                          className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                          placeholder="email@anda.com"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">No. Telp</label>
+                        <input
+                          type="text"
+                          value={form.no_telp}
+                          onChange={(e) => setForm({ ...form, no_telp: e.target.value })}
+                          className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                          placeholder="08xxxxxxxxxx"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-6 border-t border-slate-50 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="px-8 py-3 rounded-2xl bg-[#01793B] text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all disabled:opacity-50"
+                    >
+                      {saving ? "Menyimpan..." : "Simpan Perubahan"}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sandi Lama</label>
+                      <input
+                        type="password"
+                        value={passwordForm.password_lama}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, password_lama: e.target.value })}
+                        className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                        placeholder="••••••••"
+                        required
+                      />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sandi Baru</label>
+                        <input
+                          type="password"
+                          value={passwordForm.password_baru}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, password_baru: e.target.value })}
+                          className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                          placeholder="Sandi Baru"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Konfirmasi Sandi</label>
+                        <input
+                          type="password"
+                          value={passwordForm.konfirmasi_sandi}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, konfirmasi_sandi: e.target.value })}
+                          className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-sm outline-none focus:border-emerald-500 transition-all"
+                          placeholder="Ulangi Sandi"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-6 border-t border-slate-50 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={passwordLoading}
+                      className="px-8 py-3 rounded-2xl bg-slate-900 text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all disabled:opacity-50"
+                    >
+                      {passwordLoading ? "Memproses..." : "Ganti Kata Sandi"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
+    </div>
   );
 }
-

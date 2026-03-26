@@ -1,12 +1,12 @@
 "use client";
 
-import { ensureSiswa, getSpmbStatus, listBerkas, getSiswaMe, getListKelas } from "@/lib/client/spmb";
 import { getJadwalPpdb } from "@/lib/client/public";
+import { ensureSiswa, getListKelas, getSiswaMe, listBerkas } from "@/lib/client/spmb";
 import { motion } from "framer-motion";
-import { FileCheck, Upload, BookOpen, Check, X, ArrowRight, Clock, AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowRight, BookOpen, Check, CheckCircle2, FileText, Upload, X, UserCircle, Users, FileStack, School } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import SpmbCountdown from "./Siswa/SpmbCountdown";
 
 interface SiswaData {
@@ -31,38 +31,29 @@ interface KelasData {
   nama: string;
 }
 
-const STATUS_MAP: Record<string, { label: string; color: string; bg: string; dot: string }> = {
-  menunggu: { label: "Menunggu", color: "text-amber-700", bg: "bg-amber-50 border-amber-100", dot: "bg-amber-400" },
-  lulus: { label: "Diterima", color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-100", dot: "bg-emerald-500" },
-  tidak_lulus: { label: "Tidak Diterima", color: "text-rose-700", bg: "bg-rose-50 border-rose-100", dot: "bg-rose-500" },
-};
 
 export default function SiswaDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [statusPpdb, setStatusPpdb] = useState<string>("menunggu");
+
   const [berkasCount, setBerkasCount] = useState(0);
   const [spmbInfo, setSpmbInfo] = useState<{ opened: boolean; tanggalSelesai: string }>({ opened: true, tanggalSelesai: "" });
   const [siswaData, setSiswaData] = useState<SiswaData | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [showDataModal, setShowDataModal] = useState(false);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError(null);
       await ensureSiswa();
-      const [statusRes, berkasRes, jadwalRes, siswaRes, kelasRes] = await Promise.all([
-        getSpmbStatus(),
+      const [berkasRes, jadwalRes, siswaRes, kelasRes] = await Promise.all([
         listBerkas(),
         getJadwalPpdb(),
         getSiswaMe(),
         getListKelas(),
       ]);
-      if (!statusRes.success) setError(statusRes.error || "Gagal memuat status");
       if (!berkasRes.success) setError(berkasRes.error || "Gagal memuat berkas");
-      setStatusPpdb(statusRes.data?.status_ppdb ?? "menunggu");
       setBerkasCount((berkasRes.data || []).length);
       setSpmbInfo({
         opened: jadwalRes.success && jadwalRes.data?.dibuka === true,
@@ -102,8 +93,7 @@ export default function SiswaDashboard() {
     ? Math.round(getRequirementStatus().filter(r => r.completed).length / requirements.length * 100)
     : 0;
 
-  const isDecisionMade = ["lulus", "tidak_lulus", "diterima", "ditolak"].includes(statusPpdb?.toLowerCase());
-  const statusInfo = STATUS_MAP[statusPpdb] ?? STATUS_MAP["menunggu"];
+
 
   if (loading) {
     return (
@@ -128,49 +118,79 @@ export default function SiswaDashboard() {
       {/* SPMB Countdown */}
       <SpmbCountdown tanggalSelesai={spmbInfo.tanggalSelesai} isOpened={spmbInfo.opened} />
 
-      {/* Status + Progress row */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {/* Status SPMB */}
-        <Link
-          href="/dashboard/siswa/status"
-          className={`group rounded-2xl border p-6 flex items-center gap-4 hover:-translate-y-0.5 transition-all shadow-sm ${statusInfo.bg}`}
-        >
-          <div className="relative shrink-0">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-white`}>
-              <FileCheck size={22} className={statusInfo.color} />
-            </div>
-            <span className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${statusInfo.dot} ${isDecisionMade ? "" : "animate-pulse"}`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Status SPMB</p>
-            <p className={`text-lg font-black mt-0.5 ${statusInfo.color}`}>{statusInfo.label}</p>
-          </div>
-          <ArrowRight size={16} className="text-gray-300 group-hover:text-current transition-colors shrink-0" />
-        </Link>
-
-        {/* Kelengkapan Data */}
+      {/* Small Summary Grid */}
+      <div className="grid grid-cols-1 gap-4">
+        
+        {/* Completion Card - Modern Progress Card */}
         <button
           onClick={() => setShowModal(true)}
-          className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all text-left w-full"
+          className="group relative overflow-hidden bg-white rounded-[2.5rem] border border-gray-100 p-6 flex items-center gap-6 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 text-left"
         >
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
-            <span className="text-xl font-black">{completionPct}%</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Kelengkapan Data</p>
-            <div className="mt-2 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-700 ${completionPct === 100 ? "bg-emerald-500" : "bg-blue-400"}`}
-                style={{ width: `${completionPct}%` }}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-blue-100/50 transition-colors" />
+          
+          <div className="relative w-16 h-16 shrink-0">
+            <svg className="w-16 h-16 -rotate-90" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="#f1f5f9" strokeWidth="6" />
+              <circle 
+                cx="32" cy="32" r="28" fill="none" 
+                stroke={completionPct === 100 ? "#10b981" : "#3b82f6"} 
+                strokeWidth="6" 
+                strokeLinecap="round" 
+                strokeDasharray={`${(completionPct / 100) * 175.9} 175.9`} 
+                className="transition-all duration-1000 ease-out" 
               />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className={`text-sm font-black transition-colors ${completionPct === 100 ? "text-emerald-600" : "text-blue-600"}`}>
+                {completionPct}%
+              </span>
             </div>
           </div>
-          <ArrowRight size={16} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
+
+          <div className="flex-1 min-w-0 relative">
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-[9px] font-black text-blue-600 uppercase tracking-widest mb-2">
+              Status Data
+            </div>
+            <h3 className="text-lg font-black text-slate-900 leading-tight">Kelengkapan Profil</h3>
+            <p className="text-xs text-slate-400 font-medium mt-1">Lengkapi data pendaftaran Anda sekarang</p>
+          </div>
+          
+          <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm">
+            <ArrowRight size={18} />
+          </div>
         </button>
       </div>
 
+      {/* Status SPMB Card - Generic without revealing status */}
+      <Link
+        href="/dashboard/siswa/status"
+        className="group bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-all"
+      >
+        <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0 shadow-inner">
+          <FileText size={20} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Informasi SPMB</p>
+          <p className="text-sm font-bold text-gray-700">Lihat informasi terbaru mengenai status pendaftaran Anda</p>
+        </div>
+        <ArrowRight size={14} className="text-gray-300 group-hover:text-indigo-500 transition-colors" />
+      </Link>
+
+      {/* Broad Info Message */}
+      <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 flex items-start gap-4">
+        <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-[#01793B] shrink-0">
+           <CheckCircle2 size={18} />
+        </div>
+        <div className="flex-1">
+           <h4 className="text-sm font-black text-slate-900 tracking-tight">Pusat Informasi SPMB</h4>
+           <p className="text-xs text-slate-500 font-medium leading-relaxed mt-0.5">
+             Sistem sedang melakukan sinkronisasi data Anda dengan panitia pusat. Silakan pantau pendaftaran Anda secara berkala melalui menu yang tersedia.
+           </p>
+        </div>
+      </div>
+
       {/* Quick action cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
         {/* Berkas */}
         <Link
           href="/dashboard/siswa/berkas"
@@ -186,185 +206,163 @@ export default function SiswaDashboard() {
           <ArrowRight size={16} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
         </Link>
 
-        {/* Isi Data */}
+        {/* Isi Data / Pusat Dokumen */}
         {spmbInfo.opened ? (
           <button
-            onClick={() => setShowDataModal(true)}
-            className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all text-left w-full"
+            onClick={() => setShowModal(true)}
+            className="group relative overflow-hidden bg-white rounded-3xl border border-gray-100 shadow-sm p-8 flex items-center gap-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left w-full"
           >
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
-              <BookOpen size={20} />
+            <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-50/50 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-emerald-100/50 transition-colors" />
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#01793B] shadow-inner relative">
+              <BookOpen size={28} />
+              <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white animate-pulse" />
             </div>
-            <div className="flex-1">
-              <p className="font-bold text-gray-900 text-sm">Data Pendaftaran</p>
-              <p className="text-xs text-gray-400 mt-0.5">Isi formulir &amp; upload berkas</p>
+            <div className="flex-1 relative">
+              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-1">Pendaftaran Aktif</p>
+              <h3 className="text-xl font-black text-slate-900">Data Pendaftaran</h3>
+              <p className="text-sm text-slate-400 font-medium mt-1 leading-relaxed">Kelola formulir & berkas persyaratan siswa</p>
             </div>
-            <ArrowRight size={16} className="text-gray-300 group-hover:text-blue-400 transition-colors" />
+            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+              <ArrowRight size={20} />
+            </div>
           </button>
         ) : (
-          <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 flex items-center gap-4 opacity-60">
-            <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400">
-              <BookOpen size={20} />
+          <div className="bg-slate-50 rounded-3xl border border-slate-100 p-8 flex items-center gap-6 opacity-60">
+            <div className="w-16 h-16 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-400">
+              <BookOpen size={28} />
             </div>
             <div>
-              <p className="font-bold text-slate-600 text-sm">Data Pendaftaran</p>
-              <p className="text-xs text-slate-400 mt-0.5">SPMB telah berakhir</p>
+              <p className="font-bold text-slate-600 text-lg leading-tight">Data Pendaftaran</p>
+              <p className="text-sm text-slate-400 mt-1">Sistem pendaftaran saat ini telah ditutup</p>
             </div>
           </div>
         )}
-
-        {/* Status */}
-        <Link
-          href="/dashboard/siswa/status"
-          className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all"
-        >
-          <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
-            <Clock size={20} />
-          </div>
-          <div className="flex-1">
-            <p className="font-bold text-gray-900 text-sm">Status Pendaftaran</p>
-            <p className="text-xs text-gray-400 mt-0.5">Lihat hasil &amp; keputusan</p>
-          </div>
-          <ArrowRight size={16} className="text-gray-300 group-hover:text-amber-400 transition-colors" />
-        </Link>
       </div>
 
       {/* Checklist Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowModal(false)}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4">
-              <h2 className="text-lg font-bold text-gray-900">Kelengkapan Data</h2>
-              <p className="text-sm text-gray-400 mt-0.5">{completionPct}% sudah diisi</p>
+            {/* Header with progress ring */}
+            <div className="relative bg-linear-to-br from-slate-50 to-white px-6 pt-8 pb-6 border-b border-slate-100">
+              <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <X size={18} />
+              </button>
+              <div className="flex items-center gap-5">
+                {/* Circular Progress */}
+                <div className="relative w-16 h-16 shrink-0">
+                  <svg className="w-16 h-16 -rotate-90" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="28" fill="none" stroke="#f1f5f9" strokeWidth="5" />
+                    <circle cx="32" cy="32" r="28" fill="none" stroke={completionPct === 100 ? "#10b981" : "#3b82f6"} strokeWidth="5" strokeLinecap="round" strokeDasharray={`${(completionPct / 100) * 175.9} 175.9`} className="transition-all duration-1000" />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className={`text-sm font-black ${completionPct === 100 ? 'text-emerald-600' : 'text-blue-600'}`}>{completionPct}%</span>
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-slate-900">Kelengkapan Data SPMB</h2>
+                  <p className="text-sm text-slate-400 mt-0.5">
+                    {completionPct === 100 ? 'Semua data sudah lengkap!' : `${getRequirementStatus().filter(r => r.completed).length} dari ${requirements.length} data terisi`}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="p-6 space-y-5">
+            {/* Checklist grouped by section */}
+            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
               {Object.entries(
                 getRequirementStatus().reduce((acc: Record<string, ReturnType<typeof getRequirementStatus>>, item) => {
                   if (!acc[item.section]) acc[item.section] = [];
                   acc[item.section].push(item);
                   return acc;
                 }, {})
-              ).map(([section, items]) => (
-                <div key={section}>
-                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{section}</h3>
-                  <div className="space-y-1.5">
-                    {items.map((req) => (
-                      <div key={req.field} className="flex items-center gap-2.5 text-sm">
-                        {req.completed ? (
-                          <Check className="h-4 w-4 text-emerald-500 shrink-0" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-400 shrink-0" />
-                        )}
-                        <span className={req.completed ? "text-gray-700" : "text-gray-400"}>
-                          {req.label}
-                        </span>
-                      </div>
-                    ))}
+              ).map(([section, items]) => {
+                const sectionComplete = items.every(i => i.completed);
+                return (
+                  <div key={section} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">{section}</h3>
+                      {sectionComplete && (
+                        <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full uppercase tracking-widest">Lengkap</span>
+                      )}
+                    </div>
+                    <div className="bg-slate-50/60 rounded-2xl border border-slate-100 divide-y divide-slate-100">
+                      {items.map((req) => (
+                        <div key={req.field} className="flex items-center gap-3 px-4 py-3">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                            req.completed 
+                              ? 'bg-emerald-500 text-white' 
+                              : 'bg-slate-200 text-slate-400'
+                          }`}>
+                            {req.completed 
+                              ? <Check size={12} strokeWidth={3} /> 
+                              : <X size={10} strokeWidth={3} />
+                            }
+                          </div>
+                          <span className={`text-sm font-medium ${req.completed ? 'text-slate-700' : 'text-slate-400'}`}>
+                            {req.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {completionPct < 100 && (
-                <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-700">
-                  {getRequirementStatus().filter(r => !r.completed).length} data masih perlu dilengkapi.
+                <div className="flex items-start gap-3 rounded-2xl bg-amber-50 border border-amber-100 px-4 py-3.5">
+                  <AlertCircle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-sm text-amber-700 font-medium">
+                    {getRequirementStatus().filter(r => !r.completed).length} data masih perlu dilengkapi untuk menyelesaikan pendaftaran.
+                  </p>
                 </div>
               )}
             </div>
 
-            <div className="sticky bottom-0 bg-white border-t border-slate-100 px-6 py-4 flex gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
-              >
-                Kembali
-              </button>
-              <button
-                onClick={() => { setShowModal(false); router.push("/dashboard/siswa/data-spmb"); }}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-[#01793B] text-white text-sm font-bold hover:bg-emerald-700 transition-colors"
-              >
-                Isi Formulir
-              </button>
+            {/* Quick actions footer */}
+            <div className="border-t border-slate-100 px-6 py-4 space-y-3 bg-slate-50/50">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">Lengkapi Data</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/dashboard/siswa/data-siswa"
+                  onClick={() => setShowModal(false)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 transition-all"
+                >
+                  <UserCircle size={18} className="text-emerald-500" /> Data Siswa
+                </Link>
+                <Link
+                  href="/dashboard/siswa/data-ortu"
+                  onClick={() => setShowModal(false)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition-all"
+                >
+                  <Users size={18} className="text-blue-500" /> Data Orang Tua
+                </Link>
+                <Link
+                  href="/dashboard/siswa/berkas"
+                  onClick={() => setShowModal(false)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 transition-all"
+                >
+                  <FileStack size={18} className="text-amber-500" /> Upload Berkas
+                </Link>
+                <Link
+                  href="/dashboard/siswa/kelas"
+                  onClick={() => setShowModal(false)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 transition-all"
+                >
+                  <School size={18} className="text-violet-500" /> Pilih Kelas
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
       )}
 
-      {/* Data Pendaftaran Modal */}
-      {showDataModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-2xl max-w-sm w-full"
-          >
-            <div className="px-6 py-5 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900">Data Pendaftaran</h2>
-              <p className="text-sm text-gray-400 mt-0.5">Pilih bagian yang ingin dilengkapi</p>
-            </div>
-
-            <div className="p-4 space-y-2">
-              <Link
-                href="/dashboard/siswa/data-siswa"
-                onClick={() => setShowDataModal(false)}
-                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-emerald-50 border border-gray-100 hover:border-emerald-100 transition-all"
-              >
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#01793B] shrink-0">
-                  <BookOpen size={18} />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm text-gray-900">Data Calon Siswa</p>
-                  <p className="text-xs text-gray-400">Nama, lahir, jenis kelamin, dll.</p>
-                </div>
-                <ArrowRight size={15} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
-              </Link>
-
-              <Link
-                href="/dashboard/siswa/data-ortu"
-                onClick={() => setShowDataModal(false)}
-                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-blue-50 border border-gray-100 hover:border-blue-100 transition-all"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
-                  <BookOpen size={18} />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm text-gray-900">Data Orang Tua</p>
-                  <p className="text-xs text-gray-400">Nama ayah, ibu, pekerjaan, kontak.</p>
-                </div>
-                <ArrowRight size={15} className="text-gray-300 group-hover:text-blue-400 transition-colors" />
-              </Link>
-
-              <Link
-                href="/dashboard/siswa/berkas"
-                onClick={() => setShowDataModal(false)}
-                className="group flex items-center gap-4 p-4 rounded-xl hover:bg-amber-50 border border-gray-100 hover:border-amber-100 transition-all"
-              >
-                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
-                  <Upload size={18} />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm text-gray-900">Upload Berkas</p>
-                  <p className="text-xs text-gray-400">Akta, KK, KTP, pas foto, dll.</p>
-                </div>
-                <ArrowRight size={15} className="text-gray-300 group-hover:text-amber-400 transition-colors" />
-              </Link>
-            </div>
-
-            <div className="px-6 py-4 border-t border-gray-100">
-              <button
-                onClick={() => setShowDataModal(false)}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
-              >
-                Tutup
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,13 +1,9 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcryptjs from 'bcryptjs';
 import 'dotenv/config';
-import { PrismaClient } from '../generated/prisma/client';
-import { Role, Status, StatusValidasi, Tipe } from '../generated/prisma/enums';
+import { PrismaClient, Role } from '@prisma/client';
 import {
-  BerkasSiswaSeedData,
-  InformasiSekolahSeedData,
-  JenisBerkasSeedData,
-  UserSeedData,
+  UserSeedData
 } from '../src/types/seed.types';
 
 const connectionString = `${process.env.DATABASE_URL}`;

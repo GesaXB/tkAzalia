@@ -1,9 +1,9 @@
+import BlogSection from "../HomeComponent/BlogSection";
 import HeroSection from "../HomeComponent/HeroSection";
 import ProgramSection from "../HomeComponent/ProgramSection";
 import TestimonialSection from "../HomeComponent/TestimonialSection";
 import VisionMissionSection from "../HomeComponent/VisionMissionSection";
 import WhyChooseSection from "../HomeComponent/WhyChooseSection";
-import BlogSection from "../HomeComponent/BlogSection";
 
 export default function LandingPage() {
   return (
@@ -13,7 +13,7 @@ export default function LandingPage() {
       </div>
 
       <div className="px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14 max-w-[1600px] mx-auto">
-        
+
         <div className="relative -mt-8 md:-mt-10 pb-6">
           <VisionMissionSection />
         </div>

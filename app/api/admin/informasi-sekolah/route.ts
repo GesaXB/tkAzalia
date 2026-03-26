@@ -7,7 +7,7 @@ import {
   updateInformasiSekolah,
   InformasiSekolahInput,
 } from '@/lib/admin/informasiSekolah';
-import { Tipe, Status } from '../../../../generated/prisma/enums';
+import { Tipe, Status, StatusValidasi } from '@prisma/client';
 
 const TIPE_VALUES = Object.values(Tipe) as string[];
 const STATUS_VALUES = Object.values(Status) as string[];

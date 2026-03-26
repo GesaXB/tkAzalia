@@ -19,13 +19,17 @@ import {
   Home,
   Mail,
   Phone,
+  Printer,
+  Download,
   User,
   X,
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function statusLabel(s: string) {
   const map: Record<string, string> = {
@@ -269,6 +273,75 @@ export default function AdminPpdbDetailPage() {
     });
   };
 
+  const handleExportExcel = async () => {
+    if (!siswa) return;
+    try {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Detail Pendaftar');
+
+      // Styling Header & Title
+      worksheet.mergeCells('A1:B1');
+      worksheet.getCell('A1').value = 'BIODATA PENDAFTAR TK AZALIA';
+      worksheet.getCell('A1').font = { size: 14, bold: true };
+      worksheet.getCell('A1').alignment = { horizontal: 'center' };
+
+      worksheet.addRow([]); // Gap
+
+      // Data Rows
+      const addDataRow = (label: string, value: any) => {
+        const row = worksheet.addRow([label.toUpperCase(), value || "-"]);
+        row.getCell(1).font = { bold: true };
+        row.getCell(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } }; // Light gray
+        row.height = 20;
+      };
+
+      addDataRow('ID Pendaftaran', `SPMB-2026-${String(siswa.siswa_id).padStart(4, "0")}`);
+      addDataRow('Nama Lengkap', siswa.nama_anak || siswa.user.nama_lengkap);
+      addDataRow('Nama Panggilan', siswa.nama_panggilan);
+      addDataRow('Tempat Lahir', siswa.tempat_lahir);
+      addDataRow('Tanggal Lahir', siswa.tanggal_lahir ? new Date(siswa.tanggal_lahir).toLocaleDateString('id-ID') : "-");
+      addDataRow('Jenis Kelamin', siswa.jenis_kelamin === "L" || siswa.jenis_kelamin === "Laki-laki" ? "Laki-laki" : "Perempuan");
+      addDataRow('Anak Ke', siswa.anak_ke);
+      addDataRow('Pilihan Kelas', siswa.kelas?.nama || "Belum dipilih");
+      
+      worksheet.addRow([]); // Gap
+      addDataRow('DATA ORANG TUA', '');
+      worksheet.lastRow!.getCell(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF01793B' } };
+      worksheet.lastRow!.getCell(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+
+      addDataRow('Nama Ayah', siswa.nama_ayah);
+      addDataRow('Pekerjaan Ayah', siswa.pekerjaan_ayah);
+      addDataRow('Nama Ibu', siswa.nama_ibu);
+      addDataRow('Pekerjaan Ibu', siswa.pekerjaan_ibu);
+      addDataRow('No. WhatsApp', siswa.no_whatsapp || siswa.user.no_telp);
+      addDataRow('Alamat', siswa.alamat_rumah);
+      
+      worksheet.addRow([]);
+      addDataRow('Status PPDB', (siswa.status_ppdb || "menunggu").toUpperCase());
+
+      // Column widths
+      worksheet.getColumn(1).width = 25;
+      worksheet.getColumn(2).width = 50;
+
+      // All borders
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber > 2) {
+            row.eachCell(cell => {
+                cell.border = {
+                    top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}
+                };
+            });
+        }
+      });
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `Profil_${siswa.nama_anak || "Siswa"}_Azalia.xlsx`);
+    } catch (err) {
+      console.error('Export detail error:', err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
@@ -338,11 +411,21 @@ export default function AdminPpdbDetailPage() {
                 </span>
               </span>
             </div>
-            {siswa.kelas && (
-              <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-white uppercase tracking-wider">
-                Kelas: {siswa.kelas.nama}
-              </span>
-            )}
+            
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleExportExcel}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95"
+              >
+                <Download size={16} className="text-[#01793B]" />
+                Export Excel
+              </button>
+              {siswa.kelas && (
+                <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-white uppercase tracking-wider">
+                  Kelas: {siswa.kelas.nama}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

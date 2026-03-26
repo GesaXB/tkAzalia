@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { StatusValidasi } from '../../../generated/prisma/enums';
+import { StatusValidasi } from '@prisma/client';
 
 export interface CreateBerkasInput {
   siswaId: number;

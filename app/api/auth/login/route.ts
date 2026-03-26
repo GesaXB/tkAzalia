@@ -57,6 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       userId: user.user_id,
       username: user.username,
       role: user.role,
+      nama_lengkap: user.nama_lengkap,
     });
 
     return NextResponse.json(

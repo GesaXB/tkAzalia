@@ -1,4 +1,4 @@
-import { Role, Status, StatusValidasi, Tipe } from '../../generated/prisma/enums';
+import { Role, Status, StatusValidasi, Tipe } from '@prisma/client';
 
 export interface UserSeedData {
   username: string;

@@ -25,6 +25,7 @@ interface DashboardShellProps {
   sidebarTitle: string;
   items: SidebarItem[];
   onLogout: () => void;
+  userName?: string;
   children: React.ReactNode;
 }
 
@@ -36,12 +37,13 @@ export default function DashboardShell({
   sidebarTitle,
   items,
   onLogout,
+  userName,
   children,
 }: DashboardShellProps) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
+  const [expandedMenus, setExpandedMenus] = useState<string | null>(null);
 
   useEffect(() => {
     const stored =
@@ -62,26 +64,33 @@ export default function DashboardShell({
   };
 
   const toggleMenu = (label: string) => {
-    setExpandedMenus((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(label)) {
-        newSet.delete(label);
-      } else {
-        newSet.add(label);
-      }
-      return newSet;
-    });
+    setExpandedMenus((prev) => (prev === label ? null : label));
   };
 
-  const isMenuExpanded = (label: string) => expandedMenus.has(label);
+  const isMenuExpanded = (label: string) => expandedMenus === label;
   const isSubmenuActive = (submenu: SidebarSubItem[] | undefined) => {
     if (!submenu) return false;
     return submenu.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"));
   };
 
-  const handleLinkClick = () => {
+  // Auto-expand the submenu that has an active sub-item
+  useEffect(() => {
+    const activeParent = items.find(
+      (item) => item.submenu?.some((sub) => pathname === sub.href || pathname.startsWith(sub.href + "/"))
+    );
+    if (activeParent) {
+      setExpandedMenus(activeParent.label);
+    }
+  }, [pathname, items]);
+
+  const handleLinkClick = (parentLabel?: string) => {
     if (window.innerWidth < 1024) {
       setSidebarOpen(false);
+    }
+    // Only close submenus when clicking a top-level link (no parentLabel)
+    // Keep submenu open when clicking a sub-item within the same parent
+    if (!parentLabel) {
+      setExpandedMenus(null);
     }
   };
 
@@ -168,7 +177,7 @@ export default function DashboardShell({
                                 key={subitem.href}
                                 href={subitem.href}
                                 prefetch
-                                onClick={handleLinkClick}
+                                onClick={() => handleLinkClick(item.label)}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                                   isSubitemActive
                                     ? "bg-emerald-500/10 text-emerald-700 border-l-2 border-emerald-500"
@@ -190,7 +199,7 @@ export default function DashboardShell({
                     key={item.href}
                     href={item.href ?? "/"}
                     prefetch
-                    onClick={handleLinkClick}
+                    onClick={() => handleLinkClick()}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive
                         ? "bg-emerald-500/10 text-emerald-700"
@@ -205,6 +214,14 @@ export default function DashboardShell({
           </div>
         </div>
       </motion.aside>
+      
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden transition-opacity duration-300"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       <div 
         className="flex-1 min-w-0 flex flex-col transition-all duration-300"
@@ -225,13 +242,26 @@ export default function DashboardShell({
               <p className="text-sm text-slate-500 truncate">{subtitle}</p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={handleLogoutClick}
-            className="shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors"
-          >
-            Keluar
-          </button>
+          <div className="flex items-center gap-3">
+            {userName && (
+              <div className="hidden sm:flex items-center gap-3 pr-4 border-r border-slate-200">
+                <div className="text-right">
+                  <p className="text-sm font-bold text-slate-900 leading-none">{userName}</p>
+                  <p className="text-[10px] font-medium text-slate-500 mt-1 uppercase tracking-wider">Terautentikasi</p>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm">
+                  {userName.charAt(0)}
+                </div>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={handleLogoutClick}
+              className="shrink-0 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+            >
+              Keluar
+            </button>
+          </div>
         </header>
 
         <motion.main

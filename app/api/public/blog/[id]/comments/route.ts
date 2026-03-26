@@ -45,7 +45,7 @@ export const POST = authMiddleware(async (authenticatedReq: AuthenticatedRequest
     }
 
     const body = await authenticatedReq.json();
-    const { isi } = body;
+    const { isi, parent_id } = body;
     const userPayload = authenticatedReq.user;
 
     if (!isi) {
@@ -58,6 +58,7 @@ export const POST = authMiddleware(async (authenticatedReq: AuthenticatedRequest
         user_id: userPayload.userId,
         nama: userPayload.nama_lengkap as string || userPayload.username, // Fallback to username
         isi,
+        parent_id: parent_id || null,
       },
     });
 

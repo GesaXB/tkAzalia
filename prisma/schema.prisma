@@ -129,12 +129,15 @@ model Komentar {
   komentar_id Int              @id @default(autoincrement())
   info_id     Int
   user_id     Int?
+  parent_id   Int?
   nama        String
   isi         String
   created_at  DateTime         @default(now())
-  
-  informasi   InformasiSekolah @relation(fields: [info_id], references: [info_id])
+
+  informasi   InformasiSekolah @relation(fields: [info_id], references: [info_id], onDelete: Cascade)
   user        User?            @relation(fields: [user_id], references: [user_id])
+  parent      Komentar?        @relation("Replies", fields: [parent_id], references: [komentar_id], onDelete: Cascade)
+  replies     Komentar[]       @relation("Replies")
 }
 
 enum Tipe {
@@ -160,4 +163,15 @@ model PpdbSetting {
   tanggal_selesai DateTime
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
+}
+
+model CetakSetting {
+  id                  Int      @id @default(autoincrement())
+  tahun_ajaran        String   @default("2025/2026")
+  teks_pembuka       String   @default("Berdasarkan hasil seleksi Penerimaan Peserta Didik Baru (PPDB) TK Azalia, dengan ini kami menyatakan bahwa:")
+  teks_penutup       String   @default("Siswa tersebut di atas dinyatakan DITERIMA sebagai Peserta Didik Baru di TK Azalia.")
+  nama_kepala_sekolah String   @default("Hj. Pengelola TK Azalia, S.Pd")
+  nip_kepala_sekolah  String?  @default("-")
+  lokasi_ttd          String   @default("Bandung")
+  updated_at          DateTime @updatedAt
 }

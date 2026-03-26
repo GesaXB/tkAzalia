@@ -3,25 +3,40 @@ import { apiRequest } from './api';
 import { getToken } from './session';
 
 export async function uploadBlogImage(file: File): Promise<{ success: true; data: { url: string } } | { success: false; error: string }> {
-  const token = getToken();
-  if (!token) {
-    return { success: false, error: 'Belum masuk' };
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: 'Belum masuk' };
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+
+    const text = await res.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (e) {
+      return { success: false, error: `Respons server tidak valid (${res.status})` };
+    }
+
+    if (!res.ok) {
+      return { success: false, error: data.error || data.message || `Upload gagal (${res.status})` };
+    }
+
+    if (data?.success && data?.data?.url) {
+      return { success: true, data: { url: data.data.url } };
+    }
+    return { success: false, error: 'Format respons tidak dikenal' };
+  } catch (err) {
+    console.error('uploadBlogImage error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Kesalahan koneksi' };
   }
-  const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch('/api/admin/upload', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: formData,
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    return { success: false, error: (data && data.error) || 'Upload gagal' };
-  }
-  if (data?.success && data?.data?.url) {
-    return { success: true, data: { url: data.data.url } };
-  }
-  return { success: false, error: 'Respons tidak valid' };
 }
 
 export interface KelasItem {
@@ -249,4 +264,32 @@ export async function deleteKomentar(id: number) {
   return apiRequest(`/api/admin/comments/${id}`, {
     method: 'DELETE',
   }, true);
+}
+
+export async function listKomentarAdmin(infoId: number) {
+  return apiRequest<PublicKomentar[]>(`/api/public/blog/${infoId}/comments`, {
+    method: 'GET',
+  }, true);
+}
+
+export async function addKomentarAdmin(infoId: number, data: { nama: string, isi: string, parent_id?: number | null }) {
+  return apiRequest<PublicKomentar>(`/api/public/blog/${infoId}/comments`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }, true);
+}
+
+export interface PublicKomentar {
+  komentar_id: number;
+  info_id: number;
+  user_id: number | null;
+  parent_id?: number | null;
+  nama: string;
+  isi: string;
+  created_at: string;
+  user?: {
+    user_id: number;
+    nama_lengkap: string;
+    role: string;
+  };
 }

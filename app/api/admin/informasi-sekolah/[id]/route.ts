@@ -25,10 +25,18 @@ async function deleteHandler(
       { success: true, message: 'Informasi berhasil dihapus' },
       { status: 200 }
     );
-  } catch {
+  } catch (error: any) {
+    console.error('[DELETE_INFORMASI]', error);
+    
+    // Status 404 hanya jika data tidak ditemukan (P2025 di Prisma)
+    const isNotFound = error.code === 'P2025' || error.message?.includes('Record to delete does not exist');
+    
     return NextResponse.json(
-      { success: false, error: 'Informasi tidak ditemukan' },
-      { status: 404 }
+      { 
+        success: false, 
+        error: isNotFound ? 'Informasi tidak ditemukan' : 'Gagal menghapus informasi: ' + (error.message || 'Error internal server')
+      },
+      { status: isNotFound ? 404 : 500 }
     );
   }
 }

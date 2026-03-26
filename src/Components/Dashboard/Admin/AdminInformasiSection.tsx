@@ -2,8 +2,9 @@
 
 import ConfirmModal from "@/Components/Dashboard/ConfirmModal";
 import { InformasiSekolahItem, uploadBlogImage } from "@/lib/client/admin";
-import { Edit2, FileText, Image as ImageIcon, Search, Trash2, Upload, X } from "lucide-react";
+import { Edit2, FileText, Image as ImageIcon, MessageCircle, Search, Trash2, Upload, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface InfoFormState {
   judul: string;
@@ -32,6 +33,16 @@ interface AdminInformasiSectionProps {
   onDeleteInfo?: (info_id: number) => void;
   editingId: number | null;
   onCloseEditModal: () => void;
+  isLoading?: boolean;
+  onViewComments?: (info: InformasiSekolahItem) => void;
+  showComments?: boolean;
+  comments?: any[];
+  loadingComments?: boolean;
+  onDeleteComment?: (id: number) => void;
+  selectedInfo?: InformasiSekolahItem | null;
+  onCloseComments?: () => void;
+  deletingCommentId?: number | null;
+  onReplyComment?: (commentId: number, isi: string) => Promise<boolean>;
 }
 
 const TIPE_OPTIONS = [
@@ -58,6 +69,16 @@ export default function AdminInformasiSection({
   onDeleteInfo,
   editingId,
   onCloseEditModal,
+  isLoading,
+  onViewComments,
+  showComments,
+  comments,
+  loadingComments,
+  onDeleteComment,
+  selectedInfo,
+  onCloseComments,
+  deletingCommentId,
+  onReplyComment,
 }: AdminInformasiSectionProps) {
   const [search, setSearch] = useState("");
   const [filterTipe, setFilterTipe] = useState("");
@@ -69,6 +90,9 @@ export default function AdminInformasiSection({
   const [deleteTarget, setDeleteTarget] = useState<InformasiSekolahItem | null>(null);
   const [deleting, setDeleting] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -125,20 +149,36 @@ export default function AdminInformasiSection({
   const handleCreateImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const toastId = toast.loading("Mengunggah gambar...");
     setUploadingCreate(true);
     const res = await uploadBlogImage(file);
     setUploadingCreate(false);
-    if (res.success) onChangeInfoForm({ ...infoForm, gambar: res.data.url });
+    
+    if (res.success) {
+      onChangeInfoForm({ ...infoForm, gambar: res.data.url });
+      toast.success("Gambar berhasil diunggah", { id: toastId });
+    } else {
+      toast.error(res.error || "Gagal mengunggah gambar", { id: toastId });
+    }
     e.target.value = "";
   };
 
   const handleEditImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const toastId = toast.loading("Mengunggah gambar baru...");
     setUploadingEdit(true);
     const res = await uploadBlogImage(file);
     setUploadingEdit(false);
-    if (res.success) onChangeInfoUpdate({ ...infoUpdate, gambar: res.data.url });
+    
+    if (res.success) {
+      onChangeInfoUpdate({ ...infoUpdate, gambar: res.data.url });
+      toast.success("Gambar baru berhasil diunggah", { id: toastId });
+    } else {
+      toast.error(res.error || "Gagal mengunggah gambar baru", { id: toastId });
+    }
     e.target.value = "";
   };
 
@@ -162,7 +202,7 @@ export default function AdminInformasiSection({
     <div className="space-y-6">
       {/* Article Form — Full Width */}
       <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-linear-to-r from-white to-emerald-50/30">
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100">
               <FileText size={20} className="text-[#01793B]" />
@@ -293,10 +333,15 @@ export default function AdminInformasiSection({
                       </div>
                       <button
                         type="submit"
-                        className="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-[11px] uppercase tracking-wider hover:bg-emerald-600 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2"
+                        disabled={isLoading}
+                        className="w-full py-3 rounded-2xl bg-slate-900 text-white font-bold text-[11px] uppercase tracking-wider hover:bg-emerald-600 transition-all active:scale-95 shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <FileText size={16} />
-                        Posting Sekarang
+                        {isLoading ? (
+                          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <FileText size={16} />
+                        )}
+                        {isLoading ? "Memproses..." : "Posting Sekarang"}
                       </button>
                     </div>
                   </div>
@@ -448,6 +493,15 @@ export default function AdminInformasiSection({
                         Edit
                       </button>
                       <div className="flex items-center gap-2">
+                        {onViewComments && (
+                          <button
+                            onClick={() => onViewComments(info)}
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all border border-emerald-100 active:scale-95"
+                            title="Lihat Komentar"
+                          >
+                            <MessageCircle size={14} />
+                          </button>
+                        )}
                         {onDeleteInfo && (
                           <button
                             onClick={() => openDeleteModal(info)}
@@ -488,7 +542,7 @@ export default function AdminInformasiSection({
 
       {/* Edit Modal */}
       {isEditOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseEditModal}>
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseEditModal}>
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h3 className="font-bold text-gray-900">Edit Artikel</h3>
@@ -576,14 +630,183 @@ export default function AdminInformasiSection({
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="flex-1 bg-slate-900 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-600 transition-all active:scale-95">
-                  Simpan Perubahan
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 bg-slate-900 text-white py-3 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-600 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isLoading && <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />}
+                  {isLoading ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
-                <button type="button" onClick={onCloseEditModal} className="px-8 py-3 rounded-2xl border border-slate-200 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
+                <button
+                  type="button"
+                  onClick={onCloseEditModal}
+                  disabled={isLoading}
+                  className="px-8 py-3 rounded-2xl border border-slate-200 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors disabled:opacity-50"
+                >
                   Batal
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Comments Modal */}
+      {showComments && selectedInfo && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onCloseComments}>
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-100">
+                  <MessageCircle size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 leading-tight">Daftar Komentar</h3>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5 line-clamp-1">Artikel: {selectedInfo.judul}</p>
+                </div>
+              </div>
+              <button onClick={onCloseComments} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+              {loadingComments ? (
+                <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                  <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Memuat...</p>
+                </div>
+              ) : comments && comments.length > 0 ? (
+                <div className="space-y-8">
+                  {comments.filter(c => !c.parent_id).map((comment) => {
+                    const replies = comments.filter(r => r.parent_id === comment.komentar_id);
+                    
+                    return (
+                      <div key={comment.komentar_id} className="space-y-4">
+                        <div className="group">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-4 flex-1">
+                              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 shrink-0 text-xs font-black">
+                                {comment.nama.charAt(0).toUpperCase()}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h5 className="font-bold text-slate-900 text-sm">{comment.nama}</h5>
+                                  <span className="text-[10px] text-slate-300 font-medium">
+                                    {new Date(comment.created_at).toLocaleDateString("id-ID", { day: 'numeric', month: 'short' })}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl rounded-tl-none inline-block border border-slate-100/50">{comment.isi}</p>
+                                
+                                <div className="mt-2">
+                                  <button 
+                                    onClick={() => {
+                                      setReplyingTo(comment.komentar_id);
+                                      setReplyText("");
+                                    }}
+                                    className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-full transition-colors"
+                                  >
+                                    Balas
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => onDeleteComment?.(comment.komentar_id)}
+                              disabled={deletingCommentId === comment.komentar_id}
+                              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all opacity-0 group-hover:opacity-100"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Reply Form */}
+                        {replyingTo === comment.komentar_id && (
+                          <div className="ml-14 p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-3">
+                            <textarea
+                              value={replyText}
+                              onChange={(e) => setReplyText(e.target.value)}
+                              placeholder="Ketik balasan admin..."
+                              className="w-full p-3 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-emerald-500 transition-all resize-none"
+                              rows={2}
+                              autoFocus
+                            />
+                            <div className="flex justify-end gap-2">
+                              <button onClick={() => setReplyingTo(null)} className="px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest text-slate-400">Batal</button>
+                              <button 
+                                onClick={async () => {
+                                  if (!onReplyComment) return;
+                                  setSendingReply(true);
+                                  const success = await onReplyComment(comment.komentar_id, replyText);
+                                  setSendingReply(false);
+                                  if (success) {
+                                    setReplyingTo(null);
+                                    setReplyText("");
+                                  }
+                                }}
+                                disabled={sendingReply || !replyText.trim()}
+                                className="px-5 py-1.5 rounded-lg bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 disabled:opacity-50"
+                              >
+                                {sendingReply ? "..." : "Kirim Balasan"}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Replies List */}
+                        {replies.length > 0 && (
+                          <div className="ml-14 space-y-4 border-l border-slate-100 pl-6">
+                            {replies.map(reply => (
+                              <div key={reply.komentar_id} className="group flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center shrink-0 text-[10px] font-black">
+                                    A
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h6 className="font-bold text-slate-900 text-xs">Admin</h6>
+                                      <span className="text-[9px] text-slate-300 font-bold">•</span>
+                                      <span className="text-[9px] text-slate-400 font-medium">
+                                        {new Date(reply.created_at).toLocaleDateString("id-ID", { day: 'numeric', month: 'short' })}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed bg-white p-3 rounded-2xl rounded-tl-none border border-slate-100 inline-block">{reply.isi}</p>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => onDeleteComment?.(reply.komentar_id)}
+                                  className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-200 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all"
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200 mb-4 border border-slate-100">
+                    <MessageCircle size={28} />
+                  </div>
+                  <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">Belum ada komentar</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="px-6 py-4 border-t border-slate-50 flex justify-end">
+              <button
+                onClick={onCloseComments}
+                className="px-6 py-2 rounded-xl bg-slate-50 text-slate-500 font-bold text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all"
+              >
+                Tutup
+              </button>
+            </div>
           </div>
         </div>
       )}

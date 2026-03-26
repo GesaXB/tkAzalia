@@ -9,7 +9,7 @@ export default function MissionCard() {
 
       <div className="relative z-10">
         <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:-rotate-6 transition-transform duration-300">
-            <Rocket className="text-white w-7 h-7" />
+          <Rocket className="text-white w-7 h-7" />
         </div>
 
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">

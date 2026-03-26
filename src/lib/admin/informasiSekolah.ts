@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { Tipe, Status } from '../../../generated/prisma/enums';
+import { Tipe, Status } from '@prisma/client';
 
 export interface InformasiSekolahInput {
   judul: string;
@@ -54,8 +54,15 @@ export async function updateInformasiSekolah(id: number, input: InformasiSekolah
 }
 
 export async function deleteInformasiSekolah(id: number) {
-  await prisma.informasiSekolah.delete({
-    where: { info_id: id },
-  });
+  // Gunakan transaction untuk menghapus komentar dan blog secara bersamaan
+  // Ini memastikan integritas data jika foreign key cascade belum terpasang di database
+  await prisma.$transaction([
+    prisma.komentar.deleteMany({
+      where: { info_id: id },
+    }),
+    prisma.informasiSekolah.delete({
+      where: { info_id: id },
+    }),
+  ]);
 }
 
