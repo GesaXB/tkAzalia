@@ -30,10 +30,10 @@ export default function PendaftaranInfo({ dokumenFetch = [], jadwalFetch = null 
     ];
   } else {
     jadwal = [
-      { label: "Gelombang 1", value: "Jan – Mar 2026" },
-      { label: "Gelombang 2", value: "Apr – Jun 2026" },
-      { label: "Pengumuman", value: "H+3 Observasi" },
-      { label: "Seragam", value: "Menyesuaikan" },
+      { label: "Pendaftaran SPMB", value: "Belum Ada Jadwal / Ditutup" },
+      { label: "Tanggal Mulai", value: "Belum Ditentukan" },
+      { label: "Tanggal Selesai", value: "Belum Ditentukan" },
+      { label: "Informasi Tambahan", value: "Silakan hubungi Admin" },
     ];
   }
 
