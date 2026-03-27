@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import icon from '../public/logotk.png';
 import "../styles/globals.css";
-
 import AppShell from "@/Components/layout/AppShell";
+import JsonLd from "@/Components/layout/JsonLd";
 import { ToastProvider } from "@/context/ToastContext";
 
 const inter = Inter({
@@ -75,6 +75,7 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <JsonLd />
       </head>
       <body
         className="flex flex-col min-h-screen bg-white text-gray-900 antialiased"

@@ -1,23 +1,42 @@
 "use client";
 import { CheckCircle2, AlertCircle, Phone, CalendarDays } from "lucide-react";
 
-const dokumen = [
-  "Formulir Pendaftaran Online (isi melalui website ini)",
-  "Fotocopy Akta Kelahiran (2 lembar)",
-  "Fotocopy Kartu Keluarga (2 lembar)",
-  "Fotocopy KTP Orang Tua — Ayah & Ibu",
-  "Pas Foto Anak 3×4, warna merah/biru (4 lembar)",
-  "Usia minimal 4 tahun (Kel. A) & 5 tahun (Kel. B)",
-];
+interface PendaftaranInfoProps {
+  dokumenFetch?: string[];
+  jadwalFetch?: { tanggal_mulai: string; tanggal_selesai: string } | null;
+}
 
-const jadwal = [
-  { label: "Gelombang 1", value: "Jan – Mar 2026" },
-  { label: "Gelombang 2", value: "Apr – Jun 2026" },
-  { label: "Pengumuman", value: "H+3 Observasi" },
-  { label: "Seragam", value: "Menyesuaikan" },
-];
+export default function PendaftaranInfo({ dokumenFetch = [], jadwalFetch = null }: PendaftaranInfoProps) {
+  const dokumen = dokumenFetch.length > 0 ? dokumenFetch : [
+    "Formulir Pendaftaran Online (isi melalui website ini)",
+    "Fotocopy Akta Kelahiran (2 lembar)",
+    "Fotocopy Kartu Keluarga (2 lembar)",
+    "Fotocopy KTP Orang Tua — Ayah & Ibu",
+    "Pas Foto Anak 3×4, warna merah/biru (4 lembar)",
+    "Usia minimal 4 tahun (Kel. A) & 5 tahun (Kel. B)",
+  ];
 
-export default function PendaftaranInfo() {
+  let jadwal = [];
+  if (jadwalFetch) {
+    const formatTanggal = (iso: string) => {
+      return new Date(iso).toLocaleDateString("id-ID", { month: "short", year: "numeric", day: "numeric" });
+    };
+
+    jadwal = [
+      { label: "Tanggal Mulai", value: formatTanggal(jadwalFetch.tanggal_mulai) },
+      { label: "Tanggal Selesai", value: formatTanggal(jadwalFetch.tanggal_selesai) },
+      { label: "Pengumuman", value: "Menyusul" },
+      { label: "Daftar Ulang", value: "Sesuai Arahan" },
+    ];
+  } else {
+    jadwal = [
+      { label: "Gelombang 1", value: "Jan – Mar 2026" },
+      { label: "Gelombang 2", value: "Apr – Jun 2026" },
+      { label: "Pengumuman", value: "H+3 Observasi" },
+      { label: "Seragam", value: "Menyesuaikan" },
+    ];
+  }
+
   return (
     <section className="py-16 px-6 bg-white">
       <div className="max-w-6xl mx-auto">

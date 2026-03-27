@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 
 interface SiswaStatusSectionProps {
   status: { status_ppdb: string; catatan_ppdb: string | null } | null;
+  requiredDocs?: string[];
 }
 
-export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) {
+export default function SiswaStatusSection({ status, requiredDocs = [] }: SiswaStatusSectionProps) {
   const router = useRouter();
   const statusKey = status?.status_ppdb?.toLowerCase() || "menunggu";
   const catatan = status?.catatan_ppdb;
@@ -60,7 +61,7 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
 
               {catatan && (
                 <div className="p-6 bg-red-50/50 rounded-2xl border border-red-100/50 text-slate-700 italic flex gap-3">
-                  <span className="font-bold text-red-600 NOT-ITALIC not-italic">Catatan:</span> {catatan}
+                  <span className="font-bold text-red-600 not-italic">Catatan:</span> {catatan}
                 </div>
               )}
             </div>
@@ -70,6 +71,10 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
     }
 
     if (statusKey === "diterima" || statusKey === "lulus") {
+      const docsToRender = requiredDocs.length > 0 
+        ? requiredDocs 
+        : ["Dokumen-dokumen validasi persyaratan Anda"];
+
       return (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -109,17 +114,10 @@ export default function SiswaStatusSection({ status }: SiswaStatusSectionProps) 
                 <h3 className="text-lg font-black text-white">Langkah Selanjutnya: Daftar Ulang</h3>
               </div>
               <p className="text-emerald-100 text-sm leading-relaxed">
-                Silakan datang ke sekolah TK Azalia untuk melakukan <span className="font-black text-white">daftar ulang</span> dengan membawa dokumen/berkas asli berikut:
+                Silakan datang ke sekolah TK Azalia untuk melakukan <span className="font-black text-white">daftar ulang</span> dengan membawa dan menunjukkan file asli dokumen/berkas berikut:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {[
-                  "Akta Kelahiran Asli",
-                  "Kartu Keluarga (KK) Asli",
-                  "KTP Orang Tua Asli",
-                  "Pas Foto 3x4 (2 lembar)",
-                  "Fotokopi Ijazah TK/PAUD (jika ada)",
-                  "Materai (jika diperlukan)",
-                ].map((doc, i) => (
+                {docsToRender.map((doc, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-white/90">
                     <CheckCircle className="w-4 h-4 text-emerald-300 shrink-0" />
                     <span>{doc}</span>
