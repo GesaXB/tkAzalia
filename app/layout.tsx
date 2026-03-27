@@ -12,21 +12,49 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TK Azalia - Pendidikan Anak Usia Dini",
-  description: "TK Azalia menawarkan pendidikan berkualitas dengan pengembangan karakter dan akademik yang seimbang",
-  keywords: ["TK", "PAUD", "Pendidikan Anak", "TK Azalia", "Pendidikan Dini"],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://tkazalia.vercel.app'),
+  title: {
+    default: "TK Azalia - Pendidikan Anak Usia Dini Terpadu",
+    template: "%s | TK Azalia",
+  },
+  description: "TK Azalia menawarkan pendidikan anak usia dini berkualitas dengan pengembangan karakter Islami, akademik yang seimbang, serta lingkungan belajar yang aman dan menyenangkan.",
+  keywords: ["TK", "PAUD", "Pendidikan Anak Usia Dini", "TK Azalia", "Sekolah TK", "Taman Kanak-Kanak", "Bermain Sambil Belajar"],
   authors: [{ name: "TK Azalia" }],
-  robots: "index, follow",
+  creator: "TK Azalia",
+  publisher: "TK Azalia",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     type: "website",
-    title: "TK Azalia",
-    description: "Website resmi TK Azalia",
-    images: [{ url: icon.src }],
+    locale: "id_ID",
+    url: "/",
+    siteName: "TK Azalia",
+    title: "TK Azalia - Pendidikan Anak Usia Dini Terbaik",
+    description: "Jelajahi program pendidikan yang berfokus pada perkembangan kognitif, motorik, relijius, dan kemandirian anak prasekolah bersama TK Azalia.",
+    images: [{ url: icon.src, width: 800, height: 600, alt: "Logo TK Azalia" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TK Azalia - Pendidikan Anak Usia Dini",
+    description: "TK Azalia menawarkan pendidikan berkualitas dengan pengembangan karakter dan akademik yang seimbang",
+    images: [icon.src],
   },
   icons: {
     icon: icon.src,
     shortcut: icon.src,
     apple: icon.src,
+  },
+  verification: {
+    google: "6YJ4Jm8RByGf6CGJA4Td4huJoEBYstUJDf-SkZYqebw",
   },
 };
 
