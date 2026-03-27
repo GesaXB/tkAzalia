@@ -14,10 +14,8 @@ export default function PendaftaranInfo() {
           <ul className="space-y-4 flex-grow">
             {[
               "Mengisi Formulir Pendaftaran Online/Offline",
-              "Fotocopy Akta Kelahiran (2 Lembar)",
-              "Fotocopy Kartu Keluarga (2 Lembar)",
-              "Fotocopy KTP Orang Tua (Ayah & Ibu)",
-              "Pas Foto Anak 3x4 (Warna Merah/Biru - 4 Lembar)",
+              "Fotocopy Akta Kelahiran",
+              "Fotocopy Kartu Keluarga",
               "Usia minimal 4 tahun (Kelompok A) & 5 tahun (Kelompok B)"
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-3 text-gray-700">
