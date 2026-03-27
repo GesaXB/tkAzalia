@@ -17,15 +17,10 @@ async function getHandler(): Promise<NextResponse<ApiResponse>> {
   }
 }
 
-async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
+async function putHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
   try {
     const body = await (req as NextRequest).json();
-    const { tanggal_mulai, tanggal_selesai, reset } = body;
-
-    if (reset) {
-      await resetSpmbJadwal();
-      return NextResponse.json({ success: true, message: 'Jadwal berhasil dihapus' });
-    }
+    const { tanggal_mulai, tanggal_selesai } = body;
 
     if (!tanggal_mulai || !tanggal_selesai) {
       return NextResponse.json(
@@ -48,10 +43,21 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
       message: 'Jadwal berhasil disimpan',
     });
   } catch (err) {
-    console.error('POST /api/admin/ppdb/jadwal:', err);
+    console.error('PUT /api/admin/ppdb/jadwal:', err);
     return NextResponse.json({ success: false, error: 'Gagal menyimpan jadwal' }, { status: 500 });
   }
 }
 
+async function deleteHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
+  try {
+    await resetSpmbJadwal();
+    return NextResponse.json({ success: true, message: 'Jadwal berhasil dihapus' });
+  } catch (err) {
+    console.error('DELETE /api/admin/ppdb/jadwal:', err);
+    return NextResponse.json({ success: false, error: 'Gagal mereset jadwal' }, { status: 500 });
+  }
+}
+
 export const GET = authMiddleware(getHandler, ['admin']);
-export const POST = authMiddleware(postHandler, ['admin']);
+export const PUT = authMiddleware(putHandler, ['admin']);
+export const DELETE = authMiddleware(deleteHandler, ['admin']);
