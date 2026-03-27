@@ -42,6 +42,8 @@ export interface KelasItem {
   kelas_id: number;
   nama: string;
   urutan: number;
+  kuota?: number;
+  filled?: number;
 }
 
 export interface SiswaMeData {

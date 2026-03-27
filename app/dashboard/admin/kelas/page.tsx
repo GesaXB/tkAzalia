@@ -12,7 +12,8 @@ import {
   updateKelasAdmin,
   deleteKelasAdmin,
 } from "@/lib/client/admin";
-import { Plus, Pencil, Trash2, X, Check, BookOpen } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check, BookOpen, Users, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminKelasPage() {
   const router = useRouter();
@@ -165,7 +166,7 @@ export default function AdminKelasPage() {
 
         <div className="rounded-xl border border-gray-100 bg-white overflow-hidden shadow-sm">
           {/* Header */}
-          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-emerald-50/30">
+          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-linear-to-r from-white to-emerald-50/30">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100 text-[#01793B]">
                 <BookOpen size={20} />
@@ -314,12 +315,22 @@ export default function AdminKelasPage() {
                           <td className="px-6 py-5 font-bold text-slate-800">{k.nama}</td>
                           <td className="px-6 py-5 text-slate-500 font-medium truncate max-w-[200px]">{k.deskripsi || "-"}</td>
                           <td className="px-6 py-5 text-center">
-                            <span className="inline-flex px-3 py-1 rounded-xl bg-slate-50 text-slate-900 text-[10px] font-black uppercase tracking-widest ring-1 ring-slate-100">
-                              {k.kuota || 0}
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest ring-1 ${
+                              k.kuota && k.filled !== undefined && k.filled >= k.kuota
+                                ? 'bg-red-50 text-red-600 ring-red-200'
+                                : 'bg-emerald-50 text-emerald-700 ring-emerald-100'
+                            }`}>
+                              {k.filled || 0} / {k.kuota || 0}
+                              {k.kuota && k.filled !== undefined && k.filled >= k.kuota && (
+                                <AlertCircle size={12} className="text-red-500" />
+                              )}
                             </span>
                           </td>
                           <td className="px-6 py-5 text-right">
                             <div className="flex justify-end items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all">
+                              <Link href={`/dashboard/admin/kelas/${k.kelas_id}`} className="p-2 rounded-xl text-blue-600 hover:bg-blue-50 transition-colors" title="Lihat Siswa">
+                                <Users size={16} />
+                              </Link>
                               <button onClick={() => startEdit(k)} className="p-2 rounded-xl text-amber-600 hover:bg-amber-50 transition-colors" title="Edit">
                                 <Pencil size={16} />
                               </button>
@@ -380,8 +391,11 @@ export default function AdminKelasPage() {
                                 #{k.urutan}
                               </span>
                             </div>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">
-                              Kuota: <span className="text-slate-700">{k.kuota || 0}</span>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                              Kuota: <span className={`text-slate-700 px-1.5 py-0.5 rounded ${k.kuota && k.filled !== undefined && k.filled >= k.kuota ? 'bg-red-50 text-red-600' : ''}`}>{k.filled || 0} / {k.kuota || 0}</span>
+                              {k.kuota && k.filled !== undefined && k.filled >= k.kuota && (
+                                <span className="text-red-500 text-[9px] font-bold">(PENUH)</span>
+                              )}
                             </p>
                             {k.deskripsi && (
                               <p className="text-sm text-slate-500 font-medium line-clamp-2">{k.deskripsi}</p>
@@ -389,6 +403,12 @@ export default function AdminKelasPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
+                          <Link
+                            href={`/dashboard/admin/kelas/${k.kelas_id}`}
+                            className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl border border-blue-200 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all"
+                          >
+                            <Users size={14} /> Siswa
+                          </Link>
                           <button
                             type="button"
                             onClick={() => startEdit(k)}

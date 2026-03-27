@@ -45,6 +45,7 @@ export interface KelasItem {
   deskripsi?: string | null;
   urutan: number;
   kuota: number;
+  filled?: number;
 }
 
 export interface AdminPpdbSiswa {

@@ -3,6 +3,11 @@ import { StatusPpdb } from '@/types';
 
 export async function listPpdbSiswa() {
   const siswa = await prisma.siswa.findMany({
+    where: {
+      user: {
+        role: 'user',
+      },
+    },
     include: {
       user: true,
       kelas: true,
@@ -21,8 +26,13 @@ export async function listPpdbSiswa() {
 }
 
 export async function getPpdbSiswaById(siswaId: number) {
-  const siswa = await prisma.siswa.findUnique({
-    where: { siswa_id: siswaId },
+  const siswa = await prisma.siswa.findFirst({
+    where: {
+      siswa_id: siswaId,
+      user: {
+        role: 'user',
+      },
+    },
     include: {
       user: true,
       kelas: true,

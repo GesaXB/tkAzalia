@@ -1,9 +1,27 @@
 import { prisma } from '@/lib/prisma';
 
 export async function listKelas() {
-  return prisma.kelas.findMany({
+  const data = await prisma.kelas.findMany({
     orderBy: { urutan: 'asc' },
+    include: {
+      _count: {
+        select: {
+          siswa: {
+            where: {
+              user: {
+                role: 'user',
+              },
+            },
+          },
+        },
+      },
+    },
   });
+
+  return data.map((d) => ({
+    ...d,
+    filled: d._count.siswa,
+  }));
 }
 
 export async function createKelas(nama: string, deskripsi: string | null, urutan: number, kuota: number = 0) {

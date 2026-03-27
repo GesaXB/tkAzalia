@@ -178,8 +178,9 @@ export default function ClassSelection() {
         }}
       >
         {kelasList.map((kelas) => {
+          const isFull = !!kelas.kuota && kelas.kuota > 0 && (kelas.filled || 0) >= kelas.kuota;
           const isSelected = selectedKelasId === kelas.kelas_id;
-          const isLocked = !!existingSelection || !ppdbOpened;
+          const isLocked = !!existingSelection || !ppdbOpened || (isFull && !isSelected);
           const isOtherSelected = !!existingSelection && !isSelected;
 
           return (
@@ -209,6 +210,12 @@ export default function ClassSelection() {
                   DIPILIH
                 </div>
               )}
+              {isFull && !isSelected && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 bg-red-100 text-red-700 border border-red-200 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                  <Lock size={12} />
+                  PENUH
+                </div>
+              )}
 
               <div className="flex flex-col h-full">
                 <div className={`
@@ -219,10 +226,15 @@ export default function ClassSelection() {
                 </div>
 
                 <h4 className="text-xl font-bold text-gray-900 mb-1">{kelas.nama}</h4>
-                <div className="flex items-center gap-2 text-sm font-medium text-gray-500 mb-3">
+                <div className="flex items-center gap-2 text-sm font-medium text-gray-500 mb-1">
                   <Users size={16} />
                   {getAgeGroup(kelas.nama)}
                 </div>
+                {kelas.kuota !== undefined && kelas.kuota > 0 && (
+                  <div className="text-xs font-medium text-gray-500 mb-3">
+                    Sisa Kuota: <span className={`font-bold ${isFull ? 'text-red-500' : 'text-[#01793B]'}`}>{Math.max(0, kelas.kuota - (kelas.filled || 0))}</span> / {kelas.kuota}
+                  </div>
+                )}
 
                 <p className="text-sm text-gray-600 leading-relaxed mb-4 flex-1">
                   {getDescription(kelas.nama)}
@@ -244,7 +256,9 @@ export default function ClassSelection() {
                     ? (isSelected ? "Kelas Terpilih" : "Tidak Dipilih")
                     : !ppdbOpened
                       ? "Pendaftaran Ditutup"
-                      : "Pilih Kelas Ini"}
+                      : isFull
+                        ? "Kuota Penuh"
+                        : "Pilih Kelas Ini"}
                 </button>
               </div>
             </motion.div>

@@ -2,6 +2,7 @@
 import { listKelasPublik, type KelasPublicItem } from "@/lib/client/public";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, GraduationCap, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const ICON_STYLES = [
@@ -74,30 +75,31 @@ export default function ProgramSection() {
               const style = ICON_STYLES[idx % ICON_STYLES.length];
               const IconComponent = style.icon;
               return (
-                <motion.article
-                  key={kelas.kelas_id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.2 }}
-                  className="group relative bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-transparent hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-300"
-                >
-                  <div className={`w-16 h-16 ${style.color} rounded-2xl flex items-center justify-center mb-6 transition-colors duration-300 ${style.hover} group-hover:text-white`}>
-                    <IconComponent className="w-8 h-8" strokeWidth={2} />
-                  </div>
+                <Link key={kelas.kelas_id} href="/program">
+                  <motion.article
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.2 }}
+                    className="group relative h-full bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-transparent hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-pointer"
+                  >
+                    <div className={`w-16 h-16 ${style.color} rounded-2xl flex items-center justify-center mb-6 transition-colors duration-300 ${style.hover} group-hover:text-white`}>
+                      <IconComponent className="w-8 h-8" strokeWidth={2} />
+                    </div>
 
-                  <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900 mt-1">{kelas.nama}</h3>
-                  </div>
+                    <div className="mb-4">
+                      <h3 className="text-2xl font-bold text-gray-900 mt-1">{kelas.nama}</h3>
+                    </div>
 
-                  <p className="text-gray-600 leading-relaxed mb-8">
-                    {kelas.deskripsi || "Program pendidikan berkualitas untuk buah hati Anda."}
-                  </p>
+                    <p className="text-gray-600 leading-relaxed mb-8">
+                      {kelas.deskripsi || "Program pendidikan berkualitas untuk buah hati Anda."}
+                    </p>
 
-                  <div className="flex items-center text-[#01793B] font-bold group-hover:gap-3 gap-2 transition-all cursor-pointer">
-                    Selengkapnya <ArrowRight className="w-5 h-5" />
-                  </div>
-                </motion.article>
+                    <div className="flex items-center text-[#01793B] font-bold group-hover:gap-3 gap-2 transition-all">
+                      Selengkapnya <ArrowRight className="w-5 h-5" />
+                    </div>
+                  </motion.article>
+                </Link>
               );
             })}
           </div>

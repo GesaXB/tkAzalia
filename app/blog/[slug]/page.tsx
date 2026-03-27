@@ -73,47 +73,11 @@ const CommentItem = ({
       <User size={isReply ? 16 : 20} className="text-emerald-600" />
     </div>
     <div className="flex-1">
-      <div className="flex items-center justify-between gap-3 mb-1">
-        <div className="flex items-center gap-2">
-          <h5 className={`${isReply ? 'text-xs' : 'text-sm'} font-bold text-gray-900`}>{comment.nama}</h5>
-          <span className="text-[10px] text-gray-400 font-medium">
-            {formatDate(comment.created_at)}
-          </span>
-          
-          {/* Edit/Delete/Reply for Owner/Admin */}
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
-            {!isEditing && !isReply && user && (
-              <button
-                onClick={onReply}
-                className="p-2 rounded-xl text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all border border-transparent hover:border-emerald-100"
-                title="Balas komentar"
-              >
-                <Reply size={14} />
-              </button>
-            )}
-            
-            {(user?.user_id === comment.user_id || user?.role === 'admin') && (
-              <>
-                {user?.user_id === comment.user_id && !isEditing && (
-                  <button
-                    onClick={() => onEdit(comment.isi)}
-                    className="p-2 rounded-xl text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all border border-transparent hover:border-emerald-100"
-                    title="Edit komentar"
-                  >
-                    <Edit2 size={14} />
-                  </button>
-                )}
-                <button
-                  onClick={onDelete}
-                  className="p-2 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
-                  title="Hapus komentar"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center gap-2 mb-1">
+        <h5 className={`${isReply ? 'text-xs' : 'text-sm'} font-bold text-gray-900`}>{comment.nama}</h5>
+        <span className="text-[10px] text-gray-400 font-medium">
+          {formatDate(comment.created_at)}
+        </span>
       </div>
       
       {isEditing ? (
@@ -146,9 +110,48 @@ const CommentItem = ({
           </div>
         </div>
       ) : (
-        <p className={`${isReply ? 'text-xs' : 'text-sm'} text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-2xl rounded-tl-none inline-block border border-gray-100/50`}>
-          {comment.isi}
-        </p>
+        <div className="flex flex-col items-start gap-2">
+          <p className={`${isReply ? 'text-xs' : 'text-sm'} text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-2xl rounded-tl-none border border-gray-100/50`}>
+            {comment.isi}
+          </p>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity ml-1">
+            {!isReply && user && (
+              <button
+                onClick={onReply}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-gray-400 hover:text-emerald-600 bg-gray-50 hover:bg-emerald-50 border border-gray-100 hover:border-emerald-100 transition-all"
+                title="Balas komentar"
+              >
+                <Reply size={12} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Balas</span>
+              </button>
+            )}
+            
+            {(user?.user_id === comment.user_id || user?.role === 'admin') && (
+              <>
+                {user?.user_id === comment.user_id && (
+                  <button
+                    onClick={() => onEdit(comment.isi)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-gray-400 hover:text-emerald-600 bg-gray-50 hover:bg-emerald-50 border border-gray-100 hover:border-emerald-100 transition-all"
+                    title="Edit komentar"
+                  >
+                    <Edit2 size={12} />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Edit</span>
+                  </button>
+                )}
+                <button
+                  onClick={onDelete}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-gray-400 hover:text-red-600 bg-gray-50 hover:bg-red-50 border border-gray-100 hover:border-red-100 transition-all"
+                  title="Hapus komentar"
+                >
+                  <Trash2 size={12} />
+                  <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:inline">Hapus</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   </motion.div>
