@@ -14,21 +14,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: post.uptadet_at,
     changeFrequency: 'weekly' as const,
-    priority: 0.8,
+    priority: 0.7,
   }));
 
   const routes = [
-    '',
-    '/blog',
-    '/program',
-    '/galeri',
-    '/tentang',
-    '/pendaftaran',
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
+    { path: '', priority: 1.0, freq: 'daily' },
+    { path: '/about', priority: 0.9, freq: 'weekly' },
+    { path: '/program', priority: 0.9, freq: 'weekly' },
+    { path: '/pendaftaran', priority: 0.95, freq: 'daily' },
+    { path: '/contact', priority: 0.8, freq: 'monthly' },
+    { path: '/blog', priority: 0.85, freq: 'daily' },
+  ].map(({ path, priority, freq }) => ({
+    url: `${baseUrl}${path}`,
     lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: route === '' ? 1 : 0.9,
+    changeFrequency: freq as 'daily' | 'weekly' | 'monthly',
+    priority,
   }));
 
   return [...routes, ...blogUrls];

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { ApiResponse } from '@/types';
 import { authMiddleware, AuthenticatedRequest } from '@/lib/middleware/auth';
 import { getSpmbJadwal, upsertSpmbJadwal, resetSpmbJadwal, isSpmbOpen } from '@/lib/spmbSetting';
@@ -37,6 +38,7 @@ async function putHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
     }
 
     await upsertSpmbJadwal(mulai, selesai);
+    revalidatePath('/pendaftaran');
 
     return NextResponse.json({
       success: true,
@@ -51,6 +53,7 @@ async function putHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
 async function deleteHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse>> {
   try {
     await resetSpmbJadwal();
+    revalidatePath('/pendaftaran');
     return NextResponse.json({ success: true, message: 'Jadwal berhasil dihapus' });
   } catch (err) {
     console.error('DELETE /api/admin/ppdb/jadwal:', err);

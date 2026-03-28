@@ -51,13 +51,21 @@ function TrendChart({ data }: { data: any[] }) {
             tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 500 }}
           />
           <Tooltip 
+            labelFormatter={(label, payload) => {
+              if (payload && payload[0]) {
+                return payload[0].payload.fullName;
+              }
+              return label;
+            }}
             contentStyle={{ 
               borderRadius: '12px', 
               border: 'none', 
               boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
               fontSize: '12px',
-              fontWeight: '600'
+              fontWeight: '600',
+              padding: '8px 12px'
             }}
+            labelStyle={{ color: '#01793B', marginBottom: '4px' }}
           />
           <Area 
             type="monotone" 
@@ -188,6 +196,48 @@ export default function AdminDashboard() {
   const [tidakLulusCount, setTidakLulusCount] = useState(0);
   const [totalInfo, setTotalInfo] = useState(0);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [rawPpdbData, setRawPpdbData] = useState<any[]>([]);
+  
+  // Date states for filtering
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const processChartData = (data: any[], start: string, end: string) => {
+    const sDate = new Date(start);
+    const eDate = new Date(end);
+    sDate.setHours(0,0,0,0);
+    eDate.setHours(23,59,59,999);
+
+    const diffTime = Math.abs(eDate.getTime() - sDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Limit to reasonable number of days for chart (e.g. 31 days)
+    const limitDays = Math.min(diffDays, 31);
+    
+    const result = Array.from({ length: limitDays }, (_, i) => {
+      const d = new Date(sDate);
+      d.setDate(sDate.getDate() + i);
+      
+      const dayName = d.toLocaleDateString('id-ID', { weekday: 'short' });
+      const dayNum = d.getDate();
+      const monthName = d.toLocaleDateString('id-ID', { month: 'short' });
+      
+      const count = data.filter((s: any) => {
+        if (!s.user?.created_at) return false;
+        const regDate = new Date(s.user?.created_at);
+        return regDate.toDateString() === d.toDateString();
+      }).length;
+      
+      return { 
+        name: diffDays > 7 ? `${dayNum}/${d.getMonth()+1}` : dayName,
+        fullName: `${dayName}, ${dayNum} ${monthName}`,
+        total: count, 
+        rawDate: d 
+      };
+    });
+    
+    setChartData(result);
+  };
 
   useEffect(() => {
     setDashboardInfo("Ringkasan Admin", "Kelola SPMB dan informasi sekolah");
@@ -207,27 +257,28 @@ export default function AdminDashboard() {
       if (!ppdbResponse.success) setError(ppdbResponse.error || "Gagal memuat data SPMB");
       if (!infoResponse.success) setError(infoResponse.error || "Gagal memuat informasi");
       const ppdbList = ppdbResponse.data || [];
+      setRawPpdbData(ppdbList);
       setTotalPpdb(ppdbList.length);
       setMenungguCount(ppdbList.filter((s: { status_ppdb?: string }) => s.status_ppdb === "menunggu").length);
       setLulusCount(ppdbList.filter((s: { status_ppdb?: string }) => s.status_ppdb === "lulus").length);
       setTidakLulusCount(ppdbList.filter((s: { status_ppdb?: string }) => s.status_ppdb === "tidak_lulus").length);
       
-      // Process Chart Data
-      const trend = ppdbList.reduce((acc: any[], curr: any) => {
-        const dateStr = curr.user?.created_at;
-        if (!dateStr) return acc;
-        
-        const date = new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-        const existing = acc.find(d => d.name === date);
-        if (existing) {
-          existing.total += 1;
-        } else {
-          acc.push({ name: date, total: 1, rawDate: new Date(dateStr) });
-        }
-        return acc;
-      }, []).sort((a, b) => a.rawDate.getTime() - b.rawDate.getTime());
+      // Default range: Monday to Saturday of current week
+      const now = new Date();
+      const currentDay = now.getDay();
+      const diffToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+      const mon = new Date(now);
+      mon.setDate(now.getDate() + diffToMonday);
+      const sat = new Date(mon);
+      sat.setDate(mon.getDate() + 5);
       
-      setChartData(trend);
+      const sStr = mon.toISOString().split('T')[0];
+      const eStr = sat.toISOString().split('T')[0];
+      
+      setStartDate(sStr);
+      setEndDate(eStr);
+      processChartData(ppdbList, sStr, eStr);
+
       setTotalInfo((infoResponse.data || []).length);
       setLoading(false);
     };
@@ -310,18 +361,37 @@ export default function AdminDashboard() {
 
       {/* Trend Chart */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+          <div className="flex items-center gap-3 self-start">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#01793B]">
               <TrendingUp size={18} />
             </div>
             <div>
               <h2 className="font-bold text-gray-900">Tren Pendaftaran</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Grafik pendaftaran calon siswa harian</p>
+              <p className="text-xs text-gray-400 mt-0.5">Filter berdasarkan rentang pendaftaran</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-[10px] font-black text-[#01793B] uppercase tracking-widest">
-            Level Aktif
+          
+          <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100">
+            <input 
+              type="date" 
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                if (endDate) processChartData(rawPpdbData, e.target.value, endDate);
+              }}
+              className="bg-transparent text-[11px] font-bold text-gray-600 outline-none px-2 py-1"
+            />
+            <span className="text-gray-300">—</span>
+            <input 
+              type="date" 
+              value={endDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                if (startDate) processChartData(rawPpdbData, startDate, e.target.value);
+              }}
+              className="bg-transparent text-[11px] font-bold text-gray-600 outline-none px-2 py-1"
+            />
           </div>
         </div>
         <TrendChart data={chartData} />
