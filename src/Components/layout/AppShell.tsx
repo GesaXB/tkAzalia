@@ -1,9 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "@/Components/layout/Navbar";
 import Footer from "@/Components/layout/Footer";
-import JadwalSpmbCarousel from "@/Components/HomeComponent/JadwalSpmbCarousel";
+
+const JadwalSpmbCarousel = dynamic(
+  () => import("@/Components/HomeComponent/JadwalSpmbCarousel"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="h-[52px] w-full bg-gradient-to-r from-[#01793B]/80 to-emerald-700/80"
+        aria-hidden
+      />
+    ),
+  }
+);
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

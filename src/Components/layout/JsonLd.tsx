@@ -1,5 +1,7 @@
+import { getSiteUrl } from "@/lib/seo";
+
 export default function JsonLd() {
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://tkazalia.vercel.app';
+  const APP_URL = getSiteUrl();
 
   const schema = {
     "@context": "https://schema.org",
@@ -106,14 +108,6 @@ export default function JsonLd() {
         "inLanguage": "id-ID",
         "publisher": {
           "@id": `${APP_URL}/#organization`
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": `${APP_URL}/blog?q={search_term_string}`
-          },
-          "query-input": "required name=search_term_string"
         }
       },
       {

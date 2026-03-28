@@ -1,16 +1,26 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import AppShell from "@/Components/layout/AppShell";
 import JsonLd from "@/Components/layout/JsonLd";
 import { ToastProvider } from "@/context/ToastContext";
+import { getSiteUrl } from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://tkazalia.vercel.app';
+const APP_URL = getSiteUrl();
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#16a34a",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -29,7 +39,10 @@ export const metadata: Metadata = {
   publisher: "TK Azalia",
   category: "Education",
   alternates: {
-    canonical: '/',
+    canonical: "/",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
   },
   robots: {
     index: true,
@@ -84,15 +97,7 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} scroll-smooth`}>
       <head>
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        {/* Font di-host oleh next/font — tidak perlu preconnect ke Google Fonts */}
         <JsonLd />
       </head>
       <body

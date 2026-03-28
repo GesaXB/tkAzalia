@@ -1,9 +1,35 @@
-import BlogSection from "../HomeComponent/BlogSection";
+import dynamic from "next/dynamic";
 import HeroSection from "../HomeComponent/HeroSection";
-import ProgramSection from "../HomeComponent/ProgramSection";
-import TestimonialSection from "../HomeComponent/TestimonialSection";
-import VisionMissionSection from "../HomeComponent/VisionMissionSection";
-import WhyChooseSection from "../HomeComponent/WhyChooseSection";
+
+function SectionPlaceholder() {
+  return (
+    <div
+      className="min-h-[200px] w-full animate-pulse rounded-2xl bg-gray-100/90"
+      aria-hidden
+    />
+  );
+}
+
+const VisionMissionSection = dynamic(
+  () => import("../HomeComponent/VisionMissionSection"),
+  { loading: SectionPlaceholder }
+);
+const WhyChooseSection = dynamic(
+  () => import("../HomeComponent/WhyChooseSection"),
+  { loading: SectionPlaceholder }
+);
+const ProgramSection = dynamic(
+  () => import("../HomeComponent/ProgramSection"),
+  { loading: SectionPlaceholder }
+);
+const TestimonialSection = dynamic(
+  () => import("../HomeComponent/TestimonialSection"),
+  { loading: SectionPlaceholder }
+);
+const BlogSection = dynamic(
+  () => import("../HomeComponent/BlogSection"),
+  { loading: SectionPlaceholder }
+);
 
 export default function LandingPage() {
   return (
@@ -13,7 +39,6 @@ export default function LandingPage() {
       </div>
 
       <div className="px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14 max-w-[1600px] mx-auto">
-
         <div className="relative -mt-8 md:-mt-10 pb-6">
           <VisionMissionSection />
         </div>

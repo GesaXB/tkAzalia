@@ -1,14 +1,23 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://tkazalia.vercel.app';
+  const baseUrl = getSiteUrl();
 
   return {
     rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/dashboard/', '/api/', '/auth/'], // Cegah bot merayapi area privat form
+      userAgent: "*",
+      allow: "/",
+      disallow: [
+        "/dashboard/",
+        "/api/",
+        "/auth/",
+        "/auth/login",
+        "/auth/register",
+        "/auth/forgotpassword",
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }
